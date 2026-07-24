@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏎️ Sobre - Estatísticas F1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            color: #e10600;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e10600;
+            padding-bottom: 20px;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #e10600;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .card p {
+            color: #ddd;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .tecnologias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .tecnologia {
+            background: #e10600;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .btn-voltar {
+            display: inline-block;
+            background: #e10600;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover {
+            background: #ff1a00;
+            transform: scale(1.05);
+        }
+        .footer {
+            text-align: center;
+            color: #555;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏎️ Sobre o Projeto</h1>
+        <div class="subtitle">Estatísticas F1 - Análise de dados 2019-2023</div>
+
+        <div class="card">
+            <h2>📊 O que é este projeto?</h2>
+            <p>
+                Este site foi criado para analisar e visualizar dados históricos da Fórmula 1,
+                cobrindo as temporadas de <strong>2019 a 2023</strong>. O objetivo é mostrar
+                estatísticas de vitórias por piloto, por equipe e a evolução ao longo dos anos.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Tecnologias utilizadas</h2>
+            <div class="tecnologias">
+                <span class="tecnologia">🐍 Python</span>
+                <span class="tecnologia">📊 Pandas</span>
+                <span class="tecnologia">📈 Matplotlib</span>
+                <span class="tecnologia">🌐 Flask</span>
+                <span class="tecnologia">🎨 HTML/CSS</span>
+            </div>
+            <p style="margin-top: 15px;">
+                Os dados foram coletados através da API Ergast e processados com Python.
+                Os gráficos foram gerados com Matplotlib e o site foi desenvolvido com Flask.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>📈 O que você pode encontrar aqui?</h2>
+            <ul style="color: #ddd; font-size: 1.1em; line-height: 2; padding-left: 20px;">
+                <li>🏆 <strong>Vitórias por Piloto</strong> – Ranking dos pilotos com mais vitórias</li>
+                <li>🏆 <strong>Vitórias por Equipe</strong> – Comparativo entre as equipes</li>
+                <li>📈 <strong>Evolução por Temporada</strong> – Total de corridas por ano</li>
+                <li>📊 <strong>Tabela Resumo</strong> – Números exatos de cada piloto</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>👨‍💻 Sobre o desenvolvedor</h2>
+            <p>
+                Este projeto foi desenvolvido como parte do aprendizado em programação,
+                com foco em análise de dados e desenvolvimento web. O objetivo é criar
+                um portfólio que mostre habilidades técnicas e paixão por dados.
+            </p>
+            <p style="margin-top: 10px;">
+                <strong>Tecnologias dominadas:</strong> Python, Pandas, Flask, HTML/CSS, Git
+            </p>
+        </div>
+
+        <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+
+        <div class="footer">
+            Projeto desenvolvido com Python, Pandas, Matplotlib e Flask
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🏎️ Estatísticas F1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 10px; text-shadow: 0 0 20px rgba(225, 6, 0, 0.3); }
+        .subtitle { text-align: center; color: #aaa; font-size: 1.2em; margin-bottom: 20px; border-bottom: 2px solid #e10600; padding-bottom: 20px; }
+        .link-sobre { text-align: center; margin-bottom: 30px; }
+        .link-sobre a { color: #e10600; font-weight: bold; text-decoration: none; font-size: 1.1em; }
+        .link-sobre a:hover { text-decoration: underline; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        .card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; transition: transform 0.3s; }
+        .card:hover { transform: scale(1.02); }
+        .card h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
+        .card img { width: 100%; border-radius: 8px; border: 1px solid #333; }
+        .full-width { grid-column: 1 / -1; }
+        .tabela-container { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; margin-top: 20px; }
+        .tabela-container h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #e10600; color: #fff; font-weight: bold; }
+        td { color: #ddd; }
+        tr:hover { background: #2a2a2a; }
+        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏎️ Estatísticas F1</h1>
+        <div class="subtitle">Análise de dados das temporadas 2019, 2020, 2021, 2022 e 2023</div>
+
+        <div class="link-sobre">
+            <a href="/sobre">📖 Sobre este projeto</a>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>🏆 Vitórias por Piloto</h2>
+                <img src="{{ url_for('static', filename='vitorias_piloto_2019_2023.png') }}" alt="Vitórias por Piloto">
+            </div>
+            <div class="card">
+                <h2>🏆 Vitórias por Equipe</h2>
+                <img src="{{ url_for('static', filename='vitorias_equipe_2019_2023.png') }}" alt="Vitórias por Equipe">
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h2>📈 Evolução por Temporada</h2>
+            <img src="{{ url_for('static', filename='evolucao_temporadas_2019_2023.png') }}" alt="Evolução por Temporada">
+        </div>
+
+        <div class="tabela-container">
+            <h2>📊 Resumo das Vitórias</h2>
+            <table>
+                <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
+                <tbody>
+                    {% for i in range(piloto_labels|length) %}
+                    <tr><td>{{ piloto_labels[i] }}</td><td>{{ piloto_values[i] }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">Projeto desenvolvido com Python, Pandas, Matplotlib e Flask</div>
+    </div>
+</body>
+</html>
