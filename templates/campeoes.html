@@ -3,70 +3,84 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏎️ Estatísticas F1</title>
+    <title>🏆 Campeões da F1</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
         h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 10px; text-shadow: 0 0 20px rgba(225, 6, 0, 0.3); }
         .subtitle { text-align: center; color: #aaa; font-size: 1.2em; margin-bottom: 20px; border-bottom: 2px solid #e10600; padding-bottom: 20px; }
-        .link-sobre { text-align: center; margin-bottom: 30px; }
-        .link-sobre a { color: #e10600; font-weight: bold; text-decoration: none; font-size: 1.1em; margin: 0 15px; }
-        .link-sobre a:hover { text-decoration: underline; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
         .card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; transition: transform 0.3s; }
         .card:hover { transform: scale(1.02); }
         .card h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
         .card img { width: 100%; border-radius: 8px; border: 1px solid #333; }
         .full-width { grid-column: 1 / -1; }
-        .tabela-container { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; margin-top: 20px; }
+        .tabela-container { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; margin-top: 20px; overflow-x: auto; }
         .tabela-container h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
         th { background: #e10600; color: #fff; font-weight: bold; }
         td { color: #ddd; }
         tr:hover { background: #2a2a2a; }
+        .btn-voltar { display: inline-block; background: #e10600; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0; transition: 0.3s; }
+        .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
         .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2em; } }
+        .info-text { text-align: center; color: #aaa; margin-bottom: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏎️ Estatísticas F1</h1>
-        <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
+        <h1>🏆 Campeões Mundiais da F1</h1>
+        <div class="subtitle">História completa desde 1950 até 2025</div>
 
-        <div class="link-sobre">
-            <a href="/sobre">📖 Sobre este projeto</a>
-            <a href="/campeoes">🏆 Campeões da F1</a>
-        </div>
+        <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
 
         <div class="grid">
             <div class="card">
-                <h2>🏆 Vitórias por Piloto</h2>
-                <img src="{{ url_for('static', filename='vitorias_piloto_historico.png') }}" alt="Vitórias por Piloto">
+                <h2>👑 Maiores Campeões</h2>
+                <p class="info-text">Pilotos com mais títulos mundiais (Top 10)</p>
+                <img src="{{ url_for('static', filename='ranking_pilotos.png') }}" alt="Ranking de Pilotos">
             </div>
             <div class="card">
-                <h2>🏆 Vitórias por Equipe</h2>
-                <img src="{{ url_for('static', filename='vitorias_equipe_historico.png') }}" alt="Vitórias por Equipe">
+                <h2>🏎️ Equipes com mais títulos</h2>
+                <p class="info-text">Construtores com mais campeonatos (Top 10)</p>
+                <img src="{{ url_for('static', filename='ranking_equipes.png') }}" alt="Ranking de Equipes">
             </div>
         </div>
 
         <div class="card full-width">
-            <h2>📈 Evolução por Temporada</h2>
-            <img src="{{ url_for('static', filename='evolucao_temporadas_historico.png') }}" alt="Evolução por Temporada">
+            <h2>🌍 Títulos por País</h2>
+            <p class="info-text">Total de campeonatos conquistados por país (Top 10)</p>
+            <img src="{{ url_for('static', filename='ranking_paises.png') }}" alt="Ranking de Países">
         </div>
 
         <div class="tabela-container">
-            <h2>📊 Resumo das Vitórias (1950-2026)</h2>
+            <h2>📋 Todos os Campeões (1950-2025)</h2>
             <table>
-                <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Piloto</th>
+                        <th>Equipe</th>
+                        <th>País</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    {% for i in range(piloto_labels|length) %}
-                    <tr><td>{{ piloto_labels[i] }}</td><td>{{ piloto_values[i] }}</td></tr>
+                    {% for campeao in campeoes %}
+                    <tr>
+                        <td>{{ campeao.ano }}</td>
+                        <td>{{ campeao.piloto }}</td>
+                        <td>{{ campeao.equipe }}</td>
+                        <td>{{ campeao.pais }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
 
         <div class="footer">Projeto desenvolvido com Python, Pandas, Matplotlib e Flask</div>
     </div>
