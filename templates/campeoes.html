@@ -37,25 +37,28 @@
 
         <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
 
-        <div class="grid">
-            <div class="card">
-                <h2>👑 Maiores Campeões</h2>
-                <p class="info-text">Pilotos com mais títulos mundiais (Top 10)</p>
-                <img src="{{ url_for('static', filename='ranking_pilotos.png') }}" alt="Ranking de Pilotos">
-            </div>
-            <div class="card">
-                <h2>🏎️ Equipes com mais títulos</h2>
-                <p class="info-text">Construtores com mais campeonatos (Top 10)</p>
-                <img src="{{ url_for('static', filename='ranking_equipes.png') }}" alt="Ranking de Equipes">
-            </div>
+        <!-- GRÁFICO 1: TÍTULOS POR PILOTO -->
+        <div class="card full-width">
+            <h2>👑 Títulos por Piloto</h2>
+            <p class="info-text">Pilotos com mais títulos mundiais (Top 10)</p>
+            <img src="{{ url_for('static', filename='ranking_pilotos.png') }}" alt="Ranking de Pilotos">
         </div>
 
+        <!-- GRÁFICO 2: TÍTULOS POR CONSTRUTOR -->
+        <div class="card full-width">
+            <h2>🏎️ Títulos por Construtor</h2>
+            <p class="info-text">Construtores com mais títulos mundiais (Top 10)</p>
+            <img src="{{ url_for('static', filename='ranking_construtores.png') }}" alt="Ranking de Construtores">
+        </div>
+
+        <!-- GRÁFICO 3: TÍTULOS POR PAÍS -->
         <div class="card full-width">
             <h2>🌍 Títulos por País</h2>
             <p class="info-text">Total de campeonatos conquistados por país (Top 10)</p>
             <img src="{{ url_for('static', filename='ranking_paises.png') }}" alt="Ranking de Países">
         </div>
 
+        <!-- TABELA COMPLETA -->
         <div class="tabela-container">
             <h2>📋 Todos os Campeões (1950-2025)</h2>
             <table>
@@ -63,7 +66,6 @@
                     <tr>
                         <th>Ano</th>
                         <th>Piloto</th>
-                        <th>Equipe</th>
                         <th>País</th>
                     </tr>
                 </thead>
@@ -72,7 +74,6 @@
                     <tr>
                         <td>{{ campeao.ano }}</td>
                         <td>{{ campeao.piloto }}</td>
-                        <td>{{ campeao.equipe }}</td>
                         <td>{{ campeao.pais }}</td>
                     </tr>
                     {% endfor %}

@@ -2,102 +2,221 @@ ano,piloto,equipe,vitorias
 1950,Giuseppe Farina,Alfa Romeo,3
 1950,Juan Manuel Fangio,Alfa Romeo,3
 1951,Juan Manuel Fangio,Alfa Romeo,3
+1951,José Froilán González,Ferrari,1
+1951,Giuseppe Farina,Alfa Romeo,1
+1951,Alberto Ascari,Ferrari,2
 1952,Alberto Ascari,Ferrari,6
+1952,Piero Taruffi,Ferrari,1
 1953,Alberto Ascari,Ferrari,5
-1954,Juan Manuel Fangio,Mercedes,6
-1955,Juan Manuel Fangio,Mercedes,5
+1953,Juan Manuel Fangio,Maserati,1
+1953,Mike Hawthorn,Ferrari,1
+1953,Giuseppe Farina,Ferrari,1
+1954,Juan Manuel Fangio,Mercedes,4
+1954,Juan Manuel Fangio,Maserati,2
+1954,Mike Hawthorn,Ferrari,1
+1954,José Froilán González,Ferrari,1
+1955,Juan Manuel Fangio,Mercedes,4
+1955,Maurice Trintignant,Ferrari,1
 1955,Stirling Moss,Mercedes,1
 1956,Juan Manuel Fangio,Ferrari,3
-1956,Stirling Moss,Maserati,1
+1956,Luigi Musso,Ferrari,1
+1956,Peter Collins,Ferrari,2
+1956,Stirling Moss,Maserati,2
 1957,Juan Manuel Fangio,Maserati,4
-1957,Stirling Moss,Maserati,2
-1958,Mike Hawthorn,Ferrari,3
-1958,Stirling Moss,Cooper,3
+1957,Stirling Moss,Maserati,3
+1957,Tony brooks,Vanwall,1
+1958,Mike Hawthorn,Ferrari,1
+1958,Tony Brooks,Vanwall,3
+1958,Peter Collins,Ferrari,1
+1958,Maurice Trintignant,Cooper,1
+1958,Stirling Moss,Cooper,4
 1959,Jack Brabham,Cooper,2
-1959,Stirling Moss,Cooper,1
+1959,Tony brooks,Ferrari,2
+1959,Stirling Moss,Cooper,2
+1959,Bruce McLaren,Cooper,1
 1960,Jack Brabham,Cooper,5
+1960,Bruce McLaren,Cooper,1
+1961,Innes Ireland,Lotus,1
 1960,Stirling Moss,Lotus,2
+1960,Phil Hill,Ferrari,1
 1961,Phil Hill,Ferrari,2
+1961,Wolfgang von Trips,Ferrari,2
+1961,Giancarlo Baghetti,Ferrari,1
 1961,Stirling Moss,Lotus,2
 1962,Graham Hill,BRM,4
+1962,Dan Gurney,Porsche,1
+1962,Bruce McLaren,Cooper,1
 1962,Jim Clark,Lotus,3
 1963,Jim Clark,Lotus,7
 1963,Graham Hill,BRM,2
+1963,John Surtees,Ferrari,1
 1964,John Surtees,Ferrari,2
+1964,Dan Gurney,Brabham,2
 1964,Jim Clark,Lotus,3
+1964,Lorenzo Bandini,Ferrari,1
 1964,Graham Hill,BRM,2
 1965,Jim Clark,Lotus,6
 1965,Jackie Stewart,BRM,1
 1965,Graham Hill,BRM,2
+1966,John Surtees,Ferrari,2
+1966,Ludovico Scarfiotti,Ferrari,1
 1966,Jack Brabham,Brabham,4
 1966,Jackie Stewart,BRM,1
 1966,Jim Clark,Lotus,1
 1967,Jack Brabham,Brabham,2
+1967,John Surtees,Honda,1
+1967,Dan Gurney,Eagle,1
 1967,Denny Hulme,Brabham,2
 1967,Jim Clark,Lotus,4
 1968,Graham Hill,Lotus,3
+1968,Jo Siffert,Lotus,1
+1968,Jacky ickx,Ferrari,1
+1968,Denny Hulme,McLaren,2
 1968,Jackie Stewart,Matra,3
 1968,Jim Clark,Lotus,1
+1968,Bruce McLaren,McLaren,1
 1969,Jackie Stewart,Matra,6
+1969,Jacky ickx,Brabham,2
+1969,jochen Rindt,Lotus,1
+1969,Denny Hulme,McLaren,1
 1969,Graham Hill,Lotus,1
 1970,Jochen Rindt,Lotus,5
 1970,Jackie Stewart,March,1
+1970,Jacky ickx,Ferrari,3
 1970,Jack Brabham,Brabham,1
+1970,Clay Regazzoni,Ferrari,1
 1970,Emerson Fittipaldi,Lotus,1
 1971,Jackie Stewart,Tyrrell,6
+1971,Jacky ickx,Ferrari,1
+1971,Mario Andretti,Ferrari,1
+1971,François Cevert,Tyrrell,1
+1971,Jo siffert,Brm,1
 1972,Emerson Fittipaldi,Lotus,5
+1972,Jacky ickx,Ferrari,1
 1972,Jackie Stewart,Tyrrell,4
+1972,Denny Hulme,McLaren,1
 1973,Jackie Stewart,Tyrrell,5
+1973,Denny Hulme,McLaren,1
 1973,Emerson Fittipaldi,Lotus,3
+1973,Ronnie Peterson,Lotus,4
+1974,Ronnie Peterson,Lotus,3
+1974,Clay Regazzoni,Ferrari,1
 1974,Emerson Fittipaldi,McLaren,3
+1974,Denny Hulme,McLaren,1
+1974,Carlos Reutemann,Brabham,3
+1974,Jody Scheckter,Tyrrell,2
 1974,Niki Lauda,Ferrari,2
 1975,Niki Lauda,Ferrari,5
+1975,Carlos Pace,Brabham,1
+1975,Clay Regazzoni,Ferrari,1
+1975,Jochen Mass,McLaren,1
+1975,Carlos Reutemann,Brabham,1
+1975,Jody Scheckter,Tyrrell,1
+1975,James Hunt,Hesketh,1
 1975,Emerson Fittipaldi,McLaren,2
 1976,James Hunt,McLaren,6
+1976,Ronnie Peterson,March,1
+1976,Clay Regazzoni,Ferrari,1
+1976,Jody Scheckter,Tyrrell,1
+1976,Mario Andretti,Lotus,1
 1976,Niki Lauda,Ferrari,5
+1976,John Watson,Penske,1
+1977,Mario Andretti,Lotus,4
+1977,Carlos Reutemann,Ferrari,1
 1977,Niki Lauda,Ferrari,3
+1977,alan Jones,Shadow,1
+1977,Jody Scheckter,Wolf,3
+1977,James Hunt,McLaren,3
+1977,Gunnar Nilsson,Lotus,1
 1978,Mario Andretti,Lotus,6
+1978,Ronnie Peterson,Lotus,2
+1978,Carlos Reutemann,Ferrari,4
 1978,Niki Lauda,Brabham,2
+1978,Patrick Depailler,Tyrrell,1
+1978,Gilles Villeneuve,Ferrari,1
+1979,alan Jones,Williams,4
+1979,Gilles Villeneuve,Ferrari,3
+1979,Clay Regazzoni,Williams,1
+1979,Patrick Depailler,Ligier,1
+1979,Jean-Pierre Jabouille,Renault,1
 1979,Jody Scheckter,Ferrari,3
 1980,Alan Jones,Williams,5
+1980,Jean-Pierre Jabouille,Renault,1
+1980,René Arnoux,Renault,2
+1980,Carlos Reutemann,Williams,1
+1980,Didier Pironi,Ligier,1
 1980,Nelson Piquet,Brabham,3
 1981,Nelson Piquet,Brabham,3
+1981,John Watson,McLaren,1
+1981,Gilles Villeneuve,Ferrari,2
+1981,alan Jones,Williams,2
 1981,Alain Prost,Renault,3
+1981,Carlos Reutemann,Williams,2
 1982,Keke Rosberg,Williams,1
+1982,Elio de Angelis,Lotus,1
+1982,René Arnoux,Renault,2
+1982,John Watson,McLaren,2
+1982,Didier Pironi,Ferrari,2
+1982,Patrick Tambay,Ferrari,1
 1982,Nelson Piquet,Brabham,1
+1982,Ricardo Patrese,Brabham,1
 1982,Niki Lauda,McLaren,2
 1982,Alain Prost,Renault,2
 1983,Nelson Piquet,Brabham,3
+1983,Ricardo Patrese,Brabham,1
+1983,John Watson,McLaren,1
+1983,Keke Rosberg,Williams,1
+1983,Michele Alboreto,Tyrrell,1
+1983,René Arnoux,Ferrari,3
+1983,Patrick Tambay,Ferrari,1
+1983,Michele Alboreto,Tyrrell,1
 1983,Alain Prost,Renault,4
 1984,Niki Lauda,McLaren,5
+1984,Michele Alboreto,Ferrari,1
+1984,Keke Rosberg,Williams,1
 1984,Alain Prost,McLaren,7
 1984,Nelson Piquet,Brabham,2
 1985,Alain Prost,McLaren,5
+1985,Elio de Angelis,Lotus,1
+1985,Michele Alboreto,Ferrari,2
+1985,Keke Rosberg,Williams,2
 1985,Ayrton Senna,Lotus,2
 1985,Nelson Piquet,Brabham,1
 1985,Niki Lauda,McLaren,1
 1985,Nigel Mansell,Williams,2
 1986,Alain Prost,McLaren,4
 1986,Ayrton Senna,Lotus,2
+1986,Gerhard Berger,Benetton,1
 1986,Nelson Piquet,Williams,4
 1986,Nigel Mansell,Williams,5
 1987,Nelson Piquet,Williams,3
+1987,Gerhard Berger,Ferrari,2
 1987,Ayrton Senna,Lotus,2
 1987,Alain Prost,McLaren,3
 1987,Nigel Mansell,Williams,6
 1988,Ayrton Senna,McLaren,8
+1988,Gerhard Berger,Ferrari,1
 1988,Alain Prost,McLaren,7
 1989,Alain Prost,McLaren,4
+1989,Alessandro Nannini,Benetton,1
 1989,Ayrton Senna,McLaren,6
+1989,Gerhard Berger,Ferrari,1
+1989,Thierry Boutsen,Williams,2
 1989,Nigel Mansell,Ferrari,2
-1990,Nelson Piquet,Bennetton,2
+1990,Nelson Piquet,Benetton,2
+1990,Thierry Boutsen,Williams,1
+1990,Riccardo Patrese,Williams,1
 1990,Ayrton Senna,McLaren,6
 1990,Alain Prost,Ferrari,5
 1990,Nigel Mansell,Ferrari,1
 1991,Ayrton Senna,McLaren,7
+1991,Gerhard Berger,McLaren,1
+1991,Riccardo Patrese,Williams,2
 1991,Nigel Mansell,Williams,5
-1991,Nelson Piquet,Bennetton,1
+1991,Nelson Piquet,Benetton,1
 1992,Nigel Mansell,Williams,9
+1992,Gerhard Berger,McLaren,2
+1992,Riccardo Patrese,Williams,1
 1992,Ayrton Senna,McLaren,3
 1992,Michael Schumacher,Benetton,1
 1993,Alain Prost,Williams,7
@@ -106,73 +225,123 @@ ano,piloto,equipe,vitorias
 1993,Michael Schumacher,Benetton,1
 1994,Michael Schumacher,Benetton,8
 1994,Damon Hill,Williams,6
+1994,Gerhard Berger,Ferrari,1
 1994,Nigel Mansell,Williams,1
 1995,Michael Schumacher,Benetton,9
 1995,Damon Hill,Williams,4
+1995,Johnny Herbert,Benetton,2
+1995,David Coulthard,Williams,1
 1996,Michael Schumacher,Ferrari,3
 1996,Damon Hill,Williams,8
+1996,Jacques Villeneuve,Williams,4
 1997,Michael Schumacher,Ferrari,5
+1997,Gerhard Berger,Benetton,1
+1997,Heinz-Harald Frentzen,Williams,1
 1997,Jacques Villeneuve,Williams,7
 1997,Mika Häkkinen,McLaren,1
+1997,David Coulthard,McLaren,2
 1998,Michael Schumacher,Ferrari,6
+1998,David Coulthard,McLaren,1
 1998,Mika Häkkinen,McLaren,8
 1998,Damon Hill,Williams,1
+1999,David Coulthard,McLaren,2
+1999,Heinz-Harald Frentzen,Jordan,1
 1999,Michael Schumacher,Ferrari,2
+1999,Eddie Irvine,Ferrari,4
 1999,Mika Häkkinen,McLaren,5
+1999,Johnny Herbert,Stewart,1
 2000,Michael Schumacher,Ferrari,9
+2000,David Coulthard,McLaren,3
+2000,Ruben Barrichello,Ferrari,1
 2000,Mika Häkkinen,McLaren,4
+2000,Juan Pablo Montoya,Williams,1
 2001,Michael Schumacher,Ferrari,9
+2001,Ralf Schumacher,Williams,3
 2001,Mika Häkkinen,McLaren,2
+2001,David Coulthard,McLaren,2
 2002,Michael Schumacher,Ferrari,11
+2002,Ralf Schumacher,Williams,1
+2002,Ruben Barrichello,Ferrari,4
+2002,David Coulthard,McLaren,1
 2003,Michael Schumacher,Ferrari,6
+2003,Ralf Schumacher,Williams,2
+2003,Ruben Barrichello,Ferrari,2
 2003,Fernando Alonso,Renault,1
+2003,Juan Pablo Montoya,Williams,2
+2003,Giancarlo Fisichella,Jordan,1
+2003,Kimi Räikkönen,McLaren,1
+2003,David Coulthard,McLaren,1
 2004,Michael Schumacher,Ferrari,13
+2004,Jarno Trulli,Renault,1
+2004,Kimi Räikkönen,McLaren,1
+2004,Juan Pablo Montoya,Williams,1
+2004,Ruben Barrichello,Ferrari,2
 2005,Michael Schumacher,Ferrari,1
+2005,Juan Pablo Montoya,McLaren,3
+2005,Kimi Räikkönen,McLaren,7
+2005,Giancarlo Fisichella,Renault,1
 2005,Fernando Alonso,Renault,7
 2006,Michael Schumacher,Ferrari,7
 2006,Jenson Button,Honda,1
 2006,Fernando Alonso,Renault,7
+2006,Giancarlo Fisichella,Renault,1
+2006,Felipe Massa,Ferrari,2
 2007,Kimi Räikkönen,Ferrari,6
 2007,Fernando Alonso,McLaren,4
+2007,Felipe Massa,Ferrari,3
 2007,Lewis Hamilton,McLaren,4
 2008,Lewis Hamilton,McLaren,5
+2008,Heikki Kovalainen,McLaren,2
 2008,Fernando Alonso,Renault,2
+2008,Kimi Räikkönen,Ferrari,1
 2008,Sebastian Vettel,Toro Rosso,1
+2008,Felipe Massa,Ferrari,6
 2009,Jenson Button,Brawn,6
+2009,Rubens Barrichello,Brawn,2
 2009,Sebastian Vettel,Red Bull,4
+2009,Mark Webber,Red Bull,2
 2009,Kimi Räikkönen,Ferrari,1
 2009,Lewis Hamilton,McLaren,2
+2010,Mark Webber,Red Bull,4
 2010,Lewis Hamilton,McLaren,3
 2010,Sebastian Vettel,Red Bull,5
 2010,Fernando Alonso,Ferrari,5
 2010,Jenson Button,McLaren,2
 2011,Lewis Hamilton,McLaren,3
+2011,Mark Webber,Red Bull,1
 2011,Sebastian Vettel,Red Bull,11
 2011,Fernando Alonso,Ferrari,1
 2011,Jenson Button,McLaren,3
 2012,Lewis Hamilton,McLaren,4
+2012,Mark Webber,Red Bull,2
 2012,Sebastian Vettel,Red Bull,5
 2012,Fernando Alonso,Ferrari,3
+2012,Kimi Räikkönen,Lotus,1
 2012,Jenson Button,McLaren,3
 2012,Nico Rosberg,Mercedes,1
 2013,Lewis Hamilton,McLaren,1
+2013,Kimi Räikkönen,Lotus,1
 2013,Sebastian Vettel,Red Bull,13
 2013,Fernando Alonso,Ferrari,2
 2013,Nico Rosberg,Mercedes,2
 2014,Lewis Hamilton,Mercedes,11
 2014,Nico Rosberg,Mercedes,5
+2014,Daniel Ricciardo,Red Bull,3
 2015,Lewis Hamilton,Mercedes,10
 2015,Nico Rosberg,Mercedes,6
 2015,Sebastian Vettel,Ferrari,3
 2016,Lewis Hamilton,Mercedes,10
 2016,Nico Rosberg,Mercedes,9
+2016,Daniel Ricciardo,Red Bull,1
 2016,Max Verstappen,Red Bull,1
 2017,Lewis Hamilton,Mercedes,9
+2017,Daniel Ricciardo,Red Bull,1
 2017,Sebastian Vettel,Ferrari,5
 2017,Kimi Räikkönen,Ferrari,1
 2017,Valtteri Bottas,Mercedes,3
 2017,Max Verstappen,Red Bull,2
 2018,Lewis Hamilton,Mercedes,11
+2018,Daniel Ricciardo,Red Bull,2
 2018,Valtteri Bottas,Mercedes,2
 2018,Max Verstappen,Red Bull,2
 2018,Sebastian Vettel,Ferrari,5
@@ -184,20 +353,30 @@ ano,piloto,equipe,vitorias
 2019,Charles Leclerc,Ferrari,2
 2020,Lewis Hamilton,Mercedes,11
 2020,Valtteri Bottas,Mercedes,1
+2020,Sergio Pérez,Racing Point,1
 2020,Max Verstappen,Red Bull,2
 2021,Max Verstappen,Red Bull,10
 2021,Lewis Hamilton,Mercedes,8
+2021,Sergio Pérez,Red Bull,1
+2021,Daniel Ricciardo,McLaren,1
 2022,Max Verstappen,Red Bull,15
 2022,George Russell,Mercedes,1
+2022,Sergio Pérez,Red Bull,2
+2022,Carlos Sainz,Ferrari,1
 2022,Charles Leclerc,Ferrari,3
 2023,Max Verstappen,Red Bull,19
+2023,Sergio Pérez,Red Bull,2
+2023,Carlos Sainz,Ferrari,1
 2024,Max Verstappen,Red Bull,9
+2024,Carlos Sainz,Ferrari,2
 2024,Lando Norris,McLaren,4
+2024,Oscar Piastri,McLaren,2
 2024,George Russell,Mercedes,2
 2024,Lewis Hamilton,Mercedes,2
 2024,Charles Leclerc,Ferrari,3
 2025,Max Verstappen,Red Bull,8
 2025,Lando Norris,McLaren,7
+2025,Oscar Piastri,McLaren,7
 2025,George Russell,Mercedes,2
 2026,Max Verstappen,Red Bull,0
 2026,Lando Norris,McLaren,1
