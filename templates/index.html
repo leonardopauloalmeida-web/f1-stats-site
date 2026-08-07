@@ -3,22 +3,49 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏎️ Estatísticas F1</title>
+    <title>{{ _('🏎️ Estatísticas F1') }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; position: relative; }
         h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 10px; text-shadow: 0 0 20px rgba(225, 6, 0, 0.3); }
         .subtitle { text-align: center; color: #aaa; font-size: 1.2em; margin-bottom: 20px; border-bottom: 2px solid #e10600; padding-bottom: 20px; }
+
+        .seletor-idioma {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            font-size: 0.8em;
+            background: #1a1a1a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            z-index: 10;
+        }
+        .seletor-idioma a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            opacity: 0.5;
+            transition: 0.3s;
+            padding: 2px 4px;
+        }
+        .seletor-idioma a:hover { opacity: 1; color: #e10600; }
+        .seletor-idioma span { color: #555; }
+
         .link-sobre { text-align: center; margin-bottom: 30px; }
         .link-sobre a { color: #e10600; font-weight: bold; text-decoration: none; font-size: 1.1em; margin: 0 15px; }
         .link-sobre a:hover { text-decoration: underline; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
         .card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; transition: transform 0.3s; }
         .card:hover { transform: scale(1.02); }
         .card h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
         .card img { width: 100%; border-radius: 8px; border: 1px solid #333; }
         .full-width { grid-column: 1 / -1; }
+
         .tabela-container { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #333; margin-top: 20px; }
         .tabela-container h2 { color: #e10600; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
         table { width: 100%; border-collapse: collapse; }
@@ -26,9 +53,9 @@
         th { background: #e10600; color: #fff; font-weight: bold; }
         td { color: #ddd; }
         tr:hover { background: #2a2a2a; }
+
         .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; line-height: 1.6; }
 
-        /* ===== CONTADOR REGRESSIVO ===== */
         .contador-container {
             background: #1a1a1a;
             border: 1px solid #e10600;
@@ -39,93 +66,73 @@
             margin: 0 auto 30px auto;
             box-shadow: 0 0 20px rgba(225, 6, 0, 0.15);
         }
-        .contador-titulo {
-            font-size: 0.8em;
-            color: #aaa;
-            letter-spacing: 1px;
-        }
-        .contador-grande {
-            font-weight: bold;
-            color: #e10600;
-            font-size: 1.2em;
-            margin: 5px 0 10px 0;
-        }
-        .contador-tempo {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-weight: bold;
-        }
-        .contador-tempo div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .contador-tempo span {
-            font-size: 2.2em;
-            color: #e10600;
-            line-height: 1;
-        }
-        .contador-tempo small {
-            font-size: 0.6em;
-            color: #888;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
+        .contador-titulo { font-size: 0.8em; color: #aaa; letter-spacing: 1px; }
+        .contador-grande { font-weight: bold; color: #e10600; font-size: 1.2em; margin: 5px 0 10px 0; }
+        .contador-tempo { display: flex; justify-content: center; gap: 20px; font-weight: bold; }
+        .contador-tempo div { display: flex; flex-direction: column; align-items: center; }
+        .contador-tempo span { font-size: 2.2em; color: #e10600; line-height: 1; }
+        .contador-tempo small { font-size: 0.6em; color: #888; text-transform: uppercase; margin-top: 4px; }
+
         @media (max-width: 600px) {
             .contador-tempo { gap: 10px; }
             .contador-tempo span { font-size: 1.5em; }
-        }
-
-        @media (max-width: 768px) {
             .grid { grid-template-columns: 1fr; }
             h1 { font-size: 2em; }
+            .seletor-idioma { position: relative; top: 0; right: 0; justify-content: center; margin-bottom: 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏎️ Estatísticas F1</h1>
-        <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
 
-        <!-- ===== CONTADOR ===== -->
+        <div class="seletor-idioma">
+            <a href="{{ url_for('set_language', lang='pt') }}">PT</a>
+            <span>|</span>
+            <a href="{{ url_for('set_language', lang='en') }}">EN</a>
+            <span>|</span>
+            <a href="{{ url_for('set_language', lang='ko') }}">KO</a>
+        </div>
+
+        <h1>{{ _('🏎️ Estatísticas F1') }}</h1>
+        <div class="subtitle">{{ _('Análise de dados históricos da Fórmula 1 (1950-2026)') }}</div>
+
         <div class="contador-container">
-            <div class="contador-titulo">🏁 PRÓXIMA CORRIDA</div>
-            <div class="contador-grande">🇳🇱 GP DA HOLANDA - ZANDVOORT</div>
+            <div class="contador-titulo">{{ _('🏁 PRÓXIMA CORRIDA') }}</div>
+            <div class="contador-grande">{{ _('🇳🇱 GP DA HOLANDA - ZANDVOORT') }}</div>
             <div class="contador-tempo" id="cronometro">
-                <div><span id="dias">00</span><small>dias</small></div>
-                <div><span id="horas">00</span><small>horas</small></div>
-                <div><span id="minutos">00</span><small>min</small></div>
-                <div><span id="segundos">00</span><small>seg</small></div>
+                <div><span id="dias">00</span><small>{{ _('dias') }}</small></div>
+                <div><span id="horas">00</span><small>{{ _('horas') }}</small></div>
+                <div><span id="minutos">00</span><small>{{ _('min') }}</small></div>
+                <div><span id="segundos">00</span><small>{{ _('seg') }}</small></div>
             </div>
         </div>
 
         <div class="link-sobre">
-            <a href="/sobre">📖 Sobre este projeto</a>
-            <a href="/campeoes">🏆 Campeões da F1</a>
-            <a href="/quiz">🧠 Quiz da F1</a>
+            <a href="/sobre">{{ _('📖 Sobre este projeto') }}</a>
+            <a href="/campeoes">{{ _('🏆 Campeões da F1') }}</a>
+            <a href="/quiz">{{ _('🧠 Quiz da F1') }}</a>
         </div>
 
         <div class="grid">
             <div class="card">
-                <h2>🏆 Vitórias por Piloto</h2>
-                <img src="{{ url_for('static', filename='vitorias_piloto_historico.png') }}" alt="Vitórias por Piloto">
+                <h2>{{ _('🏆 Vitórias por Piloto') }}</h2>
+                <img src="{{ url_for('static', filename='vitorias_piloto_historico.png') }}" alt="{{ _('Vitórias por Piloto') }}">
             </div>
             <div class="card">
-                <h2>🏆 Vitórias por Equipe</h2>
-                <img src="{{ url_for('static', filename='vitorias_equipe_historico.png') }}" alt="Vitórias por Equipe">
+                <h2>{{ _('🏆 Vitórias por Equipe') }}</h2>
+                <img src="{{ url_for('static', filename='vitorias_equipe_historico.png') }}" alt="{{ _('Vitórias por Equipe') }}">
             </div>
         </div>
 
         <div class="card full-width">
-            <h2>📈 Evolução por Temporada</h2>
-            <img src="{{ url_for('static', filename='evolucao_temporadas_historico.png') }}" alt="Evolução por Temporada">
+            <h2>{{ _('📈 Evolução por Temporada') }}</h2>
+            <img src="{{ url_for('static', filename='evolucao_temporadas_historico.png') }}" alt="{{ _('Evolução por Temporada') }}">
         </div>
 
         <div class="tabela-container">
-            <h2>📊 Resumo das Vitórias (1950-2026)</h2>
+            <h2>{{ _('📊 Resumo das Vitórias (1950-2026)') }}</h2>
             <table>
-                <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
+                <thead><tr><th>{{ _('Piloto') }}</th><th>{{ _('Vitórias') }}</th></tr></thead>
                 <tbody>
                     {% for i in range(piloto_labels|length) %}
                     <tr><td>{{ piloto_labels[i] }}</td><td>{{ piloto_values[i] }}</td></tr>
@@ -135,22 +142,22 @@
         </div>
 
         <div class="footer">
-            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
-            <p>Dados utilizados apenas para fins educacionais.</p>
+            <p>{{ _('Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.') }}</p>
+            <p>{{ _('Dados utilizados apenas para fins educacionais.') }}</p>
         </div>
+
     </div>
 
-    <!-- ===== SCRIPT DO CONTADOR ===== -->
     <script>
-        // Data alvo: 23 de Agosto de 2026 (Dia da Corrida), às 10:00 (horário de Brasília)
         const dataCorrida = new Date('2026-08-23T10:00:00-03:00');
+        const mensagemCorridaHoje = "{{ _('🚦 CORRIDA HOJE!') }}";
 
         function atualizarContador() {
             const agora = new Date();
             const diferenca = dataCorrida - agora;
 
             if (diferenca <= 0) {
-                document.getElementById('cronometro').innerHTML = '<span style="color: #e10600; font-size: 1.5em;">🚦 CORRIDA HOJE!</span>';
+                document.getElementById('cronometro').innerHTML = '<span style="color: #e10600; font-size: 1.5em;">' + mensagemCorridaHoje + '</span>';
                 return;
             }
 
@@ -165,9 +172,8 @@
             document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
         }
 
-        // Atualiza a cada segundo
         setInterval(atualizarContador, 1000);
-        atualizarContador(); // Chama imediatamente para não ficar em branco
+        atualizarContador();
     </script>
 </body>
 </html>

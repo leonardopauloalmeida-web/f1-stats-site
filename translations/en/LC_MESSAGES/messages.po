@@ -7,205 +7,151 @@ msgid ""
 msgstr ""
 "Project-Id-Version: F1 Stats\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-07 00:38-0300\n"
+"POT-Creation-Date: 2026-08-07 01:25-0300\n"
 "PO-Revision-Date: 2026-08-07 00:38-0300\n"
 "Last-Translator: Leonardo Paulo Almeida\n"
-"Language-Team: English\n"
 "Language: en\n"
+"Language-Team: English\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app.py:35
-msgid "Estatísticas F1"
-msgstr "F1 Statistics"
+msgid "🏎️ Estatísticas F1"
+msgstr "🏎️ F1 Statistics"
 
-#: app.py:36
 msgid "Análise de dados históricos da Fórmula 1 (1950-2026)"
 msgstr "Historical F1 Data Analysis (1950-2026)"
 
-#: templates/index.html
-msgid "Análise de dados históricos da Fórmula 1 (1950-2026)"
-msgstr "Historical F1 Data Analysis (1950-2026)"
+msgid "🏁 PRÓXIMA CORRIDA"
+msgstr "🏁 NEXT RACE"
 
-#: templates/index.html
-msgid "Vitórias por Piloto"
-msgstr "Wins by Driver"
+msgid "🇳🇱 GP DA HOLANDA - ZANDVOORT"
+msgstr "🇳🇱 DUTCH GP - ZANDVOORT"
 
-#: templates/index.html
-msgid "Vitórias por Equipe"
-msgstr "Wins by Constructor"
-
-#: templates/index.html
-msgid "Evolução por Temporada"
-msgstr "Season Evolution"
-
-#: templates/index.html
-msgid "Resumo das Vitórias (1950-2026)"
-msgstr "Wins Summary (1950-2026)"
-
-#: templates/index.html
-msgid "Piloto"
-msgstr "Driver"
-
-#: templates/index.html
-msgid "Vitórias"
-msgstr "Wins"
-
-#: templates/index.html
-msgid "Próxima Corrida"
-msgstr "Next Race"
-
-#: templates/index.html
-msgid "GP DA HOLANDA - ZANDVOORT"
-msgstr "DUTCH GP - ZANDVOORT"
-
-#: templates/index.html
 msgid "dias"
 msgstr "days"
 
-#: templates/index.html
 msgid "horas"
 msgstr "hours"
 
-#: templates/index.html
 msgid "min"
 msgstr "min"
 
-#: templates/index.html
 msgid "seg"
 msgstr "sec"
 
-#: templates/index.html
-msgid "Sobre este projeto"
-msgstr "About this project"
+msgid "📖 Sobre este projeto"
+msgstr "📖 About this project"
 
-#: templates/index.html
-msgid "Campeões da F1"
-msgstr "F1 Champions"
+msgid "🏆 Campeões da F1"
+msgstr "🏆 F1 Champions"
 
-#: templates/index.html
-msgid "Quiz da F1"
-msgstr "F1 Quiz"
+msgid "🧠 Quiz da F1"
+msgstr "🧠 F1 Quiz"
 
-#: templates/index.html
+msgid "🏆 Vitórias por Piloto"
+msgstr "🏆 Wins by Driver"
+
+msgid "🏆 Vitórias por Equipe"
+msgstr "🏆 Wins by Constructor"
+
+msgid "📈 Evolução por Temporada"
+msgstr "📈 Season Evolution"
+
+msgid "📊 Resumo das Vitórias (1950-2026)"
+msgstr "📊 Wins Summary (1950-2026)"
+
+msgid "Piloto"
+msgstr "Driver"
+
+msgid "Vitórias"
+msgstr "Wins"
+
 msgid "Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes."
 msgstr "This site is a personal project and has no affiliation with Formula 1, FIA, or teams."
 
-#: templates/index.html
 msgid "Dados utilizados apenas para fins educacionais."
 msgstr "Data used for educational purposes only."
 
-#: templates/sobre.html
+msgid "🚦 CORRIDA HOJE!"
+msgstr "🚦 RACE TODAY!"
+
 msgid "Sobre o Projeto"
 msgstr "About the Project"
 
-#: templates/sobre.html
 msgid "O que é este projeto?"
 msgstr "What is this project?"
 
-#: templates/sobre.html
 msgid "Este site foi criado para analisar e visualizar dados históricos da Fórmula 1, cobrindo as temporadas de <strong>1950 a 2026</strong>. O objetivo é mostrar estatísticas de vitórias por piloto, por equipe e a evolução ao longo dos anos."
 msgstr "This site was created to analyze and visualize historical Formula 1 data, covering seasons from <strong>1950 to 2026</strong>. The goal is to show statistics of wins by driver, by team, and the evolution over the years."
 
-#: templates/sobre.html
 msgid "Tecnologias utilizadas"
 msgstr "Technologies used"
 
-#: templates/sobre.html
 msgid "Os dados foram coletados através da API Ergast e processados com Python. Os gráficos foram gerados com Matplotlib e o site foi desenvolvido com Flask."
 msgstr "Data was collected through the Ergast API and processed with Python. Charts were generated with Matplotlib and the site was developed with Flask."
 
-#: templates/sobre.html
 msgid "O que você pode encontrar aqui?"
 msgstr "What can you find here?"
 
-#: templates/sobre.html
 msgid "Sobre o desenvolvedor"
 msgstr "About the developer"
 
-#: templates/sobre.html
 msgid "Este projeto foi desenvolvido como parte do aprendizado em programação, com foco em análise de dados e desenvolvimento web. O objetivo é criar um portfólio que mostre habilidades técnicas e paixão por dados."
 msgstr "This project was developed as part of learning programming, focusing on data analysis and web development. The goal is to create a portfolio that shows technical skills and passion for data."
 
-#: templates/campeoes.html
 msgid "Campeões Mundiais da F1"
 msgstr "F1 World Champions"
 
-#: templates/campeoes.html
 msgid "História completa desde 1950 até 2025"
 msgstr "Complete history from 1950 to 2025"
 
-#: templates/campeoes.html
 msgid "Voltar para o início"
 msgstr "Back to home"
 
-#: templates/campeoes.html
 msgid "Títulos por Piloto"
 msgstr "Titles by Driver"
 
-#: templates/campeoes.html
 msgid "Pilotos com mais títulos mundiais (Top 10)"
 msgstr "Drivers with most world titles (Top 10)"
 
-#: templates/campeoes.html
 msgid "Títulos por Construtor"
 msgstr "Titles by Constructor"
 
-#: templates/campeoes.html
 msgid "Construtores com mais títulos mundiais (Top 10)"
 msgstr "Constructors with most world titles (Top 10)"
 
-#: templates/campeoes.html
 msgid "Títulos por País"
 msgstr "Titles by Country"
 
-#: templates/campeoes.html
 msgid "Total de campeonatos conquistados por país (Top 10)"
 msgstr "Total championships won by country (Top 10)"
 
-#: templates/campeoes.html
 msgid "Todos os Campeões (1950-2025)"
 msgstr "All Champions (1950-2025)"
 
-#: templates/campeoes.html
 msgid "Ano"
 msgstr "Year"
 
-#: templates/campeoes.html
 msgid "País"
 msgstr "Country"
 
-#: templates/campeoes.html
 msgid "Projeto desenvolvido com Python, Pandas, Matplotlib e Flask"
 msgstr "Project developed with Python, Pandas, Matplotlib and Flask"
 
-#: templates/quiz.html
-msgid "Quiz da F1"
-msgstr "F1 Quiz"
-
-#: templates/quiz.html
 msgid "Teste seus conhecimentos sobre os recordes da Fórmula 1"
 msgstr "Test your knowledge about Formula 1 records"
 
-#: templates/quiz.html
 msgid "Próxima"
 msgstr "Next"
 
-#: templates/quiz.html
 msgid "Resultado Final"
 msgstr "Final Result"
 
-#: templates/quiz.html
-msgid "Voltar para o início"
-msgstr "Back to home"
-
-#: templates/quiz.html
 msgid "Questão"
 msgstr "Question"
 
-#: templates/quiz.html
 msgid "de"
 msgstr "of"
-
