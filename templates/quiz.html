@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🏎️ Quiz - Recordes da F1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; flex: 1; }
+        h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 5px; text-shadow: 0 0 20px rgba(225,6,0,0.3); }
+        .subtitle { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 30px; border-bottom: 2px solid #e10600; padding-bottom: 15px; }
+        .progresso-container { background: #1a1a1a; border-radius: 30px; padding: 4px; margin-bottom: 30px; border: 1px solid #333; }
+        .progresso-bar { background: #e10600; height: 12px; border-radius: 30px; width: 0%; transition: width 0.5s ease; }
+        .pergunta-box {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        .pergunta-box h3 {
+            color: #e10600;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pergunta-box h3 .numero { background: #e10600; color: #fff; padding: 2px 12px; border-radius: 30px; font-size: 0.7em; }
+        .opcoes { display: flex; flex-direction: column; gap: 10px; }
+        .opcao {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #fff;
+            font-size: 1em;
+            text-align: left;
+            width: 100%;
+            font-weight: 500;
+        }
+        .opcao:hover:not(:disabled) { background: #1a1a1a; border-color: #e10600; transform: translateX(5px); }
+        .opcao:disabled { cursor: not-allowed; opacity: 0.8; }
+        .opcao.selecionada { border-color: #e10600; background: #2a1a1a; }
+        .opcao.certa { border-color: #00c853; background: #003300; }
+        .opcao.errada { border-color: #ff1744; background: #330000; }
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .btn-proximo {
+            background: #e10600;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-proximo:hover:not(:disabled) { background: #ff1a00; transform: scale(1.05); }
+        .btn-proximo:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .contador { color: #aaa; font-size: 0.95em; }
+        .resultado {
+            text-align: center;
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 40px;
+            border: 2px solid #e10600;
+            margin-top: 20px;
+        }
+        .resultado h2 { color: #e10600; font-size: 2.8em; margin-bottom: 10px; }
+        .resultado .pontuacao { font-size: 3em; font-weight: bold; color: #fff; }
+        .resultado .pontuacao span { color: #e10600; }
+        .resultado .mensagem { color: #aaa; font-size: 1.2em; margin: 15px 0; }
+        .resultado .btn-voltar {
+            display: inline-block;
+            background: #e10600;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .resultado .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
+        .footer {
+            text-align: center;
+            color: #555;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2em; }
+            .pergunta-box { padding: 20px; }
+            .pergunta-box h3 { font-size: 1.2em; }
+            .opcao { padding: 12px 16px; font-size: 0.9em; }
+            .btn-proximo { width: 100%; justify-content: center; }
+            .quiz-footer { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏎️ Quiz da F1</h1>
+    <div class="subtitle">Teste seus conhecimentos sobre os recordes da Fórmula 1</div>
+
+    <div class="progresso-container">
+        <div class="progresso-bar" id="progresso-bar"></div>
+    </div>
+
+    <div id="perguntas-container">
+        {% for pergunta in perguntas %}
+        <div class="pergunta-box" data-index="{{ loop.index0 }}" data-resposta="{{ pergunta.resposta_correta }}" style="display: none;">
+            <h3><span class="numero">{{ loop.index }}</span> {{ pergunta.pergunta }}</h3>
+            <div class="opcoes">
+                <button class="opcao" data-opcao="1">{{ pergunta.opcao1 }}</button>
+                <button class="opcao" data-opcao="2">{{ pergunta.opcao2 }}</button>
+                <button class="opcao" data-opcao="3">{{ pergunta.opcao3 }}</button>
+                <button class="opcao" data-opcao="4">{{ pergunta.opcao4 }}</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="quiz-footer">
+        <span class="contador" id="contador">Questão 1 de {{ perguntas|length }}</span>
+        <button class="btn-proximo" id="btn-proximo" disabled>Próxima →</button>
+    </div>
+
+    <div class="resultado" id="resultado-final" style="display: none;">
+        <h2>🏆 Resultado Final</h2>
+        <div class="pontuacao"><span id="acertos">0</span> / {{ perguntas|length }}</div>
+        <div class="mensagem" id="mensagem-final"></div>
+        <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+    </div>
+
+    <div class="footer">
+        <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
+        <p>Dados utilizados apenas para fins educacionais.</p>
+    </div>
+</div>
+
+<script>
+    const perguntas = document.querySelectorAll('.pergunta-box');
+    const total = perguntas.length;
+    const btnProximo = document.getElementById('btn-proximo');
+    const contador = document.getElementById('contador');
+    const progresso = document.getElementById('progresso-bar');
+    const resultadoFinal = document.getElementById('resultado-final');
+    const spanAcertos = document.getElementById('acertos');
+    const mensagemFinal = document.getElementById('mensagem-final');
+
+    let atual = 0;
+    let acertos = 0;
+    let respondeu = false;
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function mostrarPergunta(index) {
+        perguntas.forEach((p, i) => {
+            p.style.display = i === index ? 'block' : 'none';
+        });
+
+        // Embaralha as opções da pergunta atual
+        const box = perguntas[index];
+        const opcoesContainer = box.querySelector('.opcoes');
+        const opcoes = Array.from(opcoesContainer.querySelectorAll('.opcao'));
+        const opcoesEmbaralhadas = shuffleArray(opcoes);
+        opcoesContainer.innerHTML = '';
+        opcoesEmbaralhadas.forEach(op => opcoesContainer.appendChild(op));
+
+        contador.textContent = `Questão ${index + 1} de ${total}`;
+        progresso.style.width = `${((index) / total) * 100}%`;
+        btnProximo.disabled = true;
+        respondeu = false;
+
+        box.querySelectorAll('.opcao').forEach(o => {
+            o.disabled = false;
+            o.classList.remove('certa', 'errada', 'selecionada');
+        });
+        resultadoFinal.style.display = 'none';
+    }
+
+    perguntas.forEach((box) => {
+        const opcoes = box.querySelectorAll('.opcao');
+        const respostaCorreta = box.dataset.resposta;
+        const respostasCertas = respostaCorreta.split(',').map(r => r.trim());
+
+        opcoes.forEach(op => {
+            op.addEventListener('click', function() {
+                if (this.disabled || respondeu) return;
+
+                opcoes.forEach(o => o.classList.remove('selecionada'));
+                this.classList.add('selecionada');
+
+                const acertou = respostasCertas.includes(this.textContent.trim());
+                if (acertou) {
+                    this.classList.add('certa');
+                    acertos++;
+                } else {
+                    this.classList.add('errada');
+                    opcoes.forEach(o => {
+                        if (respostasCertas.includes(o.textContent.trim())) {
+                            o.classList.add('certa');
+                        }
+                    });
+                }
+
+                opcoes.forEach(o => o.disabled = true);
+                respondeu = true;
+                btnProximo.disabled = false;
+            });
+        });
+    });
+
+    mostrarPergunta(0);
+
+    btnProximo.addEventListener('click', function() {
+        if (!respondeu) return;
+        if (atual < total - 1) {
+            atual++;
+            mostrarPergunta(atual);
+        } else {
+            document.getElementById('perguntas-container').style.display = 'none';
+            btnProximo.style.display = 'none';
+            contador.style.display = 'none';
+            progresso.style.width = '100%';
+            resultadoFinal.style.display = 'block';
+            spanAcertos.textContent = acertos;
+
+            const pct = (acertos / total) * 100;
+            let msg = '';
+            if (pct === 100) msg = '🏁 Perfeito! Você é um verdadeiro especialista em F1!';
+            else if (pct >= 80) msg = '🔥 Muito bom! Você conhece bem a história da F1!';
+            else if (pct >= 50) msg = '📚 Bom! Que tal estudar mais alguns recordes?';
+            else msg = '🤔 Hora de revisar os recordes da F1! Continue aprendendo!';
+            mensagemFinal.textContent = msg;
+        }
+    });
+</script>
+</body>
+</html>

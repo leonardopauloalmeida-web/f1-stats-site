@@ -26,8 +26,61 @@
         th { background: #e10600; color: #fff; font-weight: bold; }
         td { color: #ddd; }
         tr:hover { background: #2a2a2a; }
-        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2em; } }
+        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; line-height: 1.6; }
+
+        /* ===== CONTADOR REGRESSIVO ===== */
+        .contador-container {
+            background: #1a1a1a;
+            border: 1px solid #e10600;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 0 20px rgba(225, 6, 0, 0.15);
+        }
+        .contador-titulo {
+            font-size: 0.8em;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+        .contador-grande {
+            font-weight: bold;
+            color: #e10600;
+            font-size: 1.2em;
+            margin: 5px 0 10px 0;
+        }
+        .contador-tempo {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-weight: bold;
+        }
+        .contador-tempo div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .contador-tempo span {
+            font-size: 2.2em;
+            color: #e10600;
+            line-height: 1;
+        }
+        .contador-tempo small {
+            font-size: 0.6em;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        @media (max-width: 600px) {
+            .contador-tempo { gap: 10px; }
+            .contador-tempo span { font-size: 1.5em; }
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2em; }
+        }
     </style>
 </head>
 <body>
@@ -35,9 +88,22 @@
         <h1>🏎️ Estatísticas F1</h1>
         <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
 
+        <!-- ===== CONTADOR ===== -->
+        <div class="contador-container">
+            <div class="contador-titulo">🏁 PRÓXIMA CORRIDA</div>
+            <div class="contador-grande">🇳🇱 GP DA HOLANDA - ZANDVOORT</div>
+            <div class="contador-tempo" id="cronometro">
+                <div><span id="dias">00</span><small>dias</small></div>
+                <div><span id="horas">00</span><small>horas</small></div>
+                <div><span id="minutos">00</span><small>min</small></div>
+                <div><span id="segundos">00</span><small>seg</small></div>
+            </div>
+        </div>
+
         <div class="link-sobre">
             <a href="/sobre">📖 Sobre este projeto</a>
             <a href="/campeoes">🏆 Campeões da F1</a>
+            <a href="/quiz">🧠 Quiz da F1</a>
         </div>
 
         <div class="grid">
@@ -68,13 +134,40 @@
             </table>
         </div>
 
-        <div class="footer">Projeto desenvolvido com Python, Pandas, Matplotlib e Flask</div>
+        <div class="footer">
+            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
+            <p>Dados utilizados apenas para fins educacionais.</p>
+        </div>
     </div>
 
-<div class="footer">
-    <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
-    <p>Dados utilizados apenas para fins educacionais.</p>
-</div>
+    <!-- ===== SCRIPT DO CONTADOR ===== -->
+    <script>
+        // Data alvo: 23 de Agosto de 2026 (Dia da Corrida), às 10:00 (horário de Brasília)
+        const dataCorrida = new Date('2026-08-23T10:00:00-03:00');
 
+        function atualizarContador() {
+            const agora = new Date();
+            const diferenca = dataCorrida - agora;
+
+            if (diferenca <= 0) {
+                document.getElementById('cronometro').innerHTML = '<span style="color: #e10600; font-size: 1.5em;">🚦 CORRIDA HOJE!</span>';
+                return;
+            }
+
+            const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+
+            document.getElementById('dias').textContent = String(dias).padStart(2, '0');
+            document.getElementById('horas').textContent = String(horas).padStart(2, '0');
+            document.getElementById('minutos').textContent = String(minutos).padStart(2, '0');
+            document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
+        }
+
+        // Atualiza a cada segundo
+        setInterval(atualizarContador, 1000);
+        atualizarContador(); // Chama imediatamente para não ficar em branco
+    </script>
 </body>
 </html>

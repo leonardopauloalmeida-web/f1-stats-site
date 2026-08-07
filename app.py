@@ -63,5 +63,14 @@ def campeoes():
                          titulos_pais_values=titulos_pais.values.tolist(),
                          campeoes=campeoes_lista)
 
+@app.route('/quiz')
+def quiz():
+    import pandas as pd
+    df = pd.read_csv('quiz_perguntas.csv')
+    perguntas = df.to_dict('records')
+    return render_template('quiz.html', perguntas=perguntas)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

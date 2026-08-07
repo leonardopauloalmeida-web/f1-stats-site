@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🏎️ Sobre - Estatísticas F1</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,7 +66,7 @@
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 20px;
+            margin: 20px 20px 20px 0;
             transition: 0.3s;
         }
         .btn-voltar:hover {
@@ -80,6 +80,7 @@
             padding-top: 20px;
             border-top: 1px solid #333;
             font-size: 0.9em;
+            line-height: 1.6;
         }
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
@@ -90,6 +91,11 @@
     <div class="container">
         <h1>🏎️ Sobre o Projeto</h1>
         <div class="subtitle">Estatísticas F1 - Análise de dados 1950-2026</div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+            <a href="/quiz" class="btn-voltar">🧠 Quiz da F1</a>
+        </div>
 
         <div class="card">
             <h2>📊 O que é este projeto?</h2>
@@ -122,6 +128,7 @@
                 <li>🏆 <strong>Vitórias por Equipe</strong> – Comparativo entre as equipes</li>
                 <li>📈 <strong>Evolução por Temporada</strong> – Total de corridas por ano</li>
                 <li>📊 <strong>Tabela Resumo</strong> – Números exatos de cada piloto</li>
+                <li>🧠 <strong>Quiz da F1</strong> – Teste seus conhecimentos sobre recordes históricos</li>
             </ul>
         </div>
 
@@ -137,16 +144,15 @@
             </p>
         </div>
 
-        <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+        <div style="text-align: center;">
+            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+            <a href="/quiz" class="btn-voltar">🧠 Quiz da F1</a>
+        </div>
 
         <div class="footer">
-            Projeto desenvolvido com Python, Pandas, Matplotlib e Flask
+            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
+            <p>Dados utilizados apenas para fins educacionais.</p>
         </div>
     </div>
-<div class="footer">
-    <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
-    <p>Dados utilizados apenas para fins educacionais.</p>
-</div>
-
 </body>
 </html>
