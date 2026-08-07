@@ -1,7 +1,35 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_babel import Babel, _
 import pandas as pd
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'f1-stats-secret-key-2026'
+app.config['BABEL_DEFAULT_LOCALE'] = 'pt'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+
+# Idiomas suportados
+LANGUAGES = ['pt', 'en', 'ko']
+
+babel = Babel(app)
+
+# ===== CORREÇÃO: Usando o método correto para o Babel =====
+def get_locale():
+    # Verifica se o usuário escolheu um idioma na sessão
+    if 'language' in session:
+        lang = session['language']
+        if lang in LANGUAGES:
+            return lang
+    # Se não, tenta detectar pelo navegador
+    return request.accept_languages.best_match(LANGUAGES)
+
+babel.locale_selector_func = get_locale
+
+# Rota para mudar o idioma
+@app.route('/language/<lang>')
+def set_language(lang):
+    if lang in LANGUAGES:
+        session['language'] = lang
+    return redirect(request.referrer or url_for('home'))
 
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
@@ -37,6 +65,12 @@ df_construtores_campeoes = pd.read_csv('construtores_campeoes.csv')
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
 
 # ============================================
+# DADOS DO QUIZ
+# ============================================
+df_quiz = pd.read_csv('quiz_perguntas.csv')
+perguntas_quiz = df_quiz.to_dict('records')
+
+# ============================================
 # ROTAS
 # ============================================
 
@@ -65,12 +99,7 @@ def campeoes():
 
 @app.route('/quiz')
 def quiz():
-    import pandas as pd
-    df = pd.read_csv('quiz_perguntas.csv')
-    perguntas = df.to_dict('records')
-    return render_template('quiz.html', perguntas=perguntas)
-
-
+    return render_template('quiz.html', perguntas=perguntas_quiz)
 
 if __name__ == '__main__':
     app.run(debug=True)

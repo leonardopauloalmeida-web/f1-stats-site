@@ -1,0 +1,210 @@
+# Korean translations for F1 Stats project.
+# Copyright (C) 2026
+# This file is distributed under the same license as the F1 Stats project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: F1 Stats\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-07 00:38-0300\n"
+"PO-Revision-Date: 2026-08-07 00:38-0300\n"
+"Last-Translator: Leonardo Paulo Almeida\n"
+"Language-Team: Korean\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app.py:35
+msgid "Estatísticas F1"
+msgstr "F1 통계"
+
+#: app.py:36
+msgid "Análise de dados históricos da Fórmula 1 (1950-2026)"
+msgstr "포뮬러 1 역사 데이터 분석 (1950-2026)"
+
+#: templates/index.html
+msgid "Análise de dados históricos da Fórmula 1 (1950-2026)"
+msgstr "포뮬러 1 역사 데이터 분석 (1950-2026)"
+
+#: templates/index.html
+msgid "Vitórias por Piloto"
+msgstr "드라이버별 우승"
+
+#: templates/index.html
+msgid "Vitórias por Equipe"
+msgstr "컨스트럭터별 우승"
+
+#: templates/index.html
+msgid "Evolução por Temporada"
+msgstr "시즌별 변화"
+
+#: templates/index.html
+msgid "Resumo das Vitórias (1950-2026)"
+msgstr "우승 요약 (1950-2026)"
+
+#: templates/index.html
+msgid "Piloto"
+msgstr "드라이버"
+
+#: templates/index.html
+msgid "Vitórias"
+msgstr "우승"
+
+#: templates/index.html
+msgid "Próxima Corrida"
+msgstr "다음 경기"
+
+#: templates/index.html
+msgid "GP DA HOLANDA - ZANDVOORT"
+msgstr "네덜란드 GP - 잔드보르트"
+
+#: templates/index.html
+msgid "dias"
+msgstr "일"
+
+#: templates/index.html
+msgid "horas"
+msgstr "시간"
+
+#: templates/index.html
+msgid "min"
+msgstr "분"
+
+#: templates/index.html
+msgid "seg"
+msgstr "초"
+
+#: templates/index.html
+msgid "Sobre este projeto"
+msgstr "이 프로젝트 소개"
+
+#: templates/index.html
+msgid "Campeões da F1"
+msgstr "F1 챔피언"
+
+#: templates/index.html
+msgid "Quiz da F1"
+msgstr "F1 퀴즈"
+
+#: templates/index.html
+msgid "Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes."
+msgstr "이 사이트는 개인 프로젝트이며 포뮬러 1, FIA 또는 팀과 제휴하지 않습니다."
+
+#: templates/index.html
+msgid "Dados utilizados apenas para fins educacionais."
+msgstr "데이터는 교육 목적으로만 사용됩니다."
+
+#: templates/sobre.html
+msgid "Sobre o Projeto"
+msgstr "프로젝트 소개"
+
+#: templates/sobre.html
+msgid "O que é este projeto?"
+msgstr "이 프로젝트는 무엇인가요?"
+
+#: templates/sobre.html
+msgid "Este site foi criado para analisar e visualizar dados históricos da Fórmula 1, cobrindo as temporadas de <strong>1950 a 2026</strong>. O objetivo é mostrar estatísticas de vitórias por piloto, por equipe e a evolução ao longo dos anos."
+msgstr "이 사이트는 포뮬러 1 역사 데이터를 분석하고 시각화하기 위해 만들어졌으며, <strong>1950년부터 2026년</strong>까지의 시즌을 다룹니다. 목표는 드라이버별, 팀별 우승 통계와 시간에 따른 변화를 보여주는 것입니다."
+
+#: templates/sobre.html
+msgid "Tecnologias utilizadas"
+msgstr "사용된 기술"
+
+#: templates/sobre.html
+msgid "Os dados foram coletados através da API Ergast e processados com Python. Os gráficos foram gerados com Matplotlib e o site foi desenvolvido com Flask."
+msgstr "데이터는 Ergast API를 통해 수집되었고 Python으로 처리되었습니다. 차트는 Matplotlib으로 생성되었고 사이트는 Flask로 개발되었습니다."
+
+#: templates/sobre.html
+msgid "O que você pode encontrar aqui?"
+msgstr "여기에서 무엇을 찾을 수 있나요?"
+
+#: templates/sobre.html
+msgid "Sobre o desenvolvedor"
+msgstr "개발자 소개"
+
+#: templates/sobre.html
+msgid "Este projeto foi desenvolvido como parte do aprendizado em programação, com foco em análise de dados e desenvolvimento web. O objetivo é criar um portfólio que mostre habilidades técnicas e paixão por dados."
+msgstr "이 프로젝트는 프로그래밍 학습의 일환으로 개발되었으며, 데이터 분석과 웹 개발에 중점을 두고 있습니다. 목표는 기술 능력과 데이터에 대한 열정을 보여주는 포트폴리오를 만드는 것입니다."
+
+#: templates/campeoes.html
+msgid "Campeões Mundiais da F1"
+msgstr "F1 세계 챔피언"
+
+#: templates/campeoes.html
+msgid "História completa desde 1950 até 2025"
+msgstr "1950년부터 2025년까지의 전체 역사"
+
+#: templates/campeoes.html
+msgid "Voltar para o início"
+msgstr "홈으로 돌아가기"
+
+#: templates/campeoes.html
+msgid "Títulos por Piloto"
+msgstr "드라이버별 타이틀"
+
+#: templates/campeoes.html
+msgid "Pilotos com mais títulos mundiais (Top 10)"
+msgstr "가장 많은 세계 타이틀을 가진 드라이버 (Top 10)"
+
+#: templates/campeoes.html
+msgid "Títulos por Construtor"
+msgstr "컨스트럭터별 타이틀"
+
+#: templates/campeoes.html
+msgid "Construtores com mais títulos mundiais (Top 10)"
+msgstr "가장 많은 세계 타이틀을 가진 컨스트럭터 (Top 10)"
+
+#: templates/campeoes.html
+msgid "Títulos por País"
+msgstr "국가별 타이틀"
+
+#: templates/campeoes.html
+msgid "Total de campeonatos conquistados por país (Top 10)"
+msgstr "국가별 총 챔피언십 수 (Top 10)"
+
+#: templates/campeoes.html
+msgid "Todos os Campeões (1950-2025)"
+msgstr "모든 챔피언 (1950-2025)"
+
+#: templates/campeoes.html
+msgid "Ano"
+msgstr "연도"
+
+#: templates/campeoes.html
+msgid "País"
+msgstr "국가"
+
+#: templates/campeoes.html
+msgid "Projeto desenvolvido com Python, Pandas, Matplotlib e Flask"
+msgstr "Python, Pandas, Matplotlib 및 Flask로 개발된 프로젝트"
+
+#: templates/quiz.html
+msgid "Quiz da F1"
+msgstr "F1 퀴즈"
+
+#: templates/quiz.html
+msgid "Teste seus conhecimentos sobre os recordes da Fórmula 1"
+msgstr "포뮬러 1 기록에 대한 지식을 테스트하세요"
+
+#: templates/quiz.html
+msgid "Próxima"
+msgstr "다음"
+
+#: templates/quiz.html
+msgid "Resultado Final"
+msgstr "최종 결과"
+
+#: templates/quiz.html
+msgid "Voltar para o início"
+msgstr "홈으로 돌아가기"
+
+#: templates/quiz.html
+msgid "Questão"
+msgstr "질문"
+
+#: templates/quiz.html
+msgid "de"
+msgstr "/"
