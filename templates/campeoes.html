@@ -25,7 +25,7 @@
         tr:hover { background: #2a2a2a; }
         .btn-voltar { display: inline-block; background: #e10600; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0; transition: 0.3s; }
         .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
-        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; }
+        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; line-height: 1.6; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2em; } }
         .info-text { text-align: center; color: #aaa; margin-bottom: 15px; }
     </style>
@@ -37,28 +37,24 @@
 
         <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
 
-        <!-- GRÁFICO 1: TÍTULOS POR PILOTO -->
         <div class="card full-width">
             <h2>👑 Títulos por Piloto</h2>
             <p class="info-text">Pilotos com mais títulos mundiais (Top 10)</p>
             <img src="{{ url_for('static', filename='ranking_pilotos.png') }}" alt="Ranking de Pilotos">
         </div>
 
-        <!-- GRÁFICO 2: TÍTULOS POR CONSTRUTOR -->
         <div class="card full-width">
             <h2>🏎️ Títulos por Construtor</h2>
             <p class="info-text">Construtores com mais títulos mundiais (Top 10)</p>
             <img src="{{ url_for('static', filename='ranking_construtores.png') }}" alt="Ranking de Construtores">
         </div>
 
-        <!-- GRÁFICO 3: TÍTULOS POR PAÍS -->
         <div class="card full-width">
             <h2>🌍 Títulos por País</h2>
             <p class="info-text">Total de campeonatos conquistados por país (Top 10)</p>
             <img src="{{ url_for('static', filename='ranking_paises.png') }}" alt="Ranking de Países">
         </div>
 
-        <!-- TABELA COMPLETA -->
         <div class="tabela-container">
             <h2>📋 Todos os Campeões (1950-2025)</h2>
             <table>
@@ -83,13 +79,10 @@
 
         <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
 
-        <div class="footer">Projeto desenvolvido com Python, Pandas, Matplotlib e Flask</div>
+        <div class="footer">
+            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
+            <p>Dados utilizados apenas para fins educacionais.</p>
+        </div>
     </div>
-
-<div class="footer">
-    <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
-    <p>Dados utilizados apenas para fins educacionais.</p>
-</div>
-
 </body>
 </html>

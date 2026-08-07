@@ -1,35 +1,8 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from flask_babel import Babel, _
 import pandas as pd
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1-stats-secret-key-2026'
-app.config['BABEL_DEFAULT_LOCALE'] = 'pt'
-app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
-
-# Idiomas suportados
-LANGUAGES = ['pt', 'en', 'ko']
-
-babel = Babel(app)
-
-# ===== CORREÇÃO: Usando o método correto para o Babel =====
-def get_locale():
-    # Verifica se o usuário escolheu um idioma na sessão
-    if 'language' in session:
-        lang = session['language']
-        if lang in LANGUAGES:
-            return lang
-    # Se não, tenta detectar pelo navegador
-    return request.accept_languages.best_match(LANGUAGES)
-
-babel.locale_selector_func = get_locale
-
-# Rota para mudar o idioma
-@app.route('/language/<lang>')
-def set_language(lang):
-    if lang in LANGUAGES:
-        session['language'] = lang
-    return redirect(request.referrer or url_for('home'))
 
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
