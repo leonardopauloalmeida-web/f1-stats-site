@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import pandas as pd
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1-stats-secret-key-2026'
@@ -38,9 +39,9 @@ df_construtores_campeoes = pd.read_csv('construtores_campeoes.csv')
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
 
 # ============================================
-# DADOS DO QUIZ
+# DADOS DO QUIZ (COM CAMINHO ABSOLUTO)
 # ============================================
-df_quiz = pd.read_csv('quiz_perguntas.csv')
+df_quiz = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quiz_perguntas.csv'))
 perguntas_quiz = df_quiz.to_dict('records')
 
 # ============================================

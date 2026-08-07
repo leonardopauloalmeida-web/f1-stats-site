@@ -190,4 +190,80 @@
             });
 
             const box = perguntas[index];
-            const opcoesContainer = box.querySelector
+            const opcoesContainer = box.querySelector('.opcoes');
+            const opcoes = Array.from(opcoesContainer.querySelectorAll('.opcao'));
+            const opcoesEmbaralhadas = shuffleArray(opcoes);
+            opcoesContainer.innerHTML = '';
+            opcoesEmbaralhadas.forEach(op => opcoesContainer.appendChild(op));
+
+            contador.textContent = `Questão ${index + 1} de ${total}`;
+            progresso.style.width = `${((index) / total) * 100}%`;
+            btnProximo.disabled = true;
+            respondeu = false;
+
+            box.querySelectorAll('.opcao').forEach(o => {
+                o.disabled = false;
+                o.classList.remove('certa', 'errada', 'selecionada');
+            });
+            resultadoFinal.style.display = 'none';
+        }
+
+        perguntas.forEach((box) => {
+            const opcoes = box.querySelectorAll('.opcao');
+            const respostaCorreta = box.dataset.resposta;
+            const respostasCertas = respostaCorreta.split(',').map(r => r.trim());
+
+            opcoes.forEach(op => {
+                op.addEventListener('click', function() {
+                    if (this.disabled || respondeu) return;
+
+                    opcoes.forEach(o => o.classList.remove('selecionada'));
+                    this.classList.add('selecionada');
+
+                    const acertou = respostasCertas.includes(this.textContent.trim());
+                    if (acertou) {
+                        this.classList.add('certa');
+                        acertos++;
+                    } else {
+                        this.classList.add('errada');
+                        opcoes.forEach(o => {
+                            if (respostasCertas.includes(o.textContent.trim())) {
+                                o.classList.add('certa');
+                            }
+                        });
+                    }
+
+                    opcoes.forEach(o => o.disabled = true);
+                    respondeu = true;
+                    btnProximo.disabled = false;
+                });
+            });
+        });
+
+        mostrarPergunta(0);
+
+        btnProximo.addEventListener('click', function() {
+            if (!respondeu) return;
+            if (atual < total - 1) {
+                atual++;
+                mostrarPergunta(atual);
+            } else {
+                document.getElementById('perguntas-container').style.display = 'none';
+                btnProximo.style.display = 'none';
+                contador.style.display = 'none';
+                progresso.style.width = '100%';
+                resultadoFinal.style.display = 'block';
+                spanAcertos.textContent = acertos;
+
+                const pct = (acertos / total) * 100;
+                let msg = '';
+                if (pct === 100) msg = '🏁 Perfeito! Você é um verdadeiro especialista em F1!';
+                else if (pct >= 80) msg = '🔥 Muito bom! Você conhece bem a história da F1!';
+                else if (pct >= 50) msg = '📚 Bom! Que tal estudar mais alguns recordes?';
+                else msg = '🤔 Hora de revisar os recordes da F1! Continue aprendendo!';
+                mensagemFinal.textContent = msg;
+            }
+        });
+    </script>
+</body>
+</html>
