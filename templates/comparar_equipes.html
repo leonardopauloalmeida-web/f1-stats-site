@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🏎️ Comparar Equipes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 10px; text-shadow: 0 0 20px rgba(225, 6, 0, 0.3); }
+        .subtitle { text-align: center; color: #aaa; font-size: 1.2em; margin-bottom: 30px; border-bottom: 2px solid #e10600; padding-bottom: 20px; }
+        .form-container { background: #1a1a1a; border-radius: 12px; padding: 30px; border: 1px solid #333; }
+        .form-group { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-bottom: 30px; }
+        .form-group-item { flex: 1; min-width: 200px; }
+        .form-group-item label { display: block; color: #e10600; font-weight: bold; margin-bottom: 8px; }
+        .form-group-item select { width: 100%; padding: 12px; border-radius: 8px; background: #0a0a0a; color: #fff; border: 1px solid #333; font-size: 1em; cursor: pointer; }
+        .form-group-item select:focus { border-color: #e10600; outline: none; }
+        .btn-comparar { display: block; width: 100%; padding: 14px; background: #e10600; color: #fff; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-comparar:hover { background: #ff1a00; transform: scale(1.02); }
+        .btn-voltar { display: inline-block; background: #e10600; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
+        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; line-height: 1.6; }
+        @media (max-width: 600px) { .form-group { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏎️ Comparar Equipes</h1>
+        <div class="subtitle">Escolha duas equipes e veja suas estatísticas lado a lado</div>
+
+        <div class="form-container">
+            <form action="{{ url_for('comparar_equipes_resultado') }}" method="POST">
+                <div class="form-group">
+                    <div class="form-group-item">
+                        <label for="equipe1">🏁 Equipe 1</label>
+                        <select name="equipe1" id="equipe1" required>
+                            <option value="">Selecione...</option>
+                            {% for equipe in equipes %}
+                            <option value="{{ equipe }}">{{ equipe }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group-item">
+                        <label for="equipe2">🏁 Equipe 2</label>
+                        <select name="equipe2" id="equipe2" required>
+                            <option value="">Selecione...</option>
+                            {% for equipe in equipes %}
+                            <option value="{{ equipe }}">{{ equipe }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-comparar">📊 Comparar</button>
+            </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+        </div>
+
+        <div class="footer">
+            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
+            <p>Dados utilizados apenas para fins educacionais.</p>
+        </div>
+    </div>
+</body>
+</html>

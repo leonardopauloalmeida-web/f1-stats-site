@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import pandas as pd
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f1-stats-secret-key-2026'
@@ -39,10 +40,31 @@ df_construtores_campeoes = pd.read_csv('construtores_campeoes.csv')
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
 
 # ============================================
-# DADOS DO QUIZ (COM CAMINHO ABSOLUTO)
+# DADOS DO QUIZ
 # ============================================
-df_quiz = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quiz_perguntas.csv'))
+df_quiz = pd.read_csv('quiz_perguntas.csv')
 perguntas_quiz = df_quiz.to_dict('records')
+
+# ============================================
+# DADOS DE COMPARAÇÃO DE PILOTOS
+# ============================================
+df_pilotos_detalhes = pd.read_csv('pilotos_detalhes.csv')
+lista_pilotos = df_pilotos_detalhes['piloto'].tolist()
+
+# ============================================
+# DADOS DE COMPARAÇÃO DE EQUIPES
+# ============================================
+df_equipes_detalhes = pd.read_csv('equipes_detalhes.csv')
+lista_equipes = df_equipes_detalhes['equipe'].tolist()
+
+# ============================================
+# DADOS DA TEMPORADA 2026 (DASHBOARD)
+# ============================================
+df_classificacao = pd.read_csv('temporada_2026.csv')
+df_corridas = pd.read_csv('corridas_2026.csv')
+
+# Converter datas
+df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
 # ============================================
 # ROTAS
@@ -74,6 +96,63 @@ def campeoes():
 @app.route('/quiz')
 def quiz():
     return render_template('quiz.html', perguntas=perguntas_quiz)
+
+@app.route('/comparar')
+def comparar():
+    return render_template('comparar.html', pilotos=lista_pilotos)
+
+@app.route('/comparar/resultado', methods=['POST'])
+def comparar_resultado():
+    piloto1 = request.form['piloto1']
+    piloto2 = request.form['piloto2']
+    df_pilotos = pd.read_csv('pilotos_detalhes.csv')
+    
+    dados1 = df_pilotos[df_pilotos['piloto'] == piloto1].iloc[0]
+    dados2 = df_pilotos[df_pilotos['piloto'] == piloto2].iloc[0]
+    
+    return render_template('resultado.html', p1=dados1, p2=dados2)
+
+@app.route('/comparar-equipes')
+def comparar_equipes():
+    return render_template('comparar_equipes.html', equipes=lista_equipes)
+
+@app.route('/comparar-equipes/resultado', methods=['POST'])
+def comparar_equipes_resultado():
+    equipe1 = request.form['equipe1']
+    equipe2 = request.form['equipe2']
+    df_equipes = pd.read_csv('equipes_detalhes.csv')
+    
+    dados1 = df_equipes[df_equipes['equipe'] == equipe1].iloc[0]
+    dados2 = df_equipes[df_equipes['equipe'] == equipe2].iloc[0]
+    
+    return render_template('resultado_equipes.html', e1=dados1, e2=dados2)
+
+@app.route('/dashboard')
+def dashboard():
+    classificacao = df_classificacao.to_dict('records')
+    
+    # Separar corridas realizadas (passado) e próximas (futuro)
+    agora = datetime.now()
+    corridas_realizadas = df_corridas[df_corridas['data'] <= agora]
+    corridas_futuras = df_corridas[df_corridas['data'] > agora]
+    
+    total_corridas_realizadas = len(corridas_realizadas)
+    total_pilotos = len(df_classificacao)
+    lider_pontos = df_classificacao.iloc[0]['pontos'] if not df_classificacao.empty else 0
+    
+    # Últimas 5 corridas realizadas
+    ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
+    
+    # Próximas 5 corridas
+    proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
+    
+    return render_template('dashboard.html', 
+                         classificacao=classificacao,
+                         ultimas_corridas=ultimas_corridas,
+                         proximas_corridas=proximas_corridas,
+                         total_corridas=total_corridas_realizadas,
+                         total_pilotos=total_pilotos,
+                         lider_pontos=lider_pontos)
 
 if __name__ == '__main__':
     app.run(debug=True)
