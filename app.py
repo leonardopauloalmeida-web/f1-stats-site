@@ -67,6 +67,11 @@ df_corridas = pd.read_csv('corridas_2026.csv')
 df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
 # ============================================
+# DADOS DAS PISTAS
+# ============================================
+df_pistas = pd.read_csv('pistas_detalhes.csv')
+
+# ============================================
 # ROTAS
 # ============================================
 
@@ -153,6 +158,28 @@ def dashboard():
                          total_corridas=total_corridas_realizadas,
                          total_pilotos=total_pilotos,
                          lider_pontos=lider_pontos)
+
+# ============================================
+# ROTAS DAS PISTAS
+# ============================================
+
+@app.route('/pistas')
+def pistas():
+    pistas = df_pistas.to_dict('records')
+    return render_template('pistas.html', pistas=pistas)
+
+@app.route('/pista/<nome_pista>')
+def pista_detalhe(nome_pista):
+    nome_pista_formatado = nome_pista.replace('_', ' ')
+    
+    # Buscar a pista pelo nome
+    pista = df_pistas[df_pistas['pista'] == nome_pista_formatado]
+    
+    if pista.empty:
+        return "Pista não encontrada", 404
+    
+    pista = pista.iloc[0].to_dict()
+    return render_template('pista_detalhe.html', pista=pista)
 
 if __name__ == '__main__':
     app.run(debug=True)
