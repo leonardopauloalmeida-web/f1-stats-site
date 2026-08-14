@@ -6,26 +6,26 @@
     <title>🏎️ Comparação - {{ e1.equipe }} vs {{ e2.equipe }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #fff; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0d0d0d; color: #e8e8e8; padding: 20px; min-height: 100vh; }
         .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; font-size: 2.5em; color: #e10600; margin-bottom: 10px; text-shadow: 0 0 20px rgba(225, 6, 0, 0.3); }
-        .subtitle { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 30px; border-bottom: 2px solid #e10600; padding-bottom: 20px; }
+        h1 { text-align: center; font-size: 2.5em; color: #b30000; margin-bottom: 10px; text-shadow: 0 0 20px rgba(180, 0, 0, 0.2); }
+        .subtitle { text-align: center; color: #999; font-size: 1.1em; margin-bottom: 30px; border-bottom: 1px solid #b30000; padding-bottom: 15px; letter-spacing: 1px; }
         .comparacao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .equipe-card { background: #1a1a1a; border-radius: 12px; padding: 25px; border: 1px solid #333; }
-        .equipe-card h2 { text-align: center; font-size: 2em; color: #e10600; margin-bottom: 5px; }
-        .equipe-card .pais { text-align: center; color: #aaa; font-size: 0.9em; margin-bottom: 20px; }
+        .equipe-card { background: rgba(20, 15, 15, 0.8); border-radius: 16px; padding: 25px; border: 1px solid #2a2a2a; transition: 0.3s; }
+        .equipe-card:hover { border-color: #b30000; }
+        .equipe-card h2 { text-align: center; font-size: 2em; color: #cc0000; margin-bottom: 5px; }
+        .equipe-card .pais { text-align: center; color: #999; font-size: 0.9em; margin-bottom: 20px; }
         .equipe-card table { width: 100%; border-collapse: collapse; }
-        .equipe-card td { padding: 10px 12px; border-bottom: 1px solid #333; }
-        .equipe-card td:first-child { color: #aaa; font-weight: bold; }
-        .equipe-card td:last-child { text-align: right; color: #fff; font-weight: bold; }
-        .equipe-card .destaque { color: #e10600; font-size: 1.2em; }
-        .equipe-card .pilotos { color: #aaa; font-size: 0.9em; }
-        .vencedor { border: 2px solid #e10600; box-shadow: 0 0 30px rgba(225, 6, 0, 0.2); }
-        .btn-voltar { display: inline-block; background: #e10600; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 20px 20px 0; transition: 0.3s; }
-        .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
-        .btn-nova { display: inline-block; background: #333; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0; transition: 0.3s; }
-        .btn-nova:hover { background: #555; transform: scale(1.05); }
-        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.9em; line-height: 1.6; }
+        .equipe-card td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
+        .equipe-card td:first-child { color: #999; font-weight: 500; }
+        .equipe-card td:last-child { text-align: right; color: #e8e8e8; font-weight: 600; }
+        .equipe-card .destaque { color: #cc0000; font-size: 1.2em; }
+        .vencedor { border-color: #cc0000; box-shadow: 0 0 30px rgba(200, 0, 0, 0.1); }
+        .btn-voltar { display: inline-block; background: #b30000; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 20px 20px 0; transition: 0.3s; }
+        .btn-voltar:hover { background: #cc0000; transform: scale(1.02); }
+        .btn-nova { display: inline-block; background: #2a2a2a; color: #e8e8e8; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0; transition: 0.3s; }
+        .btn-nova:hover { background: #3a3a3a; transform: scale(1.02); }
+        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2a2a2a; font-size: 0.8em; line-height: 1.6; }
         @media (max-width: 700px) { .comparacao-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -40,12 +40,12 @@
                 <h2>🏁 {{ e1.equipe }}</h2>
                 <div class="pais">🇧🇷 {{ e1.pais }}</div>
                 <table>
-                    <tr><td>🏆 Títulos de Construtores</td><td><span class="destaque">{{ e1.titulos_construtores }}</span></td></tr>
-                    <tr><td>🏆 Títulos de Pilotos</td><td>{{ e1.titulos_pilotos }}</td></tr>
+                    <tr><td>🏆 Títulos Construtores</td><td><span class="destaque">{{ e1.titulos_construtores }}</span></td></tr>
+                    <tr><td>🏆 Títulos Pilotos</td><td>{{ e1.titulos_pilotos }}</td></tr>
                     <tr><td>🏆 Vitórias</td><td>{{ e1.vitorias }}</td></tr>
                     <tr><td>🏁 Corridas</td><td>{{ e1.corridas }}</td></tr>
                     <tr><td>📅 Estreia</td><td>{{ e1.estreia }}</td></tr>
-                    <tr><td>📅 Última corrida</td><td>{{ e1.ultimo_corrida }}</td></tr>
+                    <tr><td>📅 Última corrida</td><td>{{ e1.ultima_corrida }}</td></tr>
                     <tr><td>🏎️ Pilotos Icônicos</td><td class="pilotos">{{ e1.pilotos_iconicos }}</td></tr>
                 </table>
             </div>
@@ -55,12 +55,12 @@
                 <h2>🏁 {{ e2.equipe }}</h2>
                 <div class="pais">🇧🇷 {{ e2.pais }}</div>
                 <table>
-                    <tr><td>🏆 Títulos de Construtores</td><td><span class="destaque">{{ e2.titulos_construtores }}</span></td></tr>
-                    <tr><td>🏆 Títulos de Pilotos</td><td>{{ e2.titulos_pilotos }}</td></tr>
+                    <tr><td>🏆 Títulos Construtores</td><td><span class="destaque">{{ e2.titulos_construtores }}</span></td></tr>
+                    <tr><td>🏆 Títulos Pilotos</td><td>{{ e2.titulos_pilotos }}</td></tr>
                     <tr><td>🏆 Vitórias</td><td>{{ e2.vitorias }}</td></tr>
                     <tr><td>🏁 Corridas</td><td>{{ e2.corridas }}</td></tr>
                     <tr><td>📅 Estreia</td><td>{{ e2.estreia }}</td></tr>
-                    <tr><td>📅 Última corrida</td><td>{{ e2.ultimo_corrida }}</td></tr>
+                    <tr><td>📅 Última corrida</td><td>{{ e2.ultima_corrida }}</td></tr>
                     <tr><td>🏎️ Pilotos Icônicos</td><td class="pilotos">{{ e2.pilotos_iconicos }}</td></tr>
                 </table>
             </div>
