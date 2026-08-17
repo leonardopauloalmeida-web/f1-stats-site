@@ -72,6 +72,12 @@ df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 df_pistas = pd.read_csv('pistas_detalhes.csv')
 
 # ============================================
+# DADOS DE CURIOSIDADES
+# ============================================
+df_curiosidades = pd.read_csv('curiosidades.csv', quoting=1, quotechar='"')
+lista_curiosidades = df_curiosidades.to_dict('records')
+
+# ============================================
 # ROTAS
 # ============================================
 
@@ -180,6 +186,14 @@ def pista_detalhe(nome_pista):
     
     pista = pista.iloc[0].to_dict()
     return render_template('pista_detalhe.html', pista=pista)
+
+# ============================================
+# ROTA DAS CURIOSIDADES
+# ============================================
+
+@app.route('/curiosidades')
+def curiosidades():
+    return render_template('curiosidades.html', curiosidades=lista_curiosidades)
 
 if __name__ == '__main__':
     app.run(debug=True)
