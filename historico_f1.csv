@@ -1,28 +1,36 @@
 ano,piloto,equipe,vitorias
 1950,Giuseppe Farina,Alfa Romeo,3
 1950,Juan Manuel Fangio,Alfa Romeo,3
+1950,Johnnie PARSONS, Kurtis Kraft,1
+1951,Lee WALLARD, Kurtis Kraft,1 
 1951,Juan Manuel Fangio,Alfa Romeo,3
 1951,José Froilán González,Ferrari,1
 1951,Giuseppe Farina,Alfa Romeo,1
 1951,Alberto Ascari,Ferrari,2
 1952,Alberto Ascari,Ferrari,6
+1952,Troy RUTTMAN,Kuzma,1
 1952,Piero Taruffi,Ferrari,1
 1953,Alberto Ascari,Ferrari,5
+1953,Bill VUKOVICH,Kurtis Kraft,1
 1953,Juan Manuel Fangio,Maserati,1
 1953,Mike Hawthorn,Ferrari,1
 1953,Giuseppe Farina,Ferrari,1
 1954,Juan Manuel Fangio,Mercedes,4
+1954,Bill VUKOVICH,Kurtis Kraft,1
 1954,Juan Manuel Fangio,Maserati,2
 1954,Mike Hawthorn,Ferrari,1
 1954,José Froilán González,Ferrari,1
 1955,Juan Manuel Fangio,Mercedes,4
 1955,Maurice Trintignant,Ferrari,1
+1955,Bob SWEIKERT,Kurtis Kraft,1
 1955,Stirling Moss,Mercedes,1
 1956,Juan Manuel Fangio,Ferrari,3
 1956,Luigi Musso,Ferrari,1
+1956,Pat FLAHERTY,Watson,1
 1956,Peter Collins,Ferrari,2
 1956,Stirling Moss,Maserati,2
 1957,Juan Manuel Fangio,Maserati,4
+1957,Sam HANKS,Epperly,1
 1957,Stirling Moss,Maserati,3
 1957,Tony brooks,Vanwall,1
 1958,Mike Hawthorn,Ferrari,1
@@ -39,6 +47,7 @@ ano,piloto,equipe,vitorias
 1961,Innes Ireland,Lotus,1
 1960,Stirling Moss,Lotus,2
 1960,Phil Hill,Ferrari,1
+1960,Jim RATHMANN,Watson,1
 1961,Phil Hill,Ferrari,2
 1961,Wolfgang von Trips,Ferrari,2
 1961,Giancarlo Baghetti,Ferrari,1
@@ -91,6 +100,7 @@ ano,piloto,equipe,vitorias
 1971,Mario Andretti,Ferrari,1
 1971,François Cevert,Tyrrell,1
 1971,Jo siffert,Brm,1
+1971,Peter GETHIN,BRM,1
 1972,Emerson Fittipaldi,Lotus,5
 1972,Jacky ickx,Ferrari,1
 1972,Jackie Stewart,Tyrrell,4
@@ -234,6 +244,7 @@ ano,piloto,equipe,vitorias
 1996,Michael Schumacher,Ferrari,3
 1996,Damon Hill,Williams,8
 1996,Jacques Villeneuve,Williams,4
+1996,Olivier PANIS,Ligier,1
 1997,Michael Schumacher,Ferrari,5
 1997,Gerhard Berger,Benetton,1
 1997,Heinz-Harald Frentzen,Williams,1
@@ -354,11 +365,13 @@ ano,piloto,equipe,vitorias
 2020,Lewis Hamilton,Mercedes,11
 2020,Valtteri Bottas,Mercedes,1
 2020,Sergio Pérez,Racing Point,1
+2020,Pierre GASLY,AlphaTauri,1
 2020,Max Verstappen,Red Bull,2
 2021,Max Verstappen,Red Bull,10
 2021,Lewis Hamilton,Mercedes,8
 2021,Sergio Pérez,Red Bull,1
 2021,Daniel Ricciardo,McLaren,1
+2021,Esteban OCON,Alpine,1
 2022,Max Verstappen,Red Bull,15
 2022,George Russell,Mercedes,1
 2022,Sergio Pérez,Red Bull,2
