@@ -14,7 +14,11 @@
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
         h1 {
             text-align: center;
@@ -309,9 +313,9 @@
             background: rgba(20, 10, 10, 0.6);
             border: 1px solid #b30000;
             border-radius: 16px;
-            padding: 18px 20px;
+            padding: 24px 30px;
             text-align: center;
-            max-width: 560px;
+            max-width: 820px;
             margin: 0 auto 30px auto;
             box-shadow: 0 0 25px rgba(180, 0, 0, 0.08);
         }
@@ -340,12 +344,12 @@
             flex-direction: column;
             align-items: center;
             background: rgba(0,0,0,0.3);
-            padding: 6px 14px;
+            padding: 10px 20px;
             border-radius: 10px;
-            min-width: 60px;
+            min-width: 80px;
         }
         .contador-tempo span {
-            font-size: 2.2em;
+            font-size: 2.8em;
             color: #cc0000;
             line-height: 1.2;
             font-weight: 700;
@@ -379,12 +383,12 @@
         }
         .programacao-item {
             display: grid;
-            grid-template-columns: 110px 100px 1fr;
-            gap: 6px;
-            padding: 4px 8px;
+            grid-template-columns: 130px 120px 1fr;
+            gap: 15px;
+            padding: 10px 16px;
             border-radius: 6px;
             background: rgba(0, 0, 0, 0.3);
-            font-size: 0.7em;
+            font-size: 0.85em;
             align-items: center;
         }
         .programacao-item .dia {
@@ -424,9 +428,20 @@
         @media (max-width: 700px) {
             h1 { font-size: 2.2em; }
             .grid { grid-template-columns: 1fr; }
+            .contador-container {
+                max-width: 100%;
+                padding: 15px;
+            }
             .contador-tempo { gap: 8px; }
             .contador-tempo div { min-width: 50px; padding: 4px 8px; }
             .contador-tempo span { font-size: 1.6em; }
+            .programacao-item {
+                grid-template-columns: 80px 75px 1fr;
+                font-size: 0.6em;
+                padding: 4px 6px;
+                gap: 4px;
+            }
+            .programacao-item .horario { font-size: 0.6em; }
             .menu-superior {
                 flex-direction: column;
                 align-items: center;
@@ -453,12 +468,6 @@
             }
             .dropbtn { font-size: 0.95em; }
             .menu-item { font-size: 0.95em; }
-            .programacao-item {
-                grid-template-columns: 80px 75px 1fr;
-                font-size: 0.6em;
-                padding: 4px 6px;
-            }
-            .programacao-item .horario { font-size: 0.6em; }
             .btn-tema { margin-left: 0; margin-top: 4px; }
         }
     </style>
@@ -479,38 +488,40 @@
                 <div><span id="minutos">00</span><small>min</small></div>
                 <div><span id="segundos">00</span><small>seg</small></div>
             </div>
-<!-- PROGRAMAÇÃO -->
-<div class="programacao">
-    <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
-    <div class="programacao-grid" id="programacao-grid">
-        <div class="programacao-item">
-            <span class="dia">SEX - 04 SET</span>
-            <span class="horario">07:30 — 08:30</span>
-            <span class="sessao">Treino Livre 1</span>
+
+            <!-- PROGRAMAÇÃO -->
+            <div class="programacao">
+                <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
+                <div class="programacao-grid" id="programacao-grid">
+                    <div class="programacao-item">
+                        <span class="dia">SEX - 04 SET</span>
+                        <span class="horario">07:30 — 08:30</span>
+                        <span class="sessao">Treino Livre 1</span>
+                    </div>
+                    <div class="programacao-item">
+                        <span class="dia">SEX - 04 SET</span>
+                        <span class="horario">11:00 — 12:00</span>
+                        <span class="sessao">Treino Livre 2</span>
+                    </div>
+                    <div class="programacao-item">
+                        <span class="dia">SÁB - 05 SET</span>
+                        <span class="horario">07:30 — 08:30</span>
+                        <span class="sessao">Treino Livre 3</span>
+                    </div>
+                    <div class="programacao-item">
+                        <span class="dia">SÁB - 05 SET</span>
+                        <span class="horario">11:00 — 12:00</span>
+                        <span class="sessao">Classificação</span>
+                    </div>
+                    <div class="programacao-item">
+                        <span class="dia">DOM - 06 SET</span>
+                        <span class="horario">10:00 — 12:00</span>
+                        <span class="sessao">🏆 Grande Prêmio</span>
+                    </div>
+                </div>
+                <div class="programacao-obs" id="programacao-obs">*Horários de Brasília. Monza está 5 horas à frente.</div>
+            </div>
         </div>
-        <div class="programacao-item">
-            <span class="dia">SEX - 04 SET</span>
-            <span class="horario">11:00 — 12:00</span>
-            <span class="sessao">Treino Livre 2</span>
-        </div>
-        <div class="programacao-item">
-            <span class="dia">SÁB - 05 SET</span>
-            <span class="horario">07:30 — 08:30</span>
-            <span class="sessao">Treino Livre 3</span>
-        </div>
-        <div class="programacao-item">
-            <span class="dia">SÁB - 05 SET</span>
-            <span class="horario">11:00 — 12:00</span>
-            <span class="sessao">Classificação (Quali)</span>
-        </div>
-        <div class="programacao-item">
-            <span class="dia">DOM - 06 SET</span>
-            <span class="horario">10:00 — 12:00</span>
-            <span class="sessao">🏆 Grande Prêmio</span>
-        </div>
-    </div>
-    <div class="programacao-obs" id="programacao-obs">*Horários de Brasília (GMT-3). Monza está 5 horas à frente.</div>
-</div>
 
         <!-- MENU COM DROPDOWN + BOTÃO TEMA -->
         <div class="menu-superior">
