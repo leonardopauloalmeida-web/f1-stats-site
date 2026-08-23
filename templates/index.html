@@ -1,653 +1,415 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏎️ Estatísticas F1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏎️ GP da Itália - Monza 2026</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== RESET E ESTILO GERAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e8e8e8;
-            padding: 20px;
+            background: #0a0a0a;
+            color: #ffffff;
             min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        h1 {
-            text-align: center;
-            font-size: 3.5em;
-            color: #b30000;
-            margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(180, 0, 0, 0.2);
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #b30000;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
-        }
-
-        /* ===== MENU COM DROPDOWN ===== */
-        .menu-superior {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 0;
-            margin: 15px 0 30px 0;
-            padding: 10px 18px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #2a2a2a;
             align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 20% 30%, #1a1a1a 0%, #000000 100%);
         }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropbtn {
-            background: transparent;
-            color: #bbb;
-            border: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            padding: 6px 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            font-family: inherit;
-        }
-
-        .dropbtn:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 8px 0;
-            min-width: 200px;
-            z-index: 100;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-            margin-top: 4px;
-        }
-
-        .dropdown-content a {
-            display: block;
-            color: #ccc;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 0.85em;
-            transition: 0.2s;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
-
-        .dropdown-content a:hover {
-            background: rgba(200, 0, 0, 0.1);
-            color: #cc0000;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .menu-item {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            padding: 6px 16px;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-        }
-
-        .menu-item:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
-        }
-
-        /* ===== BOTÃO MODO ESCURO/CLARO ===== */
-        .btn-tema {
-            background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #bbb;
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: 0.3s;
-            font-family: inherit;
-            margin-left: 10px;
-        }
-        .btn-tema:hover {
-            border-color: #b30000;
-            color: #e8e8e8;
-        }
-
-        /* ===== MODO CLARO ===== */
-        body.tema-claro {
-            background: #f5f5f5;
-            color: #1a1a1a;
-        }
-        body.tema-claro .card,
-        body.tema-claro .tabela-container,
-        body.tema-claro .contador-container {
-            background: #ffffff;
-            border-color: #ccc;
-        }
-        body.tema-claro .subtitle {
-            border-color: #b30000;
-        }
-        body.tema-claro .footer {
-            border-color: #ccc;
-        }
-        body.tema-claro .menu-superior {
-            background: rgba(0,0,0,0.05);
-            border-color: #ccc;
-        }
-        body.tema-claro .menu-item {
-            color: #444;
-        }
-        body.tema-claro .menu-item:hover {
-            color: #b30000;
-        }
-        body.tema-claro .dropbtn {
-            color: #444;
-        }
-        body.tema-claro .dropbtn:hover {
-            color: #b30000;
-        }
-        body.tema-claro .dropdown-content {
-            background: #ffffff;
-            border-color: #ccc;
-        }
-        body.tema-claro .dropdown-content a {
-            color: #444;
-        }
-        body.tema-claro .dropdown-content a:hover {
-            color: #b30000;
-            background: rgba(200, 0, 0, 0.05);
-        }
-        body.tema-claro .programacao-item {
-            background: rgba(0,0,0,0.05);
-        }
-        body.tema-claro .contador-grande {
-            color: #1a1a1a;
-        }
-        body.tema-claro .contador-tempo span {
-            color: #b30000;
-        }
-        body.tema-claro .contador-tempo small {
-            color: #888;
-        }
-        body.tema-claro .contador-tempo div {
-            background: rgba(0,0,0,0.05);
-        }
-        body.tema-claro .programacao-obs {
-            color: #888;
-        }
-        body.tema-claro .programacao-item .dia {
-            color: #1a1a1a;
-        }
-        body.tema-claro .programacao-item .horario {
-            color: #1a1a1a;
-        }
-        body.tema-claro .programacao-item .sessao {
-            color: #666;
-        }
-        body.tema-claro .footer {
-            color: #888;
-        }
-        body.tema-claro .btn-tema {
-            border-color: #ccc;
-            color: #444;
-        }
-        body.tema-claro .btn-tema:hover {
-            border-color: #b30000;
-            color: #b30000;
-        }
-
-        /* ===== CARDS E GRID ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 35px;
-        }
-        .card {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-            transition: 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: #b30000;
-            box-shadow: 0 6px 25px rgba(180, 0, 0, 0.06);
-        }
-        .card h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 12px;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .card img {
+        .container {
+            max-width: 820px;
             width: 100%;
-            border-radius: 10px;
+            background: #141414;
+            border-radius: 32px;
+            padding: 40px 35px;
+            box-shadow: 0 20px 60px rgba(225, 6, 0, 0.25);
             border: 1px solid #2a2a2a;
-        }
-        .full-width {
-            grid-column: 1 / -1;
+            transition: 0.3s;
         }
 
-        /* ===== TABELA ===== */
-        .tabela-container {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-            margin-top: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .tabela-container h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 15px;
+        /* ===== CABEÇALHO ===== */
+        .header {
             text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #2a2a2a;
-        }
-        th {
-            background: #b30000;
-            color: #fff;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        td {
-            color: #ddd;
-        }
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        tr:hover {
-            background: rgba(200, 0, 0, 0.06);
+            margin-bottom: 30px;
         }
 
-        /* ===== CONTADOR + PROGRAMAÇÃO ===== */
-        .contador-container {
-            background: rgba(20, 10, 10, 0.6);
-            border: 1px solid #b30000;
-            border-radius: 16px;
-            padding: 18px 20px;
-            text-align: center;
-            max-width: 560px;
-            margin: 0 auto 30px auto;
-            box-shadow: 0 0 25px rgba(180, 0, 0, 0.08);
-        }
-        .contador-titulo {
-            font-size: 0.7em;
-            color: #cc0000;
-            letter-spacing: 3px;
+        .header .gp {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #e10600;
             text-transform: uppercase;
             font-weight: 700;
+            margin-bottom: 6px;
         }
-        .contador-grande {
-            font-weight: 600;
-            color: #f0f0f0;
-            font-size: 1.1em;
-            margin: 8px 0 12px 0;
-            letter-spacing: 1px;
+
+        .header h1 {
+            font-size: 34px;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e10600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .contador-tempo {
+
+        .header .circuito {
+            font-size: 16px;
+            color: #aaaaaa;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+
+        /* ===== CONTAGEM REGRESSIVA ===== */
+        .contagem {
+            background: #1e1e1e;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            border: 1px solid #2c2c2c;
+            text-align: center;
+        }
+
+        .contagem .rotulo {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #888888;
+            margin-bottom: 12px;
+        }
+
+        .relogio {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            font-weight: 700;
+            gap: 18px;
+            flex-wrap: wrap;
         }
-        .contador-tempo div {
+
+        .bloco {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(0,0,0,0.3);
-            padding: 6px 14px;
-            border-radius: 10px;
-            min-width: 60px;
+            min-width: 70px;
         }
-        .contador-tempo span {
-            font-size: 2.2em;
-            color: #cc0000;
-            line-height: 1.2;
+
+        .bloco .numero {
+            font-size: 48px;
             font-weight: 700;
+            background: #0d0d0d;
+            padding: 8px 16px;
+            border-radius: 14px;
+            min-width: 80px;
+            text-align: center;
+            border-bottom: 4px solid #e10600;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            color: #ffffff;
         }
-        .contador-tempo small {
-            font-size: 0.55em;
-            color: #777;
+
+        .bloco .legenda {
+            font-size: 12px;
             text-transform: uppercase;
+            color: #888888;
+            margin-top: 6px;
             letter-spacing: 1px;
+        }
+
+        .separador {
+            font-size: 40px;
+            font-weight: 300;
+            color: #444444;
+            align-self: center;
+            padding-bottom: 8px;
+        }
+
+        /* ===== STATUS ===== */
+        .status {
+            text-align: center;
+            font-size: 15px;
+            color: #66cc88;
+            background: #0f2a1a;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #1a4a2a;
+            margin-top: 10px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.ativo {
+            display: block;
         }
 
         /* ===== PROGRAMAÇÃO ===== */
         .programacao {
-            margin-top: 12px;
-            border-top: 1px solid #2a2a2a;
-            padding-top: 12px;
+            margin-top: 10px;
         }
-        .programacao-titulo {
-            font-size: 0.7em;
-            color: #cc0000;
+
+        .programacao h2 {
+            font-size: 18px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
+            letter-spacing: 3px;
+            color: #cccccc;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
             text-align: center;
-            margin-bottom: 10px;
         }
-        .programacao-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 4px;
+
+        .tabela {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        .programacao-item {
+
+        .linha {
             display: grid;
-            grid-template-columns: 110px 100px 1fr;
-            gap: 6px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            font-size: 0.7em;
+            grid-template-columns: 130px 120px 1fr;
             align-items: center;
+            background: #1a1a1a;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border-left: 4px solid #e10600;
+            transition: 0.2s;
         }
-        .programacao-item .dia {
-            color: #e8e8e8;
+
+        .linha:hover {
+            background: #222222;
+            transform: scale(1.01);
+        }
+
+        .linha .dia {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 15px;
+        }
+
+        .linha .horario {
+            color: #e10600;
             font-weight: 600;
+            font-size: 15px;
         }
-        .programacao-item .horario {
-            color: #e8e8e8;
-            font-family: monospace;
-            text-align: center;
-        }
-        .programacao-item .sessao {
-            color: #999;
+
+        .linha .atividade {
+            color: #bbbbbb;
+            font-size: 15px;
             text-align: right;
         }
-        .programacao-obs {
-            font-size: 0.55em;
-            color: #666;
-            text-align: center;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
+
+        .linha.destaque {
+            border-left-color: #ffcc00;
+            background: #1f1a0a;
+        }
+
+        .linha.destaque .atividade {
+            color: #ffcc00;
+            font-weight: 700;
         }
 
         /* ===== RODAPÉ ===== */
-        .footer {
+        .rodape {
+            margin-top: 30px;
             text-align: center;
-            color: #555;
-            margin-top: 40px;
+            font-size: 13px;
+            color: #555555;
+            border-top: 1px solid #222222;
             padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
-            font-size: 0.8em;
-            line-height: 1.6;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+        }
+
+        .rodape span {
+            color: #e10600;
+            font-weight: 600;
         }
 
         /* ===== RESPONSIVO ===== */
-        @media (max-width: 700px) {
-            h1 { font-size: 2.2em; }
-            .grid { grid-template-columns: 1fr; }
-            .contador-tempo { gap: 8px; }
-            .contador-tempo div { min-width: 50px; padding: 4px 8px; }
-            .contador-tempo span { font-size: 1.6em; }
-            .menu-superior {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                border-radius: 16px;
-                padding: 12px;
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
             }
-            .dropdown-content {
-                position: static;
-                transform: none;
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                min-width: auto;
-                display: none;
+            .header h1 {
+                font-size: 24px;
             }
-            .dropdown:hover .dropdown-content {
-                display: block;
+            .bloco .numero {
+                font-size: 32px;
+                min-width: 60px;
+                padding: 6px 10px;
             }
-            .dropdown-content a {
-                padding: 6px 20px;
-                font-size: 0.85em;
+            .separador {
+                font-size: 28px;
             }
-            .dropbtn { font-size: 0.95em; }
-            .menu-item { font-size: 0.95em; }
-            .programacao-item {
-                grid-template-columns: 80px 75px 1fr;
-                font-size: 0.6em;
-                padding: 4px 6px;
+            .linha {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 10px;
+                padding: 12px 14px;
             }
-            .programacao-item .horario { font-size: 0.6em; }
-            .btn-tema { margin-left: 0; margin-top: 4px; }
+            .linha .atividade {
+                text-align: left;
+                grid-column: span 2;
+                font-size: 14px;
+            }
+            .linha .horario {
+                text-align: right;
+            }
+            .relogio {
+                gap: 10px;
+            }
+            .bloco {
+                min-width: 55px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <h1>🏎️ Estatísticas F1</h1>
-        <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
+<div class="container">
 
-        <!-- CONTADOR + PROGRAMAÇÃO -->
-        <div class="contador-container">
-            <div class="contador-titulo">🏁 PRÓXIMA CORRIDA</div>
-            <div class="contador-grande" id="nome-corrida">🇳🇱 GP DA HOLANDA - ZANDVOORT</div>
-            <div class="contador-tempo" id="cronometro">
-                <div><span id="dias">00</span><small>dias</small></div>
-                <div><span id="horas">00</span><small>horas</small></div>
-                <div><span id="minutos">00</span><small>min</small></div>
-                <div><span id="segundos">00</span><small>seg</small></div>
-            </div>
-
-            <!-- PROGRAMAÇÃO -->
-            <div class="programacao">
-                <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
-                <div class="programacao-grid" id="programacao-grid">
-                    <div class="programacao-item">
-                        <span class="dia">SEX - 21 AGO</span>
-                        <span class="horario">07:30 — 08:30</span>
-                        <span class="sessao">Treino Livre 1</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SEX - 21 AGO</span>
-                        <span class="horario">11:30 — 12:14</span>
-                        <span class="sessao">Sprint Qualifying</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SÁB - 22 AGO</span>
-                        <span class="horario">07:00 — 07:30</span>
-                        <span class="sessao">Sprint</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SÁB - 22 AGO</span>
-                        <span class="horario">11:00 — 12:00</span>
-                        <span class="sessao">Classificação</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">DOM - 23 AGO</span>
-                        <span class="horario">10:00 — 12:00</span>
-                        <span class="sessao">🏆 Grande Prêmio</span>
-                    </div>
-                </div>
-                <div class="programacao-obs" id="programacao-obs">*Horários de Brasília. Zandvoort está 5 horas à frente.</div>
-            </div>
-        </div>
-
-        <!-- MENU COM DROPDOWN + BOTÃO TEMA -->
-        <div class="menu-superior">
-            <div class="dropdown">
-                <button class="dropbtn">📊 Estatísticas</button>
-                <div class="dropdown-content">
-                    <a href="/">📈 Gráficos</a>
-                    <a href="/campeoes">🏆 Campeões</a>
-                    <a href="/dashboard">📊 Dashboard</a>
-                    <a href="/pistas">🏁 Pistas</a>
-                    <a href="/curiosidades">📖 Curiosidades</a>
-                </div>
-            </div>
-
-            <div class="dropdown">
-                <button class="dropbtn">🏁 Comparações</button>
-                <div class="dropdown-content">
-                    <a href="/comparar">📊 Comparar Pilotos</a>
-                    <a href="/comparar-equipes">📊 Comparar Equipes</a>
-                </div>
-            </div>
-
-            <a href="/quiz" class="menu-item">🧠 Quiz</a>
-            <a href="/sobre" class="menu-item">📖 Sobre</a>
-
-            <button class="btn-tema" onclick="toggleTema()">🌓 Tema</button>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h2>🏆 Vitórias por Piloto</h2>
-                <img src="{{ url_for('static', filename='vitorias_piloto_historico.png') }}" alt="Vitórias por Piloto">
-            </div>
-            <div class="card">
-                <h2>🏆 Vitórias por Equipe</h2>
-                <img src="{{ url_for('static', filename='vitorias_equipe_historico.png') }}" alt="Vitórias por Equipe">
-            </div>
-        </div>
-
-        <div class="card full-width">
-            <h2>📈 Evolução por Temporada</h2>
-            <img src="{{ url_for('static', filename='evolucao_temporadas_historico.png') }}" alt="Evolução por Temporada">
-        </div>
-
-        <div class="tabela-container">
-            <h2>📊 Resumo das Vitórias (1950-2026)</h2>
-            <table>
-                <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
-                <tbody>
-                    {% for i in range(piloto_labels|length) %}
-                    <tr><td>{{ piloto_labels[i] }}</td><td>{{ piloto_values[i] }}</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="footer">
-            <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
-            <p>Dados utilizados apenas para fins educacionais.</p>
-        </div>
-
+    <!-- ===== CABEÇALHO ===== -->
+    <div class="header">
+        <div class="gp">🏁 PRÓXIMA CORRIDA</div>
+        <h1>GP DA ITÁLIA</h1>
+        <div class="circuito">🇮🇹 Monza – 6 de Setembro de 2026</div>
     </div>
 
-    <script>
-        // ===== MODO ESCURO/CLARO =====
-        function toggleTema() {
-            document.body.classList.toggle('tema-claro');
-            const btn = document.querySelector('.btn-tema');
-            if (document.body.classList.contains('tema-claro')) {
-                btn.textContent = '🌙 Escuro';
-            } else {
-                btn.textContent = '🌓 Tema';
-            }
-        }
+    <!-- ===== CONTAGEM REGRESSIVA ===== -->
+    <div class="contagem">
+        <div class="rotulo">⏳ FALTAM</div>
+        <div class="relogio" id="relogio">
+            <div class="bloco">
+                <span class="numero" id="dias">00</span>
+                <span class="legenda">Dias</span>
+            </div>
+            <span class="separador">:</span>
+            <div class="bloco">
+                <span class="numero" id="horas">00</span>
+                <span class="legenda">Horas</span>
+            </div>
+            <span class="separador">:</span>
+            <div class="bloco">
+                <span class="numero" id="minutos">00</span>
+                <span class="legenda">Min</span>
+            </div>
+            <span class="separador">:</span>
+            <div class="bloco">
+                <span class="numero" id="segundos">00</span>
+                <span class="legenda">Seg</span>
+            </div>
+        </div>
 
-        // ===== CRONÔMETRO INTELIGENTE =====
-        const corridas = [
-            { data: '2026-08-23T10:00:00-03:00', nome: '🇳🇱 GP DA HOLANDA - ZANDVOORT', obs: 'Zandvoort está 5 horas à frente' },
-            { data: '2026-09-06T10:00:00-03:00', nome: '🇮🇹 GP DA ITÁLIA - MONZA', obs: 'Monza está 5 horas à frente' },
-            { data: '2026-09-13T10:00:00-03:00', nome: '🇦🇿 GP DO AZERBAIJÃO - BAKU', obs: 'Baku está 7 horas à frente' },
-            { data: '2026-09-20T10:00:00-03:00', nome: '🇸🇬 GP DE SINGAPURA - MARINA BAY', obs: 'Singapura está 11 horas à frente' },
-            { data: '2026-10-04T10:00:00-03:00', nome: '🇺🇸 GP DOS EUA - AUSTIN', obs: 'Austin está 2 horas atrás' },
-            { data: '2026-10-18T10:00:00-03:00', nome: '🇲🇽 GP DO MÉXICO - CIDADE DO MÉXICO', obs: 'Cidade do México está 3 horas atrás' },
-            { data: '2026-11-01T10:00:00-03:00', nome: '🇧🇷 GP DE SÃO PAULO - INTERLAGOS', obs: 'São Paulo está no mesmo fuso' },
-            { data: '2026-11-15T10:00:00-03:00', nome: '🇺🇸 GP DE LAS VEGAS - LAS VEGAS', obs: 'Las Vegas está 4 horas atrás' },
-            { data: '2026-11-29T10:00:00-03:00', nome: '🇶🇦 GP DO CATAR - LUSAIL', obs: 'Catar está 6 horas à frente' },
-            { data: '2026-12-06T10:00:00-03:00', nome: '🇦🇪 GP DE ABU DHABI - YAS MARINA', obs: 'Abu Dhabi está 7 horas à frente' }
-        ];
+        <!-- Status quando a corrida começar -->
+        <div class="status" id="statusCorrida">🏁 CORRIDA EM ANDAMENTO! 🏁</div>
+    </div>
 
-        function encontrarProximaCorrida() {
+    <!-- ===== PROGRAMAÇÃO ===== -->
+    <div class="programacao">
+        <h2>📋 Programação do fim de semana</h2>
+        <div class="tabela">
+
+            <div class="linha">
+                <span class="dia">Sex – 04 Set</span>
+                <span class="horario">07:30 – 08:30</span>
+                <span class="atividade">Treino Livre 1</span>
+            </div>
+
+            <div class="linha">
+                <span class="dia">Sex – 04 Set</span>
+                <span class="horario">11:30 – 12:14</span>
+                <span class="atividade">Sprint Qualifying</span>
+            </div>
+
+            <div class="linha">
+                <span class="dia">Sáb – 05 Set</span>
+                <span class="horario">07:00 – 07:30</span>
+                <span class="atividade">Sprint</span>
+            </div>
+
+            <div class="linha">
+                <span class="dia">Sáb – 05 Set</span>
+                <span class="horario">11:00 – 12:00</span>
+                <span class="atividade">Classificação</span>
+            </div>
+
+            <div class="linha destaque">
+                <span class="dia">Dom – 06 Set</span>
+                <span class="horario">10:00 – 12:00</span>
+                <span class="atividade">🏆 Grande Prêmio</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== RODAPÉ ===== -->
+    <div class="rodape">
+        ⏰ Horários de <span>Brasília</span> – Monza está 5 horas à frente
+        <br>
+        <span style="color:#666; font-size:12px;">Atualizado para a temporada 2026</span>
+    </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- ===== SCRIPT DA CONTAGEM REGRESSIVA ===== -->
+<!-- ============================================ -->
+<script>
+    (function() {
+        // === DATA DA CORRIDA (Horário de Brasília) ===
+        // 6 de setembro de 2026, 10:00:00 UTC-3
+        const dataCorrida = new Date('2026-09-06T10:00:00-03:00');
+
+        // Elementos do DOM
+        const diasEl   = document.getElementById('dias');
+        const horasEl  = document.getElementById('horas');
+        const minutosEl = document.getElementById('minutos');
+        const segundosEl = document.getElementById('segundos');
+        const statusEl  = document.getElementById('statusCorrida');
+        const relogioEl = document.getElementById('relogio');
+
+        function atualizarContagem() {
             const agora = new Date();
-            for (let corrida of corridas) {
-                const dataCorrida = new Date(corrida.data);
-                if (dataCorrida > agora) {
-                    return corrida;
-                }
-            }
-            return null;
-        }
+            let diffSegundos = (dataCorrida - agora) / 1000;
 
-        function atualizarContador() {
-            const proxima = encontrarProximaCorrida();
-            if (!proxima) {
-                document.getElementById('cronometro').innerHTML = '<span style="color: #b30000; font-size: 1.5em;">🏁 TEMPORADA FINALIZADA!</span>';
-                document.getElementById('nome-corrida').textContent = '🏁 TEMPORADA 2026 ENCERRADA';
-                document.getElementById('programacao-grid').innerHTML = '';
-                document.getElementById('programacao-obs').textContent = 'Acompanhe a próxima temporada em 2027!';
+            // Se a corrida já começou
+            if (diffSegundos <= 0) {
+                // Esconde os números e mostra status
+                relogioEl.style.display = 'none';
+                statusEl.classList.add('ativo');
                 return;
             }
 
-            const dataCorrida = new Date(proxima.data);
-            const agora = new Date();
-            const diferenca = dataCorrida - agora;
+            // Garante que o relógio está visível
+            relogioEl.style.display = 'flex';
+            statusEl.classList.remove('ativo');
 
-            document.getElementById('nome-corrida').textContent = proxima.nome;
-            document.getElementById('programacao-obs').textContent = `*Horários de Brasília. ${proxima.obs}`;
+            // Cálculo dos dias, horas, minutos, segundos
+            const dias = Math.floor(diffSegundos / 86400);
+            diffSegundos %= 86400;
 
-            if (diferenca <= 0) {
-                return;
-            }
+            const horas = Math.floor(diffSegundos / 3600);
+            diffSegundos %= 3600;
 
-            const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-            const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+            const minutos = Math.floor(diffSegundos / 60);
+            const segundos = Math.floor(diffSegundos % 60);
 
-            document.getElementById('dias').textContent = String(dias).padStart(2, '0');
-            document.getElementById('horas').textContent = String(horas).padStart(2, '0');
-            document.getElementById('minutos').textContent = String(minutos).padStart(2, '0');
-            document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
+            // Atualiza o DOM com dois dígitos
+            diasEl.textContent     = String(dias).padStart(2, '0');
+            horasEl.textContent    = String(horas).padStart(2, '0');
+            minutosEl.textContent  = String(minutos).padStart(2, '0');
+            segundosEl.textContent = String(segundos).padStart(2, '0');
         }
 
-        setInterval(atualizarContador, 1000);
-        atualizarContador();
-    </script>
+        // Atualiza a cada 1 segundo
+        setInterval(atualizarContagem, 1000);
+
+        // Primeira execução imediata
+        atualizarContagem();
+    })();
+</script>
 
 </body>
 </html>
