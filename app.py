@@ -78,6 +78,12 @@ df_curiosidades = pd.read_csv('curiosidades.csv', quoting=1, quotechar='"')
 lista_curiosidades = df_curiosidades.to_dict('records')
 
 # ============================================
+# DADOS DE POLE POSITIONS
+# ============================================
+df_poles = pd.read_csv('poles_f1_historico.csv')
+poles_lista = df_poles.sort_values('Poles', ascending=False).to_dict('records')
+
+# ============================================
 # ROTAS
 # ============================================
 
@@ -194,6 +200,14 @@ def pista_detalhe(nome_pista):
 @app.route('/curiosidades')
 def curiosidades():
     return render_template('curiosidades.html', curiosidades=lista_curiosidades)
+
+# ============================================
+# ROTA DAS POLE POSITIONS
+# ============================================
+
+@app.route('/poles')
+def poles():
+    return render_template('poles.html', poles=poles_lista)
 
 if __name__ == '__main__':
     app.run(debug=True)
