@@ -1,16 +1,16 @@
 posicao,piloto,equipe,pontos,vitorias,podios
 1,Kimi Antonelli,Mercedes,267,7,11
 2,George Russell,Mercedes,201,2,7
-3,Lewis Hamilton,Ferrari,183,1,5
-4,Lando Norris,McLaren,159,3,4
+3,Lewis Hamilton,Ferrari,191,1,5
+4,Lando Norris,McLaren,171,2,4
 5,Charles Leclerc,Ferrari,155,1,4
 6,Max Verstappen,Red Bull,127,0,5
-7,Oscar Piastri,McLaren,104,0,2
-8,Isack Hadjar,Red Bull Racing,68,0,0
-9,Liam Lawson,Red Bull Racing,49,0,0
-10,Pierre Gasly,Alpine,44,0,0
-11,Arvid Lindblad,Racing Bulls,23,0,0
-12,Franco Colapinto,Alpine,19,0,0
+7,Oscar Piastri,McLaren,116,0,2
+8,Isack Hadjar,Red Bull,71,0,1
+9,Liam Lawson,Racing Bulls,51,0,0
+10,Pierre Gasly,Alpine,41,0,0
+11,Arvid Lindblad,Racing Bulls,29,0,0
+12,Franco Colapinto,Alpine,21,0,0
 13,Oliver Bearman,Haas,18,0,0
 14,Gabriel Bortoleto,Audi,10,0,0
 15,Nico Hulkenberg,Audi,6,0,0
@@ -18,7 +18,7 @@ posicao,piloto,equipe,pontos,vitorias,podios
 17,Alexander Albon,Williams,5,0,0
 18,Esteban Ocon,Haas,3,0,0
 19,Fernando Alonso,Aston Martin,3,0,0
-20,Yuki Tsunoda,Racing Bulls,0,0,0
+20,Yuki Tsunoda,Racing Bulls,1,0,0
 21,Lance Stroll,Aston Martin,0,0,0
 22,Valtteri Bottas,Cadillac,0,0,0
 23,Sergio Perez,Cadillac,0,0,0
