@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🏎️ Estatísticas F1</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -12,13 +13,8 @@
             color: #e8e8e8;
             padding: 20px;
             min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
         h1 {
             text-align: center;
@@ -38,7 +34,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== MENU COM DROPDOWN ===== */
         .menu-superior {
             display: flex;
             justify-content: center;
@@ -51,12 +46,10 @@
             border: 1px solid #2a2a2a;
             align-items: center;
         }
-
         .dropdown {
             position: relative;
             display: inline-block;
         }
-
         .dropbtn {
             background: transparent;
             color: #bbb;
@@ -70,12 +63,10 @@
             letter-spacing: 0.5px;
             font-family: inherit;
         }
-
         .dropbtn:hover {
             color: #cc0000;
             background: rgba(200, 0, 0, 0.08);
         }
-
         .dropdown-content {
             display: none;
             position: absolute;
@@ -91,7 +82,6 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.8);
             margin-top: 4px;
         }
-
         .dropdown-content a {
             display: block;
             color: #ccc;
@@ -102,16 +92,13 @@
             text-align: center;
             letter-spacing: 0.3px;
         }
-
         .dropdown-content a:hover {
             background: rgba(200, 0, 0, 0.1);
             color: #cc0000;
         }
-
         .dropdown:hover .dropdown-content {
             display: block;
         }
-
         .menu-item {
             color: #bbb;
             text-decoration: none;
@@ -122,13 +109,11 @@
             border-radius: 20px;
             letter-spacing: 0.5px;
         }
-
         .menu-item:hover {
             color: #cc0000;
             background: rgba(200, 0, 0, 0.08);
         }
 
-        /* ===== BOTÃO MODO ESCURO/CLARO ===== */
         .btn-tema {
             background: transparent;
             border: 1px solid #2a2a2a;
@@ -146,169 +131,6 @@
             color: #e8e8e8;
         }
 
-        /* ===== MODO CLARO ===== */
-        body.tema-claro {
-            background: #f5f5f5;
-            color: #1a1a1a;
-        }
-        body.tema-claro .card,
-        body.tema-claro .tabela-container,
-        body.tema-claro .contador-container {
-            background: #ffffff;
-            border-color: #ccc;
-        }
-        body.tema-claro .subtitle {
-            border-color: #b30000;
-        }
-        body.tema-claro .footer {
-            border-color: #ccc;
-        }
-        body.tema-claro .menu-superior {
-            background: rgba(0,0,0,0.05);
-            border-color: #ccc;
-        }
-        body.tema-claro .menu-item {
-            color: #444;
-        }
-        body.tema-claro .menu-item:hover {
-            color: #b30000;
-        }
-        body.tema-claro .dropbtn {
-            color: #444;
-        }
-        body.tema-claro .dropbtn:hover {
-            color: #b30000;
-        }
-        body.tema-claro .dropdown-content {
-            background: #ffffff;
-            border-color: #ccc;
-        }
-        body.tema-claro .dropdown-content a {
-            color: #444;
-        }
-        body.tema-claro .dropdown-content a:hover {
-            color: #b30000;
-            background: rgba(200, 0, 0, 0.05);
-        }
-        body.tema-claro .programacao-item {
-            background: rgba(0,0,0,0.05);
-        }
-        body.tema-claro .contador-grande {
-            color: #1a1a1a;
-        }
-        body.tema-claro .contador-tempo span {
-            color: #b30000;
-        }
-        body.tema-claro .contador-tempo small {
-            color: #888;
-        }
-        body.tema-claro .contador-tempo div {
-            background: rgba(0,0,0,0.05);
-        }
-        body.tema-claro .programacao-obs {
-            color: #888;
-        }
-        body.tema-claro .programacao-item .dia {
-            color: #1a1a1a;
-        }
-        body.tema-claro .programacao-item .horario {
-            color: #1a1a1a;
-        }
-        body.tema-claro .programacao-item .sessao {
-            color: #666;
-        }
-        body.tema-claro .footer {
-            color: #888;
-        }
-        body.tema-claro .btn-tema {
-            border-color: #ccc;
-            color: #444;
-        }
-        body.tema-claro .btn-tema:hover {
-            border-color: #b30000;
-            color: #b30000;
-        }
-
-        /* ===== CARDS E GRID ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 35px;
-        }
-        .card {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-            transition: 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: #b30000;
-            box-shadow: 0 6px 25px rgba(180, 0, 0, 0.06);
-        }
-        .card h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 12px;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid #2a2a2a;
-        }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        /* ===== TABELA ===== */
-        .tabela-container {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-            margin-top: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .tabela-container h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #2a2a2a;
-        }
-        th {
-            background: #b30000;
-            color: #fff;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        td {
-            color: #ddd;
-        }
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        tr:hover {
-            background: rgba(200, 0, 0, 0.06);
-        }
-
-        /* ===== CONTADOR + PROGRAMAÇÃO ===== */
         .contador-container {
             background: rgba(20, 10, 10, 0.6);
             border: 1px solid #b30000;
@@ -361,7 +183,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== PROGRAMAÇÃO ===== */
         .programacao {
             margin-top: 12px;
             border-top: 1px solid #2a2a2a;
@@ -387,7 +208,7 @@
             gap: 15px;
             padding: 10px 16px;
             border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0,0,0,0.3);
             font-size: 0.85em;
             align-items: center;
         }
@@ -412,7 +233,92 @@
             letter-spacing: 0.3px;
         }
 
-        /* ===== RODAPÉ ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+        .card {
+            background: rgba(20, 15, 15, 0.7);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #2a2a2a;
+            transition: 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #b30000;
+            box-shadow: 0 6px 25px rgba(180, 0, 0, 0.06);
+        }
+        .card h2 {
+            color: #cc0000;
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .card p {
+            text-align: center;
+            color: #999;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        .card .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .full-width .chart-container {
+            height: 350px;
+        }
+
+        .tabela-container {
+            background: rgba(20, 15, 15, 0.7);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #2a2a2a;
+            margin-top: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .tabela-container h2 {
+            color: #cc0000;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        th {
+            background: #b30000;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        td {
+            color: #ddd;
+        }
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        tr:hover {
+            background: rgba(200, 0, 0, 0.06);
+        }
+
         .footer {
             text-align: center;
             color: #555;
@@ -424,14 +330,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* ===== RESPONSIVO ===== */
         @media (max-width: 700px) {
             h1 { font-size: 2.2em; }
             .grid { grid-template-columns: 1fr; }
-            .contador-container {
-                max-width: 100%;
-                padding: 15px;
-            }
+            .contador-container { max-width: 100%; padding: 15px; }
             .contador-tempo { gap: 8px; }
             .contador-tempo div { min-width: 50px; padding: 4px 8px; }
             .contador-tempo span { font-size: 1.6em; }
@@ -459,16 +361,13 @@
                 min-width: auto;
                 display: none;
             }
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
-            .dropdown-content a {
-                padding: 6px 20px;
-                font-size: 0.85em;
-            }
+            .dropdown:hover .dropdown-content { display: block; }
+            .dropdown-content a { padding: 6px 20px; font-size: 0.85em; }
             .dropbtn { font-size: 0.95em; }
             .menu-item { font-size: 0.95em; }
             .btn-tema { margin-left: 0; margin-top: 4px; }
+            .card .chart-container { height: 220px; }
+            .full-width .chart-container { height: 250px; }
         }
     </style>
 </head>
@@ -478,7 +377,6 @@
         <h1>🏎️ Estatísticas F1</h1>
         <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
 
-        <!-- CONTADOR + PROGRAMAÇÃO -->
         <div class="contador-container">
             <div class="contador-titulo">🏁 PRÓXIMA CORRIDA</div>
             <div class="contador-grande" id="nome-corrida">🇪🇸 GP DA ESPANHA - MADRID</div>
@@ -489,10 +387,9 @@
                 <div><span id="segundos">00</span><small>seg</small></div>
             </div>
 
-            <!-- PROGRAMAÇÃO -->
             <div class="programacao">
                 <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
-                <div class="programacao-grid" id="programacao-grid">
+                <div class="programacao-grid">
                     <div class="programacao-item">
                         <span class="dia">SEX - 11 SET</span>
                         <span class="horario">08:30 — 09:30</span>
@@ -519,11 +416,10 @@
                         <span class="sessao">🏆 Grande Prêmio</span>
                     </div>
                 </div>
-                <div class="programacao-obs" id="programacao-obs">*Horários de Brasília. Madri está 5 horas à frente.</div>
+                <div class="programacao-obs">*Horários de Brasília. Madri está 5 horas à frente.</div>
             </div>
         </div>
 
-        <!-- MENU COM DROPDOWN + BOTÃO TEMA -->
         <div class="menu-superior">
             <div class="dropdown">
                 <button class="dropbtn">📊 Estatísticas</button>
@@ -536,7 +432,6 @@
                     <a href="/poles">🏁 Pole Positions</a>
                 </div>
             </div>
-
             <div class="dropdown">
                 <button class="dropbtn">🏁 Comparações</button>
                 <div class="dropdown-content">
@@ -544,27 +439,34 @@
                     <a href="/comparar-equipes">📊 Comparar Equipes</a>
                 </div>
             </div>
-
             <a href="/quiz" class="menu-item">🧠 Quiz</a>
             <a href="/sobre" class="menu-item">📖 Sobre</a>
-
             <button class="btn-tema" onclick="toggleTema()">🌓 Tema</button>
         </div>
 
         <div class="grid">
             <div class="card">
                 <h2>🏆 Vitórias por Piloto</h2>
-                <img src="{{ url_for('static', filename='vitorias_piloto_historico.png') }}" alt="Vitórias por Piloto">
+                <p>Top 20 pilotos com mais vitórias na história</p>
+                <div class="chart-container">
+                    <canvas id="chartVitoriasPilotos"></canvas>
+                </div>
             </div>
             <div class="card">
                 <h2>🏆 Vitórias por Equipe</h2>
-                <img src="{{ url_for('static', filename='vitorias_equipe_historico.png') }}" alt="Vitórias por Equipe">
+                <p>Top 10 equipes com mais vitórias na história</p>
+                <div class="chart-container">
+                    <canvas id="chartVitoriasEquipes"></canvas>
+                </div>
             </div>
         </div>
 
         <div class="card full-width">
             <h2>📈 Evolução por Temporada</h2>
-            <img src="{{ url_for('static', filename='evolucao_temporadas_historico.png') }}" alt="Evolução por Temporada">
+            <p>Número de corridas por temporada (1950-2026)</p>
+            <div class="chart-container">
+                <canvas id="chartEvolucao"></canvas>
+            </div>
         </div>
 
         <div class="tabela-container">
@@ -587,18 +489,13 @@
     </div>
 
     <script>
-        // ===== MODO ESCURO/CLARO =====
         function toggleTema() {
             document.body.classList.toggle('tema-claro');
             const btn = document.querySelector('.btn-tema');
-            if (document.body.classList.contains('tema-claro')) {
-                btn.textContent = '🌙 Escuro';
-            } else {
-                btn.textContent = '🌓 Tema';
-            }
+            btn.textContent = document.body.classList.contains('tema-claro') ? '🌙 Escuro' : '🌓 Tema';
         }
 
-        // ===== CRONÔMETRO INTELIGENTE =====
+        // Cronômetro
         const corridas = [
             { data: '2026-09-13T10:00:00-03:00', nome: '🇪🇸 GP DA ESPANHA - MADRID', obs: 'Madri está 5 horas à frente' },
             { data: '2026-09-20T10:00:00-03:00', nome: '🇦🇿 GP DO AZERBAIJÃO - BAKU', obs: 'Baku está 7 horas à frente' },
@@ -613,50 +510,134 @@
 
         function encontrarProximaCorrida() {
             const agora = new Date();
-            for (let corrida of corridas) {
-                const dataCorrida = new Date(corrida.data);
-                if (dataCorrida > agora) {
-                    return corrida;
-                }
+            for (let c of corridas) {
+                if (new Date(c.data) > agora) return c;
             }
             return null;
         }
 
         function atualizarContador() {
-            const proxima = encontrarProximaCorrida();
-            if (!proxima) {
-                document.getElementById('cronometro').innerHTML = '<span style="color: #b30000; font-size: 1.5em;">🏁 TEMPORADA FINALIZADA!</span>';
+            const prox = encontrarProximaCorrida();
+            if (!prox) {
+                document.getElementById('cronometro').innerHTML = '<span style="color:#b30000;font-size:1.5em;">🏁 TEMPORADA FINALIZADA!</span>';
                 document.getElementById('nome-corrida').textContent = '🏁 TEMPORADA 2026 ENCERRADA';
-                document.getElementById('programacao-grid').innerHTML = '';
-                document.getElementById('programacao-obs').textContent = 'Acompanhe a próxima temporada em 2027!';
                 return;
             }
-
-            const dataCorrida = new Date(proxima.data);
-            const agora = new Date();
-            const diferenca = dataCorrida - agora;
-
-            document.getElementById('nome-corrida').textContent = proxima.nome;
-            document.getElementById('programacao-obs').textContent = `*Horários de Brasília. ${proxima.obs}`;
-
-            if (diferenca <= 0) {
-                return;
-            }
-
-            const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
-            const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
-
-            document.getElementById('dias').textContent = String(dias).padStart(2, '0');
-            document.getElementById('horas').textContent = String(horas).padStart(2, '0');
-            document.getElementById('minutos').textContent = String(minutos).padStart(2, '0');
-            document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
+            document.getElementById('nome-corrida').textContent = prox.nome;
+            const diff = new Date(prox.data) - new Date();
+            if (diff <= 0) return;
+            const d = Math.floor(diff / (1000*60*60*24));
+            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const s = Math.floor((diff % (1000*60)) / 1000);
+            document.getElementById('dias').textContent = String(d).padStart(2,'0');
+            document.getElementById('horas').textContent = String(h).padStart(2,'0');
+            document.getElementById('minutos').textContent = String(m).padStart(2,'0');
+            document.getElementById('segundos').textContent = String(s).padStart(2,'0');
         }
-
         setInterval(atualizarContador, 1000);
         atualizarContador();
-    </script>
 
+        // GRÁFICOS
+        // Cores
+        const coresPilotos = {
+            'Lewis Hamilton': '#DC0000', 'Michael Schumacher': '#DC0000', 'Max Verstappen': '#1E41FF',
+            'Sebastian Vettel': '#1E41FF', 'Alain Prost': '#FF8700', 'Ayrton Senna': '#FF8700',
+            'Fernando Alonso': '#FFD700', 'Nigel Mansell': '#00A0DE', 'Jackie Stewart': '#0000FF',
+            'Niki Lauda': '#DC0000', 'Jim Clark': '#FFD700', 'Juan Manuel Fangio': '#8B0000',
+            'Nico Rosberg': '#00D2BE', 'Nelson Piquet': '#8B4513', 'Damon Hill': '#00A0DE',
+            'Mika Häkkinen': '#FF8700', 'Stirling Moss': '#808080', 'Jenson Button': '#FF8700',
+            'Lando Norris': '#FF8700', 'Graham Hill': '#0000FF', 'Kimi Räikkönen': '#DC0000',
+            'Jack Brabham': '#8B4513', 'Emerson Fittipaldi': '#FF8700'
+        };
+
+        const coresEquipes = {
+            'Red Bull': '#1E41FF', 'Mercedes': '#00D2BE', 'Ferrari': '#DC0000',
+            'McLaren': '#FF8700', 'Williams': '#00A0DE', 'Lotus': '#FFD700',
+            'Brabham': '#8B4513', 'Benetton': '#00A86B', 'Renault': '#FFD700',
+            'Cooper': '#808080'
+        };
+
+        // 1. Vitórias por Piloto
+        const labelsPilotos = {{ piloto_labels|tojson }};
+        const valuesPilotos = {{ piloto_values|tojson }};
+        const coresPilotosChart = labelsPilotos.map(p => coresPilotos[p] || '#808080');
+
+        new Chart(document.getElementById('chartVitoriasPilotos'), {
+            type: 'bar',
+            data: {
+                labels: labelsPilotos,
+                datasets: [{
+                    label: 'Vitórias',
+                    data: valuesPilotos,
+                    backgroundColor: coresPilotosChart,
+                    borderColor: '#000',
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' vitórias' } } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
+            }
+        });
+
+        // 2. Vitórias por Equipe
+        const labelsEquipes = {{ equipe_labels|tojson }};
+        const valuesEquipes = {{ equipe_values|tojson }};
+        const coresEquipesChart = labelsEquipes.map(e => coresEquipes[e] || '#808080');
+
+        new Chart(document.getElementById('chartVitoriasEquipes'), {
+            type: 'bar',
+            data: {
+                labels: labelsEquipes,
+                datasets: [{
+                    label: 'Vitórias',
+                    data: valuesEquipes,
+                    backgroundColor: coresEquipesChart,
+                    borderColor: '#000',
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' vitórias' } } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
+            }
+        });
+
+        // 3. Evolução por Temporada
+        const anos = {{ evolucao_anos|tojson }};
+        const valoresEvolucao = {{ evolucao_valores|tojson }};
+
+        new Chart(document.getElementById('chartEvolucao'), {
+            type: 'line',
+            data: {
+                labels: anos,
+                datasets: [{
+                    label: 'Corridas',
+                    data: valoresEvolucao,
+                    borderColor: '#cc0000',
+                    backgroundColor: 'rgba(200,0,0,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#1E41FF',
+                    pointBorderColor: '#000',
+                    pointRadius: 3,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' corridas' } } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 8 } } } }
+            }
+        });
+    </script>
 </body>
 </html>

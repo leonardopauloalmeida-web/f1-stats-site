@@ -17,6 +17,10 @@ vitorias_piloto = df_vitorias.groupby('piloto')['vitorias'].sum().sort_values(as
 # Vitórias por equipe (histórico)
 vitorias_equipe = df_vitorias.groupby('equipe')['vitorias'].sum().sort_values(ascending=False)
 
+# Evolução por temporada (para gráfico de linha)
+evolucao_anos = df_vitorias.groupby('ano')['vitorias'].count().index.tolist()
+evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist()
+
 # ============================================
 # DADOS DOS CAMPEÕES (PILOTOS)
 # ============================================
@@ -93,7 +97,9 @@ def home():
                          piloto_labels=vitorias_piloto.index.tolist(),
                          piloto_values=vitorias_piloto.values.tolist(),
                          equipe_labels=vitorias_equipe.index.tolist(),
-                         equipe_values=vitorias_equipe.values.tolist())
+                         equipe_values=vitorias_equipe.values.tolist(),
+                         evolucao_anos=evolucao_anos,
+                         evolucao_valores=evolucao_valores)
 
 @app.route('/sobre')
 def sobre():
