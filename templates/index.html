@@ -391,28 +391,28 @@
                 <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
                 <div class="programacao-grid">
                     <div class="programacao-item">
-                        <span class="dia">SEX - 18 SET</span>
-                        <span class="horario">07:30 — 08:30</span>
+                        <span class="dia">QUI - 24 SET</span>
+                        <span class="horario">05:30</span>
                         <span class="sessao">Treino Livre 1</span>
                     </div>
                     <div class="programacao-item">
-                        <span class="dia">SEX - 18 SET</span>
-                        <span class="horario">11:00 — 12:00</span>
+                        <span class="dia">QUI - 24 SET</span>
+                        <span class="horario">09:00</span>
                         <span class="sessao">Treino Livre 2</span>
                     </div>
                     <div class="programacao-item">
-                        <span class="dia">SÁB - 19 SET</span>
-                        <span class="horario">07:30 — 08:30</span>
+                        <span class="dia">SEX - 25 SET</span>
+                        <span class="horario">05:30</span>
                         <span class="sessao">Treino Livre 3</span>
                     </div>
                     <div class="programacao-item">
-                        <span class="dia">SÁB - 19 SET</span>
-                        <span class="horario">11:00 — 12:00</span>
+                        <span class="dia">SEX - 25 SET</span>
+                        <span class="horario">09:00</span>
                         <span class="sessao">Classificação</span>
                     </div>
                     <div class="programacao-item">
-                        <span class="dia">DOM - 20 SET</span>
-                        <span class="horario">10:00 — 12:00</span>
+                        <span class="dia">SÁB - 26 SET</span>
+                        <span class="horario">08:00</span>
                         <span class="sessao">🏆 Grande Prêmio</span>
                     </div>
                 </div>
@@ -495,16 +495,15 @@
             btn.textContent = document.body.classList.contains('tema-claro') ? '🌙 Escuro' : '🌓 Tema';
         }
 
-        // Cronômetro
         const corridas = [
-            { data: '2026-09-20T10:00:00-03:00', nome: '🇦🇿 GP DO AZERBAIJÃO - BAKU', obs: 'Baku está 7 horas à frente' },
-            { data: '2026-10-04T10:00:00-03:00', nome: '🇲🇾 GP DO BAHREIN (MALÁSIA) - SEPANG', obs: 'Sepang está 11 horas à frente' },
-            { data: '2026-10-11T10:00:00-03:00', nome: '🇸🇬 GP DE SINGAPURA - MARINA BAY', obs: 'Singapura está 11 horas à frente' },
-            { data: '2026-10-25T10:00:00-03:00', nome: '🇺🇸 GP DOS EUA - AUSTIN', obs: 'Austin está 2 horas atrás' },
-            { data: '2026-11-01T10:00:00-03:00', nome: '🇲🇽 GP DO MÉXICO - CIDADE DO MÉXICO', obs: 'Cidade do México está 3 horas atrás' },
-            { data: '2026-11-08T10:00:00-03:00', nome: '🇧🇷 GP DE SÃO PAULO - INTERLAGOS', obs: 'São Paulo está no mesmo fuso' },
-            { data: '2026-11-22T10:00:00-03:00', nome: '🇺🇸 GP DE LAS VEGAS - LAS VEGAS', obs: 'Las Vegas está 4 horas atrás' },
-            { data: '2026-11-29T10:00:00-03:00', nome: '🇶🇦 GP DO CATAR - LUSAIL', obs: 'Catar está 6 horas à frente' },
+            { data: '2026-09-26T08:00:00-03:00', nome: '🇦🇿 GP DO AZERBAIJÃO - BAKU', obs: 'Baku está 7 horas à frente' },
+            { data: '2026-10-04T04:00:00-03:00', nome: '🇲🇾 GP DO BAHREIN (MALÁSIA) - SEPANG', obs: 'Sepang está 11 horas à frente' },
+            { data: '2026-10-11T09:00:00-03:00', nome: '🇸🇬 GP DE SINGAPURA - MARINA BAY', obs: 'Singapura está 11 horas à frente' },
+            { data: '2026-10-25T17:00:00-03:00', nome: '🇺🇸 GP DOS EUA - AUSTIN', obs: 'Austin está 2 horas atrás' },
+            { data: '2026-11-01T17:00:00-03:00', nome: '🇲🇽 GP DO MÉXICO - CIDADE DO MÉXICO', obs: 'Cidade do México está 3 horas atrás' },
+            { data: '2026-11-08T14:00:00-03:00', nome: '🇧🇷 GP DE SÃO PAULO - INTERLAGOS', obs: 'São Paulo está no mesmo fuso' },
+            { data: '2026-11-22T01:00:00-03:00', nome: '🇺🇸 GP DE LAS VEGAS - LAS VEGAS', obs: 'Las Vegas está 4 horas atrás' },
+            { data: '2026-11-29T13:00:00-03:00', nome: '🇶🇦 GP DO CATAR - LUSAIL', obs: 'Catar está 6 horas à frente' },
             { data: '2026-12-06T10:00:00-03:00', nome: '🇦🇪 GP DE ABU DHABI - YAS MARINA', obs: 'Abu Dhabi está 7 horas à frente' }
         ];
 
@@ -538,7 +537,6 @@
         setInterval(atualizarContador, 1000);
         atualizarContador();
 
-        // GRÁFICOS
         const coresPilotos = {
             'Lewis Hamilton': '#DC0000', 'Michael Schumacher': '#DC0000', 'Max Verstappen': '#1E41FF',
             'Sebastian Vettel': '#1E41FF', 'Alain Prost': '#FF8700', 'Ayrton Senna': '#FF8700',
