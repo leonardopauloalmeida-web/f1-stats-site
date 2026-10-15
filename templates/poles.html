@@ -136,6 +136,7 @@
                 border-radius: 16px;
                 padding: 12px;
             }
+            .menu-divisor { display: none; }
             th, td {
                 padding: 8px 10px;
                 font-size: 0.85em;
@@ -172,8 +173,8 @@
                     {% for p in poles %}
                     <tr>
                         <td class="td-numero">{{ loop.index }}</td>
-                        <td>{{ p.Piloto }}</td>
-                        <td><strong>{{ p.Poles }}</strong></td>
+                        <td>{{ p.piloto }}</td>
+                        <td><strong>{{ p.poles }}</strong></td>
                     </tr>
                     {% endfor %}
                 </tbody>

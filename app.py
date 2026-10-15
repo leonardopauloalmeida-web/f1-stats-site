@@ -82,10 +82,10 @@ df_curiosidades = pd.read_csv('curiosidades.csv', quoting=1, quotechar='"')
 lista_curiosidades = df_curiosidades.to_dict('records')
 
 # ============================================
-# DADOS DE POLE POSITIONS
+# DADOS DE POLE POSITIONS (CORRIGIDO: 'poles' em minúsculo)
 # ============================================
 df_poles = pd.read_csv('poles_f1_historico.csv')
-poles_lista = df_poles.sort_values('Poles', ascending=False).to_dict('records')
+poles_lista = df_poles.sort_values('poles', ascending=False).to_dict('records')
 
 # ============================================
 # ROTAS

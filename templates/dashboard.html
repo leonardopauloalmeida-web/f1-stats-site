@@ -3,67 +3,112 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>📊 Dashboard 2026</title>
+    <title>📊 Dashboard 2026 - Estatísticas F1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #141414;
+            --border: #262626;
+            --red: #e10600;
+            --red-dark: #b30000;
+            --text: #e8e8e8;
+            --text-muted: #888;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e8e8e8;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        h1 {
-            text-align: center;
-            font-size: 3em;
-            color: #b30000;
-            margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(180, 0, 0, 0.2);
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #b30000;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
+            padding-top: 70px;
         }
 
-        .menu-superior {
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+        }
+        .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0;
-            margin: 15px 0 30px 0;
-            padding: 10px 18px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #2a2a2a;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
-        .menu-item {
-            color: #bbb;
+        .logo {
+            font-size: 1.1em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
             text-decoration: none;
-            font-size: 0.9em;
+        }
+        .nav {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.82em;
             font-weight: 500;
-            padding: 6px 16px;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
         }
-        .menu-item:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
+        .nav a:hover {
+            color: var(--red);
+            background: rgba(225, 6, 0, 0.1);
         }
-        .menu-divisor {
-            color: #333;
-            padding: 0 2px;
+        .nav a.ativo {
+            color: var(--red);
+            background: rgba(225, 6, 0, 0.1);
+        }
+        .btn-tema {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #aaa;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 6px;
+            transition: 0.2s;
+        }
+        .btn-tema:hover { border-color: var(--red); color: var(--text); }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px 24px;
         }
 
-        /* Cards de estatísticas rápidas */
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .title-section h1 {
+            font-size: 2.2em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+        .title-section p { color: var(--text-muted); font-size: 0.95em; }
+
+        /* ===== CARDS DE ESTATÍSTICAS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -71,132 +116,136 @@
             margin-bottom: 30px;
         }
         .stat-card {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 12px;
-            padding: 18px;
-            border: 1px solid #2a2a2a;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid var(--border);
             text-align: center;
             transition: 0.3s;
         }
         .stat-card:hover {
-            border-color: #b30000;
+            border-color: var(--red);
+            box-shadow: 0 8px 30px rgba(225, 6, 0, 0.1);
+            transform: translateY(-4px);
         }
         .stat-card .numero {
             font-size: 2.5em;
-            color: #cc0000;
-            font-weight: 700;
+            color: var(--red);
+            font-weight: 800;
+            line-height: 1;
+            text-shadow: 0 0 15px rgba(225, 6, 0, 0.4);
         }
         .stat-card .rotulo {
-            color: #999;
-            font-size: 0.8em;
+            color: var(--text-muted);
+            font-size: 0.75em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+            font-weight: 600;
         }
 
-        /* Tabelas */
+        /* ===== TABELAS ===== */
         .tabela-container {
-            background: rgba(20, 15, 15, 0.7);
+            background: var(--bg-card);
             border-radius: 16px;
             padding: 22px;
-            border: 1px solid #2a2a2a;
-            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
         }
-        .tabela-container h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 15px;
+        .tabela-container h3 {
+            color: var(--red);
+            font-size: 1.15em;
+            margin-bottom: 16px;
             text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 700;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
         th, td {
-            padding: 10px 12px;
+            padding: 11px 14px;
             text-align: left;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid var(--border);
         }
         th {
-            background: #b30000;
+            background: var(--red);
             color: #fff;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.78em;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        td {
-            color: #ddd;
-        }
+        td { color: var(--text); font-size: 0.9em; }
         tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
-        tr:hover { background: rgba(200, 0, 0, 0.06); }
+        tr:hover { background: rgba(225, 6, 0, 0.06); }
+        .posicao { color: var(--red); font-weight: 700; }
 
+        /* ===== GRID 2 COLUNAS ===== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 24px;
         }
 
-        .btn-voltar {
-            display: inline-block;
-            background: #b30000;
-            color: #fff;
-            padding: 10px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-        .btn-voltar:hover {
-            background: #cc0000;
-            transform: scale(1.02);
-        }
-
+        /* ===== RODAPÉ ===== */
         .footer {
             text-align: center;
-            color: #555;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
-            font-size: 0.8em;
-            line-height: 1.6;
+            color: #444;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.78em;
+            line-height: 1.7;
         }
 
-        @media (max-width: 700px) {
-            h1 { font-size: 2em; }
+        /* ===== MODO CLARO ===== */
+        body.tema-claro { background: #f5f5f5; color: #1a1a1a; }
+        body.tema-claro .header { background: rgba(255,255,255,0.95); }
+        body.tema-claro .stat-card,
+        body.tema-claro .tabela-container { background: #fff; }
+        body.tema-claro td { color: #1a1a1a; }
+        body.tema-claro .nav a { color: #555; }
+        body.tema-claro .stat-card .numero { text-shadow: none; }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 900px) {
+            body { padding-top: 120px; }
+            .header-content { flex-direction: column; gap: 8px; }
+            .logo { font-size: 1em; }
+            .nav { justify-content: center; }
+            .nav a { font-size: 0.75em; padding: 6px 9px; }
+            .container { padding: 20px 14px; }
+            .title-section h1 { font-size: 1.8em; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .grid-2 { grid-template-columns: 1fr; }
-            .menu-superior {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                border-radius: 16px;
-                padding: 12px;
-            }
-            .menu-divisor { display: none; }
-            .menu-item { font-size: 0.95em; padding: 4px 10px; }
+            th, td { padding: 8px 10px; font-size: 0.82em; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📊 Dashboard 2026</h1>
-        <div class="subtitle">Resumo da temporada atual da Fórmula 1</div>
 
-        <div class="menu-superior">
-            <a href="/" class="menu-item">🏠 Início</a>
-            <span class="menu-divisor">|</span>
-            <a href="/campeoes" class="menu-item">🏆 Campeões</a>
-            <span class="menu-divisor">|</span>
-            <a href="/quiz" class="menu-item">🧠 Quiz</a>
-            <span class="menu-divisor">|</span>
-            <a href="/comparar" class="menu-item">📊 Pilotos</a>
-            <span class="menu-divisor">|</span>
-            <a href="/comparar-equipes" class="menu-item">📊 Equipes</a>
-            <span class="menu-divisor">|</span>
-            <a href="/dashboard" class="menu-item">📊 Dashboard</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏎️ Estatísticas F1</a>
+            <nav class="nav">
+                <a href="/">📈 Gráficos</a>
+                <a href="/campeoes">🏆 Campeões</a>
+                <a href="/dashboard" class="ativo">📊 Dashboard</a>
+                <a href="/pistas">🏁 Pistas</a>
+                <a href="/curiosidades">📖 Curiosidades</a>
+                <a href="/poles">🏁 Poles</a>
+                <a href="/comparar">⚔️ Pilotos</a>
+                <a href="/comparar-equipes">⚔️ Equipes</a>
+                <a href="/quiz">🧠 Quiz</a>
+                <button class="btn-tema" onclick="toggleTema()">🌓</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="title-section">
+            <h1>📊 Dashboard 2026</h1>
+            <p>Resumo da temporada atual da Fórmula 1</p>
         </div>
 
         <!-- Estatísticas Rápidas -->
@@ -221,7 +270,7 @@
 
         <!-- Classificação de Pilotos -->
         <div class="tabela-container">
-            <h2>🏁 Classificação de Pilotos</h2>
+            <h3>🏁 Classificação de Pilotos</h3>
             <table>
                 <thead>
                     <tr>
@@ -236,7 +285,7 @@
                 <tbody>
                     {% for p in classificacao %}
                     <tr>
-                        <td>{{ p.posicao }}</td>
+                        <td class="posicao">{{ p.posicao }}</td>
                         <td><strong>{{ p.piloto }}</strong></td>
                         <td>{{ p.equipe }}</td>
                         <td>{{ p.pontos }}</td>
@@ -251,7 +300,7 @@
         <!-- Últimas e Próximas Corridas -->
         <div class="grid-2">
             <div class="tabela-container">
-                <h2>🏁 Últimas Corridas</h2>
+                <h3>🏁 Últimas Corridas</h3>
                 <table>
                     <thead>
                         <tr>
@@ -273,7 +322,7 @@
             </div>
 
             <div class="tabela-container">
-                <h2>📅 Próximas Corridas</h2>
+                <h3>📅 Próximas Corridas</h3>
                 <table>
                     <thead>
                         <tr>
@@ -293,14 +342,16 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
-        </div>
-
         <div class="footer">
             <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
             <p>Dados utilizados apenas para fins educacionais.</p>
         </div>
+
     </div>
+
+    <script>
+        function toggleTema() { document.body.classList.toggle('tema-claro'); }
+    </script>
+
 </body>
 </html>

@@ -5,472 +5,443 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🏎️ Estatísticas F1</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #141414;
+            --border: #262626;
+            --red: #e10600;
+            --red-dark: #b30000;
+            --text: #e8e8e8;
+            --text-muted: #888;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e8e8e8;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
-
-        h1 {
-            text-align: center;
-            font-size: 3.5em;
-            color: #b30000;
-            margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(180, 0, 0, 0.2);
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #b30000;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
+            padding-top: 70px;
         }
 
-        .menu-superior {
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+        }
+        .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0;
-            margin: 15px 0 30px 0;
-            padding: 10px 18px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #2a2a2a;
+            justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropbtn {
-            background: transparent;
-            color: #bbb;
-            border: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            padding: 6px 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            font-family: inherit;
-        }
-        .dropbtn:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 8px 0;
-            min-width: 200px;
-            z-index: 100;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-            margin-top: 4px;
-        }
-        .dropdown-content a {
-            display: block;
-            color: #ccc;
+        .logo {
+            font-size: 1.1em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
             text-decoration: none;
-            padding: 10px 20px;
-            font-size: 0.85em;
+        }
+        .nav {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.82em;
+            font-weight: 500;
+            padding: 7px 12px;
+            border-radius: 8px;
             transition: 0.2s;
-            text-align: center;
-            letter-spacing: 0.3px;
         }
-        .dropdown-content a:hover {
-            background: rgba(200, 0, 0, 0.1);
-            color: #cc0000;
+        .nav a:hover {
+            color: var(--red);
+            background: rgba(225, 6, 0, 0.1);
         }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .menu-item {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            padding: 6px 16px;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-        }
-        .menu-item:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
-        }
-
         .btn-tema {
             background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #bbb;
-            padding: 6px 14px;
-            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: #aaa;
+            padding: 7px 12px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.8em;
-            transition: 0.3s;
-            font-family: inherit;
-            margin-left: 10px;
+            font-size: 0.85em;
+            margin-left: 6px;
+            transition: 0.2s;
         }
-        .btn-tema:hover {
-            border-color: #b30000;
-            color: #e8e8e8;
+        .btn-tema:hover { border-color: var(--red); color: var(--text); }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px 24px;
         }
 
-        .contador-container {
-            background: rgba(20, 10, 10, 0.6);
-            border: 1px solid #b30000;
-            border-radius: 16px;
-            padding: 24px 30px;
-            text-align: center;
-            max-width: 820px;
-            margin: 0 auto 30px auto;
-            box-shadow: 0 0 25px rgba(180, 0, 0, 0.08);
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .title-section h1 {
+            font-size: 2.2em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
         }
+        .title-section p { color: var(--text-muted); font-size: 0.95em; }
+
+        /* ===== CONTADOR COM NEON ===== */
+        .contador-container {
+            background: var(--bg-card);
+            border: 2px solid var(--red);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            animation: neon-box 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neon-box {
+            from {
+                box-shadow:
+                    0 0 5px #e10600,
+                    0 0 10px #e10600,
+                    0 0 20px #e10600,
+                    0 0 30px #e10600,
+                    0 0 40px rgba(225, 6, 0, 0.5),
+                    inset 0 0 15px rgba(225, 6, 0, 0.1);
+            }
+            to {
+                box-shadow:
+                    0 0 8px #e10600,
+                    0 0 18px #e10600,
+                    0 0 35px #e10600,
+                    0 0 55px #e10600,
+                    0 0 75px rgba(225, 6, 0, 0.7),
+                    inset 0 0 25px rgba(225, 6, 0, 0.2);
+            }
+        }
+
         .contador-titulo {
             font-size: 0.7em;
-            color: #cc0000;
+            color: var(--red);
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 700;
         }
         .contador-grande {
-            font-weight: 600;
-            color: #f0f0f0;
+            font-weight: 700;
+            color: #fff;
             font-size: 1.1em;
-            margin: 8px 0 12px 0;
-            letter-spacing: 1px;
+            margin: 8px 0 16px 0;
         }
         .contador-tempo {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            font-weight: 700;
+            gap: 12px;
         }
         .contador-tempo div {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 20px;
-            border-radius: 10px;
-            min-width: 80px;
+            background: #0a0a0a;
+            padding: 10px 16px;
+            border-radius: 12px;
+            min-width: 70px;
+            border: 1px solid var(--border);
         }
         .contador-tempo span {
-            font-size: 2.8em;
-            color: #cc0000;
-            line-height: 1.2;
-            font-weight: 700;
+            font-size: 2em;
+            color: var(--red);
+            line-height: 1;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 10px rgba(225, 6, 0, 0.6);
         }
         .contador-tempo small {
             font-size: 0.55em;
-            color: #777;
+            color: #666;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            margin-top: 4px;
         }
-
         .programacao {
-            margin-top: 12px;
-            border-top: 1px solid #2a2a2a;
-            padding-top: 12px;
+            margin-top: 18px;
+            border-top: 1px solid var(--border);
+            padding-top: 18px;
         }
         .programacao-titulo {
-            font-size: 0.7em;
-            color: #cc0000;
+            font-size: 0.68em;
+            color: var(--red);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 10px;
+            letter-spacing: 2.5px;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
-        .programacao-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 4px;
-        }
+        .programacao-grid { display: grid; gap: 4px; }
         .programacao-item {
             display: grid;
-            grid-template-columns: 130px 120px 1fr;
-            gap: 15px;
-            padding: 10px 16px;
-            border-radius: 6px;
-            background: rgba(0,0,0,0.3);
-            font-size: 0.85em;
+            grid-template-columns: 110px 90px 1fr;
+            gap: 10px;
+            padding: 9px 14px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.4);
+            font-size: 0.82em;
             align-items: center;
+            transition: 0.2s;
         }
-        .programacao-item .dia {
-            color: #e8e8e8;
-            font-weight: 600;
-        }
+        .programacao-item:hover { background: rgba(225, 6, 0, 0.06); }
+        .programacao-item .dia { color: var(--text); font-weight: 600; }
         .programacao-item .horario {
-            color: #e8e8e8;
-            font-family: monospace;
+            color: var(--text);
+            font-family: 'Inter', monospace;
+            font-weight: 600;
             text-align: center;
+            font-variant-numeric: tabular-nums;
         }
-        .programacao-item .sessao {
-            color: #999;
-            text-align: right;
-        }
+        .programacao-item .sessao { color: var(--text-muted); text-align: right; }
         .programacao-obs {
-            font-size: 0.55em;
-            color: #666;
+            font-size: 0.6em;
+            color: #555;
             text-align: center;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
+            margin-top: 10px;
         }
 
+        /* ===== GRID DE CARDS ===== */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 35px;
+            gap: 24px;
+            margin-bottom: 24px;
         }
         .card {
-            background: rgba(20, 15, 15, 0.7);
+            background: var(--bg-card);
             border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-            transition: 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
         }
         .card:hover {
-            transform: translateY(-4px);
-            border-color: #b30000;
-            box-shadow: 0 6px 25px rgba(180, 0, 0, 0.06);
+            border-color: var(--red);
+            box-shadow: 0 8px 30px rgba(225, 6, 0, 0.1);
         }
-        .card h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 12px;
+        .card h3 {
+            color: var(--red);
+            font-size: 1.15em;
+            margin-bottom: 4px;
             text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 700;
         }
-        .card p {
+        .card .card-desc {
             text-align: center;
-            color: #999;
-            font-size: 0.85em;
-            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            margin-bottom: 14px;
         }
-        .card .chart-container {
+        .chart-container {
             position: relative;
-            height: 300px;
+            height: 280px;
             width: 100%;
         }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-        .full-width .chart-container {
-            height: 350px;
-        }
+        .full-width { grid-column: 1 / -1; }
+        .full-width .chart-container { height: 320px; }
 
+        /* ===== TABELA ===== */
         .tabela-container {
-            background: rgba(20, 15, 15, 0.7);
+            background: var(--bg-card);
             border-radius: 16px;
             padding: 22px;
-            border: 1px solid #2a2a2a;
-            margin-top: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
         }
-        .tabela-container h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 15px;
+        .tabela-container h3 {
+            color: var(--red);
+            font-size: 1.15em;
+            margin-bottom: 16px;
             text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 700;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
         th, td {
-            padding: 12px 15px;
+            padding: 11px 14px;
             text-align: left;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid var(--border);
         }
         th {
-            background: #b30000;
+            background: var(--red);
             color: #fff;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.78em;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        td {
-            color: #ddd;
-        }
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        tr:hover {
-            background: rgba(200, 0, 0, 0.06);
-        }
+        td { color: var(--text); font-size: 0.9em; }
+        tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+        tr:hover { background: rgba(225, 6, 0, 0.06); }
 
+        /* ===== RODAPÉ ===== */
         .footer {
             text-align: center;
-            color: #555;
+            color: #444;
             margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
-            font-size: 0.8em;
-            line-height: 1.6;
-            letter-spacing: 0.5px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.78em;
+            line-height: 1.7;
         }
 
-        @media (max-width: 700px) {
-            h1 { font-size: 2.2em; }
+        /* ===== MODO CLARO ===== */
+        body.tema-claro { background: #f5f5f5; color: #1a1a1a; }
+        body.tema-claro .header { background: rgba(255,255,255,0.95); }
+        body.tema-claro .card,
+        body.tema-claro .tabela-container,
+        body.tema-claro .contador-container { background: #fff; }
+        body.tema-claro .contador-tempo div { background: #f0f0f0; }
+        body.tema-claro .programacao-item { background: rgba(0,0,0,0.04); }
+        body.tema-claro .programacao-item .dia,
+        body.tema-claro .programacao-item .horario { color: #1a1a1a; }
+        body.tema-claro .contador-grande { color: #1a1a1a; }
+        body.tema-claro td { color: #1a1a1a; }
+        body.tema-claro .nav a { color: #555; }
+        body.tema-claro .contador-container {
+            animation: none;
+            box-shadow: 0 4px 15px rgba(225, 6, 0, 0.2);
+        }
+        body.tema-claro .contador-tempo span {
+            text-shadow: none;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 900px) {
+            body { padding-top: 120px; }
+            .header-content { flex-direction: column; gap: 8px; }
+            .logo { font-size: 1em; }
+            .nav { justify-content: center; }
+            .nav a { font-size: 0.75em; padding: 6px 9px; }
+            .container { padding: 20px 14px; }
+            .title-section h1 { font-size: 1.8em; }
             .grid { grid-template-columns: 1fr; }
-            .contador-container { max-width: 100%; padding: 15px; }
-            .contador-tempo { gap: 8px; }
-            .contador-tempo div { min-width: 50px; padding: 4px 8px; }
-            .contador-tempo span { font-size: 1.6em; }
+            .contador-tempo div { min-width: 55px; padding: 8px 10px; }
+            .contador-tempo span { font-size: 1.5em; }
             .programacao-item {
-                grid-template-columns: 80px 75px 1fr;
-                font-size: 0.6em;
-                padding: 4px 6px;
-                gap: 4px;
+                grid-template-columns: 75px 65px 1fr;
+                font-size: 0.7em;
+                padding: 7px 9px;
             }
-            .programacao-item .horario { font-size: 0.6em; }
-            .menu-superior {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                border-radius: 16px;
-                padding: 12px;
-            }
-            .dropdown-content {
-                position: static;
-                transform: none;
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                min-width: auto;
-                display: none;
-            }
-            .dropdown:hover .dropdown-content { display: block; }
-            .dropdown-content a { padding: 6px 20px; font-size: 0.85em; }
-            .dropbtn { font-size: 0.95em; }
-            .menu-item { font-size: 0.95em; }
-            .btn-tema { margin-left: 0; margin-top: 4px; }
-            .card .chart-container { height: 220px; }
-            .full-width .chart-container { height: 250px; }
         }
     </style>
 </head>
 <body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏎️ Estatísticas F1</a>
+            <nav class="nav">
+                <a href="/">📈 Gráficos</a>
+                <a href="/campeoes">🏆 Campeões</a>
+                <a href="/dashboard">📊 Dashboard</a>
+                <a href="/pistas">🏁 Pistas</a>
+                <a href="/curiosidades">📖 Curiosidades</a>
+                <a href="/poles">🏁 Poles</a>
+                <a href="/comparar">⚔️ Pilotos</a>
+                <a href="/comparar-equipes">⚔️ Equipes</a>
+                <a href="/quiz">🧠 Quiz</a>
+                <button class="btn-tema" onclick="toggleTema()">🌓</button>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
 
-        <h1>🏎️ Estatísticas F1</h1>
-        <div class="subtitle">Análise de dados históricos da Fórmula 1 (1950-2026)</div>
+        <div class="title-section">
+            <h1>Estatísticas F1</h1>
+            <p>Análise de dados históricos da Fórmula 1 (1950-2026)</p>
+        </div>
 
         <div class="contador-container">
             <div class="contador-titulo">🏁 PRÓXIMA CORRIDA</div>
-            <div class="contador-grande" id="nome-corrida">🇦🇿 GP DO AZERBAIJÃO - BAKU</div>
+            <div class="contador-grande" id="nome-corrida">🇺🇸 GP DOS EUA - AUSTIN</div>
             <div class="contador-tempo" id="cronometro">
                 <div><span id="dias">00</span><small>dias</small></div>
                 <div><span id="horas">00</span><small>horas</small></div>
                 <div><span id="minutos">00</span><small>min</small></div>
                 <div><span id="segundos">00</span><small>seg</small></div>
             </div>
-
             <div class="programacao">
-                <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
-                <div class="programacao-grid">
-                    <div class="programacao-item">
-                        <span class="dia">QUI - 24 SET</span>
-                        <span class="horario">05:30</span>
-                        <span class="sessao">Treino Livre 1</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">QUI - 24 SET</span>
-                        <span class="horario">09:00</span>
-                        <span class="sessao">Treino Livre 2</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SEX - 25 SET</span>
-                        <span class="horario">05:30</span>
-                        <span class="sessao">Treino Livre 3</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SEX - 25 SET</span>
-                        <span class="horario">09:00</span>
-                        <span class="sessao">Classificação</span>
-                    </div>
-                    <div class="programacao-item">
-                        <span class="dia">SÁB - 26 SET</span>
-                        <span class="horario">08:00</span>
-                        <span class="sessao">🏆 Grande Prêmio</span>
-                    </div>
-                </div>
-                <div class="programacao-obs">*Horários de Brasília. Baku está 7 horas à frente.</div>
-            </div>
+    <div class="programacao-titulo">📋 PROGRAMAÇÃO DO FIM DE SEMANA</div>
+    <div class="programacao-grid">
+        <div class="programacao-item">
+            <span class="dia">SEX - 23 OUT</span>
+            <span class="horario">14:30</span>
+            <span class="sessao">Treino Livre 1</span>
         </div>
-
-        <div class="menu-superior">
-            <div class="dropdown">
-                <button class="dropbtn">📊 Estatísticas</button>
-                <div class="dropdown-content">
-                    <a href="/">📈 Gráficos</a>
-                    <a href="/campeoes">🏆 Campeões</a>
-                    <a href="/dashboard">📊 Dashboard</a>
-                    <a href="/pistas">🏁 Pistas</a>
-                    <a href="/curiosidades">📖 Curiosidades</a>
-                    <a href="/poles">🏁 Pole Positions</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn">🏁 Comparações</button>
-                <div class="dropdown-content">
-                    <a href="/comparar">📊 Comparar Pilotos</a>
-                    <a href="/comparar-equipes">📊 Comparar Equipes</a>
-                </div>
-            </div>
-            <a href="/quiz" class="menu-item">🧠 Quiz</a>
-            <a href="/sobre" class="menu-item">📖 Sobre</a>
-            <button class="btn-tema" onclick="toggleTema()">🌓 Tema</button>
+        <div class="programacao-item">
+            <span class="dia">SEX - 23 OUT</span>
+            <span class="horario">18:00</span>
+            <span class="sessao">Treino Livre 2</span>
+        </div>
+        <div class="programacao-item">
+            <span class="dia">SÁB - 24 OUT</span>
+            <span class="horario">14:30</span>
+            <span class="sessao">Treino Livre 3</span>
+        </div>
+        <div class="programacao-item">
+            <span class="dia">SÁB - 24 OUT</span>
+            <span class="horario">18:00</span>
+            <span class="sessao">Classificação</span>
+        </div>
+        <div class="programacao-item">
+            <span class="dia">DOM - 25 OUT</span>
+            <span class="horario">17:00</span>
+            <span class="sessao">🏆 Grande Prêmio</span>
+        </div>
+    </div>
+    <div class="programacao-obs">*Horários de Brasília. Austin está 2 horas atrás.</div>
+</div>
         </div>
 
         <div class="grid">
             <div class="card">
-                <h2>🏆 Vitórias por Piloto</h2>
-                <p>Top 20 pilotos com mais vitórias na história</p>
+                <h3>🏆 Vitórias por Piloto</h3>
+                <p class="card-desc">Top 20 pilotos com mais vitórias na história</p>
                 <div class="chart-container">
                     <canvas id="chartVitoriasPilotos"></canvas>
                 </div>
             </div>
             <div class="card">
-                <h2>🏆 Vitórias por Equipe</h2>
-                <p>Top 10 equipes com mais vitórias na história</p>
+                <h3>🏆 Vitórias por Equipe</h3>
+                <p class="card-desc">Top 10 equipes com mais vitórias na história</p>
                 <div class="chart-container">
                     <canvas id="chartVitoriasEquipes"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="card full-width">
-            <h2>📈 Evolução por Temporada</h2>
-            <p>Número de corridas por temporada (1950-2026)</p>
+        <div class="card full-width" style="margin-bottom: 24px;">
+            <h3>📈 Evolução por Temporada</h3>
+            <p class="card-desc">Número de corridas por temporada (1950-2026)</p>
             <div class="chart-container">
                 <canvas id="chartEvolucao"></canvas>
             </div>
         </div>
 
         <div class="tabela-container">
-            <h2>📊 Resumo das Vitórias (1950-2026)</h2>
+            <h3>📊 Resumo das Vitórias (1950-2026)</h3>
             <table>
                 <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
                 <tbody>
@@ -489,22 +460,15 @@
     </div>
 
     <script>
-        function toggleTema() {
-            document.body.classList.toggle('tema-claro');
-            const btn = document.querySelector('.btn-tema');
-            btn.textContent = document.body.classList.contains('tema-claro') ? '🌙 Escuro' : '🌓 Tema';
-        }
+        function toggleTema() { document.body.classList.toggle('tema-claro'); }
 
         const corridas = [
-            { data: '2026-09-26T08:00:00-03:00', nome: '🇦🇿 GP DO AZERBAIJÃO - BAKU', obs: 'Baku está 7 horas à frente' },
-            { data: '2026-10-04T04:00:00-03:00', nome: '🇲🇾 GP DO BAHREIN (MALÁSIA) - SEPANG', obs: 'Sepang está 11 horas à frente' },
-            { data: '2026-10-11T09:00:00-03:00', nome: '🇸🇬 GP DE SINGAPURA - MARINA BAY', obs: 'Singapura está 11 horas à frente' },
-            { data: '2026-10-25T17:00:00-03:00', nome: '🇺🇸 GP DOS EUA - AUSTIN', obs: 'Austin está 2 horas atrás' },
-            { data: '2026-11-01T17:00:00-03:00', nome: '🇲🇽 GP DO MÉXICO - CIDADE DO MÉXICO', obs: 'Cidade do México está 3 horas atrás' },
-            { data: '2026-11-08T14:00:00-03:00', nome: '🇧🇷 GP DE SÃO PAULO - INTERLAGOS', obs: 'São Paulo está no mesmo fuso' },
-            { data: '2026-11-22T01:00:00-03:00', nome: '🇺🇸 GP DE LAS VEGAS - LAS VEGAS', obs: 'Las Vegas está 4 horas atrás' },
-            { data: '2026-11-29T13:00:00-03:00', nome: '🇶🇦 GP DO CATAR - LUSAIL', obs: 'Catar está 6 horas à frente' },
-            { data: '2026-12-06T10:00:00-03:00', nome: '🇦🇪 GP DE ABU DHABI - YAS MARINA', obs: 'Abu Dhabi está 7 horas à frente' }
+            { data: '2026-10-25T17:00:00-03:00', nome: '🇺🇸 GP DOS EUA - AUSTIN' },
+            { data: '2026-11-01T17:00:00-03:00', nome: '🇲🇽 GP DO MÉXICO - CIDADE DO MÉXICO' },
+            { data: '2026-11-08T14:00:00-03:00', nome: '🇧🇷 GP DE SÃO PAULO - INTERLAGOS' },
+            { data: '2026-11-22T01:00:00-03:00', nome: '🇺🇸 GP DE LAS VEGAS' },
+            { data: '2026-11-29T13:00:00-03:00', nome: '🇶🇦 GP DO CATAR - LUSAIL' },
+            { data: '2026-12-06T10:00:00-03:00', nome: '🇦🇪 GP DE ABU DHABI - YAS MARINA' }
         ];
 
         function encontrarProximaCorrida() {
@@ -518,7 +482,6 @@
         function atualizarContador() {
             const prox = encontrarProximaCorrida();
             if (!prox) {
-                document.getElementById('cronometro').innerHTML = '<span style="color:#b30000;font-size:1.5em;">🏁 TEMPORADA FINALIZADA!</span>';
                 document.getElementById('nome-corrida').textContent = '🏁 TEMPORADA 2026 ENCERRADA';
                 return;
             }
@@ -537,98 +500,71 @@
         setInterval(atualizarContador, 1000);
         atualizarContador();
 
+        // ===== GRÁFICOS =====
         const coresPilotos = {
-            'Lewis Hamilton': '#DC0000', 'Michael Schumacher': '#DC0000', 'Max Verstappen': '#1E41FF',
+            'Lewis Hamilton': '#e10600', 'Michael Schumacher': '#e10600', 'Max Verstappen': '#1E41FF',
             'Sebastian Vettel': '#1E41FF', 'Alain Prost': '#FF8700', 'Ayrton Senna': '#FF8700',
             'Fernando Alonso': '#FFD700', 'Nigel Mansell': '#00A0DE', 'Jackie Stewart': '#0000FF',
-            'Niki Lauda': '#DC0000', 'Jim Clark': '#FFD700', 'Juan Manuel Fangio': '#8B0000',
+            'Niki Lauda': '#e10600', 'Jim Clark': '#FFD700', 'Juan Manuel Fangio': '#8B0000',
             'Nico Rosberg': '#00D2BE', 'Nelson Piquet': '#8B4513', 'Damon Hill': '#00A0DE',
             'Mika Häkkinen': '#FF8700', 'Stirling Moss': '#808080', 'Jenson Button': '#FF8700',
-            'Lando Norris': '#FF8700', 'Graham Hill': '#0000FF', 'Kimi Räikkönen': '#DC0000',
+            'Lando Norris': '#FF8700', 'Graham Hill': '#0000FF', 'Kimi Räikkönen': '#e10600',
             'Jack Brabham': '#8B4513', 'Emerson Fittipaldi': '#FF8700'
         };
-
         const coresEquipes = {
-            'Red Bull': '#1E41FF', 'Mercedes': '#00D2BE', 'Ferrari': '#DC0000',
+            'Red Bull': '#1E41FF', 'Mercedes': '#00D2BE', 'Ferrari': '#e10600',
             'McLaren': '#FF8700', 'Williams': '#00A0DE', 'Lotus': '#FFD700',
-            'Brabham': '#8B4513', 'Benetton': '#00A86B', 'Renault': '#FFD700',
-            'Cooper': '#808080'
+            'Brabham': '#8B4513', 'Benetton': '#00A86B', 'Renault': '#FFD700', 'Cooper': '#808080'
         };
-
-        const labelsPilotos = {{ piloto_labels|tojson }};
-        const valuesPilotos = {{ piloto_values|tojson }};
-        const coresPilotosChart = labelsPilotos.map(p => coresPilotos[p] || '#808080');
 
         new Chart(document.getElementById('chartVitoriasPilotos'), {
             type: 'bar',
             data: {
-                labels: labelsPilotos,
+                labels: {{ piloto_labels|tojson }},
                 datasets: [{
-                    label: 'Vitórias',
-                    data: valuesPilotos,
-                    backgroundColor: coresPilotosChart,
-                    borderColor: '#000',
-                    borderWidth: 1.5,
-                    borderRadius: 6
+                    data: {{ piloto_values|tojson }},
+                    backgroundColor: {{ piloto_labels|tojson }}.map(p => coresPilotos[p] || '#808080'),
+                    borderColor: '#000', borderWidth: 1, borderRadius: 5
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' vitórias' } } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 9 } } } }
             }
         });
-
-        const labelsEquipes = {{ equipe_labels|tojson }};
-        const valuesEquipes = {{ equipe_values|tojson }};
-        const coresEquipesChart = labelsEquipes.map(e => coresEquipes[e] || '#808080');
 
         new Chart(document.getElementById('chartVitoriasEquipes'), {
             type: 'bar',
             data: {
-                labels: labelsEquipes,
+                labels: {{ equipe_labels|tojson }},
                 datasets: [{
-                    label: 'Vitórias',
-                    data: valuesEquipes,
-                    backgroundColor: coresEquipesChart,
-                    borderColor: '#000',
-                    borderWidth: 1.5,
-                    borderRadius: 6
+                    data: {{ equipe_values|tojson }},
+                    backgroundColor: {{ equipe_labels|tojson }}.map(e => coresEquipes[e] || '#808080'),
+                    borderColor: '#000', borderWidth: 1, borderRadius: 5
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' vitórias' } } },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
             }
         });
 
-        const anos = {{ evolucao_anos|tojson }};
-        const valoresEvolucao = {{ evolucao_valores|tojson }};
-
         new Chart(document.getElementById('chartEvolucao'), {
             type: 'line',
             data: {
-                labels: anos,
+                labels: {{ evolucao_anos|tojson }},
                 datasets: [{
-                    label: 'Corridas',
-                    data: valoresEvolucao,
-                    borderColor: '#cc0000',
-                    backgroundColor: 'rgba(200,0,0,0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointBackgroundColor: '#1E41FF',
-                    pointBorderColor: '#000',
-                    pointRadius: 3,
-                    borderWidth: 3
+                    data: {{ evolucao_valores|tojson }},
+                    borderColor: '#e10600', backgroundColor: 'rgba(225,6,0,0.1)',
+                    fill: true, tension: 0.3,
+                    pointBackgroundColor: '#1E41FF', pointBorderColor: '#000', pointRadius: 3, borderWidth: 2.5
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' corridas' } } },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 8 } } } }
             }
         });
