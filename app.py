@@ -1,15 +1,29 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, abort
 import pandas as pd
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'f1-stats-secret-key-2026'
+
+# Corrigido: a chave secreta NÃO fica mais no código (o repositório é público).
+# No PythonAnywhere, crie a variável SECRET_KEY (veja as instruções na conversa).
+# Esta chave de reserva serve só para rodar no seu computador.
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-apenas-para-desenvolvimento')
+
+# Corrigido: caminho absoluto da pasta do projeto.
+# Assim os .csv são achados em qualquer lugar (PythonAnywhere inclusive),
+# e não dependem da pasta em que o servidor foi iniciado.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def ler_csv(nome, **kwargs):
+    return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
+
 
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
 # ============================================
-df_vitorias = pd.read_csv('historico_f1.csv')
+df_vitorias = ler_csv('historico_f1.csv')
 
 # Vitórias por piloto (histórico)
 vitorias_piloto = df_vitorias.groupby('piloto')['vitorias'].sum().sort_values(ascending=False)
@@ -24,7 +38,7 @@ evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist(
 # ============================================
 # DADOS DOS CAMPEÕES (PILOTOS)
 # ============================================
-df_pilotos_campeoes = pd.read_csv('pilotos_campeoes.csv')
+df_pilotos_campeoes = ler_csv('pilotos_campeoes.csv')
 
 # Títulos por piloto
 titulos_piloto = df_pilotos_campeoes['piloto'].value_counts().sort_values(ascending=False)
@@ -38,7 +52,7 @@ campeoes_lista = df_pilotos_campeoes.sort_values('ano', ascending=False).to_dict
 # ============================================
 # DADOS DOS CAMPEÕES (CONSTRUTORES)
 # ============================================
-df_construtores_campeoes = pd.read_csv('construtores_campeoes.csv')
+df_construtores_campeoes = ler_csv('construtores_campeoes.csv')
 
 # Títulos por construtor
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
@@ -46,45 +60,36 @@ titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_valu
 # ============================================
 # DADOS DO QUIZ
 # ============================================
-df_quiz = pd.read_csv('quiz_perguntas.csv')
+df_quiz = ler_csv('quiz_perguntas.csv')
 perguntas_quiz = df_quiz.to_dict('records')
 
 # ============================================
 # DADOS DE COMPARAÇÃO DE PILOTOS
 # ============================================
-df_pilotos_detalhes = pd.read_csv('pilotos_detalhes.csv')
+df_pilotos_detalhes = ler_csv('pilotos_detalhes.csv')
 lista_pilotos = df_pilotos_detalhes['piloto'].tolist()
 
 # ============================================
 # DADOS DE COMPARAÇÃO DE EQUIPES
 # ============================================
-df_equipes_detalhes = pd.read_csv('equipes_detalhes.csv')
+df_equipes_detalhes = ler_csv('equipes_detalhes.csv')
 lista_equipes = df_equipes_detalhes['equipe'].tolist()
-
-# ============================================
-# DADOS DA TEMPORADA 2026 (DASHBOARD)
-# ============================================
-df_classificacao = pd.read_csv('temporada_2026.csv')
-df_corridas = pd.read_csv('corridas_2026.csv')
-
-# Converter datas
-df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
 # ============================================
 # DADOS DAS PISTAS
 # ============================================
-df_pistas = pd.read_csv('pistas_detalhes.csv')
+df_pistas = ler_csv('pistas_detalhes.csv')
 
 # ============================================
 # DADOS DE CURIOSIDADES
 # ============================================
-df_curiosidades = pd.read_csv('curiosidades.csv', quoting=1, quotechar='"')
+df_curiosidades = ler_csv('curiosidades.csv', quoting=1, quotechar='"')
 lista_curiosidades = df_curiosidades.to_dict('records')
 
 # ============================================
-# DADOS DE POLE POSITIONS (CORRIGIDO: 'poles' em minúsculo)
+# DADOS DE POLE POSITIONS
 # ============================================
-df_poles = pd.read_csv('poles_f1_historico.csv')
+df_poles = ler_csv('poles_f1_historico.csv')
 poles_lista = df_poles.sort_values('poles', ascending=False).to_dict('records')
 
 # ============================================
@@ -126,14 +131,17 @@ def comparar():
 
 @app.route('/comparar/resultado', methods=['POST'])
 def comparar_resultado():
-    piloto1 = request.form['piloto1']
-    piloto2 = request.form['piloto2']
-    df_pilotos = pd.read_csv('pilotos_detalhes.csv')
-    
-    dados1 = df_pilotos[df_pilotos['piloto'] == piloto1].iloc[0]
-    dados2 = df_pilotos[df_pilotos['piloto'] == piloto2].iloc[0]
-    
-    return render_template('resultado.html', p1=dados1, p2=dados2)
+    piloto1 = request.form.get('piloto1', '')
+    piloto2 = request.form.get('piloto2', '')
+
+    # Corrigido: usa os dados já carregados (sem reler o CSV a cada clique)
+    # e responde com erro 404 se o nome não existir, em vez de quebrar com IndexError.
+    linha1 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto1]
+    linha2 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto2]
+    if linha1.empty or linha2.empty:
+        abort(404)
+
+    return render_template('resultado.html', p1=linha1.iloc[0], p2=linha2.iloc[0])
 
 @app.route('/comparar-equipes')
 def comparar_equipes():
@@ -141,35 +149,48 @@ def comparar_equipes():
 
 @app.route('/comparar-equipes/resultado', methods=['POST'])
 def comparar_equipes_resultado():
-    equipe1 = request.form['equipe1']
-    equipe2 = request.form['equipe2']
-    df_equipes = pd.read_csv('equipes_detalhes.csv')
-    
-    dados1 = df_equipes[df_equipes['equipe'] == equipe1].iloc[0]
-    dados2 = df_equipes[df_equipes['equipe'] == equipe2].iloc[0]
-    
-    return render_template('resultado_equipes.html', e1=dados1, e2=dados2)
+    equipe1 = request.form.get('equipe1', '')
+    equipe2 = request.form.get('equipe2', '')
+
+    linha1 = df_equipes_detalhes[df_equipes_detalhes['equipe'] == equipe1]
+    linha2 = df_equipes_detalhes[df_equipes_detalhes['equipe'] == equipe2]
+    if linha1.empty or linha2.empty:
+        abort(404)
+
+    return render_template('resultado_equipes.html', e1=linha1.iloc[0], e2=linha2.iloc[0])
 
 @app.route('/dashboard')
 def dashboard():
+    # Corrigido: a temporada 2026 é lida a cada visita ao dashboard.
+    # Assim, quando você atualiza os .csv, o site mostra os dados novos
+    # sem precisar apertar "Reload" no PythonAnywhere.
+    df_classificacao = ler_csv('temporada_2026.csv')
+    df_corridas = ler_csv('corridas_2026.csv')
+    df_corridas['data'] = pd.to_datetime(df_corridas['data'])
+
+    # Corrigido: garante a classificação em ordem de pontos (o líder fica na primeira linha)
+    df_classificacao = df_classificacao.sort_values('pontos', ascending=False).reset_index(drop=True)
     classificacao = df_classificacao.to_dict('records')
-    
-    # Separar corridas realizadas (passado) e próximas (futuro)
+
+    # Corrigido: uma corrida só vira "realizada" quando o DIA dela termina.
+    # Antes, uma corrida marcada para hoje (data 00:00) já aparecia como realizada de manhã,
+    # antes mesmo de acontecer.
     agora = datetime.now()
-    corridas_realizadas = df_corridas[df_corridas['data'] <= agora]
-    corridas_futuras = df_corridas[df_corridas['data'] > agora]
-    
+    fim_do_dia = df_corridas['data'] + timedelta(days=1)
+    corridas_realizadas = df_corridas[fim_do_dia <= agora]
+    corridas_futuras = df_corridas[fim_do_dia > agora]
+
     total_corridas_realizadas = len(corridas_realizadas)
     total_pilotos = len(df_classificacao)
     lider_pontos = df_classificacao.iloc[0]['pontos'] if not df_classificacao.empty else 0
-    
+
     # Últimas 5 corridas realizadas
     ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
-    
+
     # Próximas 5 corridas
     proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
-    
-    return render_template('dashboard.html', 
+
+    return render_template('dashboard.html',
                          classificacao=classificacao,
                          ultimas_corridas=ultimas_corridas,
                          proximas_corridas=proximas_corridas,
@@ -189,13 +210,13 @@ def pistas():
 @app.route('/pista/<nome_pista>')
 def pista_detalhe(nome_pista):
     nome_pista_formatado = nome_pista.replace('_', ' ')
-    
+
     # Buscar a pista pelo nome
     pista = df_pistas[df_pistas['pista'] == nome_pista_formatado]
-    
+
     if pista.empty:
         return "Pista não encontrada", 404
-    
+
     pista = pista.iloc[0].to_dict()
     return render_template('pista_detalhe.html', pista=pista)
 
@@ -216,4 +237,5 @@ def poles():
     return render_template('poles.html', poles=poles_lista)
 
 if __name__ == '__main__':
+    # debug=True só no seu computador. Nunca ligue isso em um site publicado.
     app.run(debug=True)
