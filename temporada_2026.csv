@@ -5,15 +5,15 @@ posicao,piloto,equipe,pontos,vitorias,podios
 4,George Russell,Mercedes,250,3,8
 5,Charles Leclerc,Ferrari,245,1,6
 6,Lando Norris,McLaren,221,2,5
-7,Oscar Piastri,McLaren,150,0,2
-8,Isack Hadjar,Red Bull,105,0,2
+7,Oscar Piastri,McLaren,144,0,2
+8,Isack Hadjar,Red Bull,107,0,2
 9,Liam Lawson,Red Bull,79,0,0
-10,Pierre Gasly,Alpine,43,0,0
+10,Pierre Gasly,Alpine,42,0,0
 11,Arvid Lindblad,Racing Bulls,38,0,0
 12,Franco Colapinto,Alpine,27,0,0
 13,Oliver Bearman,Haas,23,0,0
 14,Nico Hulkenberg,Audi,13,0,0
-15,Gabriel Bortoleto,Audi,10,0,0
+15,Gabriel Bortoleto,Audi,14,0,0
 16,Esteban Ocon,Haas,7,0,0
 17,Fernando Alonso,Aston Martin,7,0,0
 18,Carlos Sainz,Williams,7,0,0
@@ -22,4 +22,4 @@ posicao,piloto,equipe,pontos,vitorias,podios
 21,Lance Stroll,Aston Martin,0,0,0
 22,Valtteri Bottas,Cadillac,0,0,0
 23,Sergio Perez,Cadillac,0,0,0
-24,Ryō Hirakawa,Haas,0,0,0
+24,Ryō Hirakawa,Haas,1,0,0
