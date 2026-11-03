@@ -5,14 +5,13 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-# Corrigido: a chave secreta NÃO fica mais no código (o repositório é público).
-# No PythonAnywhere, crie a variável SECRET_KEY (veja as instruções na conversa).
+# A chave secreta NÃO fica mais no código (o repositório é público).
+# No PythonAnywhere, crie a variável SECRET_KEY na aba Web.
 # Esta chave de reserva serve só para rodar no seu computador.
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-apenas-para-desenvolvimento')
 
-# Corrigido: caminho absoluto da pasta do projeto.
-# Assim os .csv são achados em qualquer lugar (PythonAnywhere inclusive),
-# e não dependem da pasta em que o servidor foi iniciado.
+# Caminho absoluto da pasta do projeto.
+# Assim os .csv são achados em qualquer lugar (PythonAnywhere inclusive).
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -134,8 +133,7 @@ def comparar_resultado():
     piloto1 = request.form.get('piloto1', '')
     piloto2 = request.form.get('piloto2', '')
 
-    # Corrigido: usa os dados já carregados (sem reler o CSV a cada clique)
-    # e responde com erro 404 se o nome não existir, em vez de quebrar com IndexError.
+    # Usa os dados já carregados e responde 404 se o nome não existir
     linha1 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto1]
     linha2 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto2]
     if linha1.empty or linha2.empty:
@@ -161,20 +159,23 @@ def comparar_equipes_resultado():
 
 @app.route('/dashboard')
 def dashboard():
-    # Corrigido: a temporada 2026 é lida a cada visita ao dashboard.
+    # A temporada 2026 é lida a cada visita ao dashboard.
     # Assim, quando você atualiza os .csv, o site mostra os dados novos
     # sem precisar apertar "Reload" no PythonAnywhere.
     df_classificacao = ler_csv('temporada_2026.csv')
     df_corridas = ler_csv('corridas_2026.csv')
     df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
-    # Corrigido: garante a classificação em ordem de pontos (o líder fica na primeira linha)
-    df_classificacao = df_classificacao.sort_values('pontos', ascending=False).reset_index(drop=True)
+    # Ordena por pontos (desempate: vitórias, depois pódios, como na F1)
+    # e CALCULA a posição aqui. Assim a coluna "#" sempre bate com a ordem
+    # da tabela, mesmo que a coluna "posicao" do CSV esteja desatualizada.
+    df_classificacao = df_classificacao.sort_values(
+        ['pontos', 'vitorias', 'podios'], ascending=False
+    ).reset_index(drop=True)
+    df_classificacao['posicao'] = df_classificacao.index + 1
     classificacao = df_classificacao.to_dict('records')
 
-    # Corrigido: uma corrida só vira "realizada" quando o DIA dela termina.
-    # Antes, uma corrida marcada para hoje (data 00:00) já aparecia como realizada de manhã,
-    # antes mesmo de acontecer.
+    # Uma corrida só vira "realizada" quando o DIA dela termina.
     agora = datetime.now()
     fim_do_dia = df_corridas['data'] + timedelta(days=1)
     corridas_realizadas = df_corridas[fim_do_dia <= agora]
