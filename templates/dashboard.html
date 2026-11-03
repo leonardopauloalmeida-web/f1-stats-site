@@ -263,6 +263,28 @@
             to   { background-position: -130% 0; }
         }
 
+        /* ===== BARRA DE PONTOS (construtores) ===== */
+        .celula-pontos { min-width: 130px; }
+        .barra {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            margin-top: 6px;
+        }
+        .barra i {
+            display: block;
+            height: 100%;
+            border-radius: 3px;
+            background: var(--red);
+        }
+        .nota-tabela {
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 0.75em;
+            line-height: 1.5;
+            text-align: center;
+        }
+
         /* ===== GRID 2 COLUNAS ===== */
         .grid-2 {
             display: grid;
@@ -415,6 +437,45 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <!-- Classificação de Construtores -->
+        <div class="tabela-container">
+            <h3>🏭 Classificação de Construtores</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipe</th>
+                        <th>Pontos</th>
+                        <th>Vitórias</th>
+                        <th>Pódios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in construtores %}
+                    <tr>
+                        <td class="posicao">
+                            {% if c.posicao <= 3 %}
+                            <span class="medalha m{{ c.posicao }}">{{ c.posicao }}</span>
+                            {% else %}
+                            {{ c.posicao }}
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ c.equipe }}</strong></td>
+                        <td class="celula-pontos">
+                            {{ c.pontos }}
+                            <div class="barra"><i style="width: {{ c.percentual }}%"></i></div>
+                        </td>
+                        <td>{{ c.vitorias }}</td>
+                        <td>{{ c.podios }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if construtores_calculados %}
+            <p class="nota-tabela">Pontos somados a partir dos pilotos de cada equipe. Podem diferir da tabela oficial se algum piloto trocou de equipe na temporada.</p>
+            {% endif %}
         </div>
 
         <!-- Últimas e Próximas Corridas -->

@@ -26,6 +26,32 @@ def ler_csv(nome, **kwargs):
     return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
 
 
+def carregar_construtores(df_pilotos):
+    """Monta a classificação de construtores da temporada 2026.
+
+    1) Se existir o arquivo construtores_2026.csv (colunas: equipe,pontos,vitorias,podios),
+       usa ele. É o jeito mais fiel ao campeonato oficial.
+    2) Se NÃO existir, soma os pontos dos pilotos de cada equipe.
+       Atenção: se algum piloto trocou de equipe no meio do ano, essa soma pode
+       ficar diferente da tabela oficial.
+    """
+    caminho = os.path.join(BASE_DIR, 'construtores_2026.csv')
+    if os.path.exists(caminho):
+        df = pd.read_csv(caminho)
+        calculado = False
+    else:
+        df = df_pilotos.groupby('equipe', as_index=False)[['pontos', 'vitorias', 'podios']].sum()
+        calculado = True
+
+    df = df.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
+    df['posicao'] = df.index + 1
+
+    # Percentual em relação ao líder (usado na barra de pontos)
+    maior = df['pontos'].max() if not df.empty else 0
+    df['percentual'] = (df['pontos'] / maior * 100).round(1) if maior else 0
+    return df, calculado
+
+
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
 # ============================================
@@ -183,6 +209,10 @@ def dashboard():
     df_classificacao['posicao'] = df_classificacao.index + 1
     classificacao = df_classificacao.to_dict('records')
 
+    # Classificação de construtores (equipes)
+    df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
+    construtores = df_construtores.to_dict('records')
+
     # Dados do campeão para a faixa de troféu (None se o nome não for achado)
     linha_campeao = df_classificacao[df_classificacao['piloto'] == CAMPEAO_2026]
     dados_campeao = linha_campeao.iloc[0].to_dict() if not linha_campeao.empty else None
@@ -207,6 +237,8 @@ def dashboard():
 
     return render_template('dashboard.html',
                          classificacao=classificacao,
+                         construtores=construtores,
+                         construtores_calculados=construtores_calculados,
                          campeao=CAMPEAO_2026,
                          dados_campeao=dados_campeao,
                          ultimas_corridas=ultimas_corridas,
