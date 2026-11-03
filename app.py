@@ -6,31 +6,19 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 # A chave secreta NÃO fica mais no código (o repositório é público).
-# No PythonAnywhere, crie a variável SECRET_KEY na aba Web.
-# Esta chave de reserva serve só para rodar no seu computador.
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-apenas-para-desenvolvimento')
 
-# Caminho absoluto da pasta do projeto.
-# Assim os .csv são achados em qualquer lugar (PythonAnywhere inclusive).
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 
 def ler_csv(nome, **kwargs):
     return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
-
 
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
 # ============================================
 df_vitorias = ler_csv('historico_f1.csv')
-
-# Vitórias por piloto (histórico)
 vitorias_piloto = df_vitorias.groupby('piloto')['vitorias'].sum().sort_values(ascending=False)
-
-# Vitórias por equipe (histórico)
 vitorias_equipe = df_vitorias.groupby('equipe')['vitorias'].sum().sort_values(ascending=False)
-
-# Evolução por temporada (para gráfico de linha)
 evolucao_anos = df_vitorias.groupby('ano')['vitorias'].count().index.tolist()
 evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist()
 
@@ -38,22 +26,14 @@ evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist(
 # DADOS DOS CAMPEÕES (PILOTOS)
 # ============================================
 df_pilotos_campeoes = ler_csv('pilotos_campeoes.csv')
-
-# Títulos por piloto
 titulos_piloto = df_pilotos_campeoes['piloto'].value_counts().sort_values(ascending=False)
-
-# Títulos por país (dos pilotos)
 titulos_pais = df_pilotos_campeoes['pais'].value_counts().sort_values(ascending=False)
-
-# Lista completa de campeões (pilotos)
 campeoes_lista = df_pilotos_campeoes.sort_values('ano', ascending=False).to_dict('records')
 
 # ============================================
 # DADOS DOS CAMPEÕES (CONSTRUTORES)
 # ============================================
 df_construtores_campeoes = ler_csv('construtores_campeoes.csv')
-
-# Títulos por construtor
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
 
 # ============================================
@@ -133,7 +113,6 @@ def comparar_resultado():
     piloto1 = request.form.get('piloto1', '')
     piloto2 = request.form.get('piloto2', '')
 
-    # Usa os dados já carregados e responde 404 se o nome não existir
     linha1 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto1]
     linha2 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto2]
     if linha1.empty or linha2.empty:
@@ -159,36 +138,27 @@ def comparar_equipes_resultado():
 
 @app.route('/dashboard')
 def dashboard():
-    # A temporada 2026 é lida a cada visita ao dashboard.
-    # Assim, quando você atualiza os .csv, o site mostra os dados novos
-    # sem precisar apertar "Reload" no PythonAnywhere.
     df_classificacao = ler_csv('temporada_2026.csv')
     df_corridas = ler_csv('corridas_2026.csv')
-    df_corridas['data'] = pd.to_datetime(df_corridas['data'])
+    
+    # CORRIGIDO AQUI: Transforma em data e remove o horário (00:00:00)
+    df_corridas['data'] = pd.to_datetime(df_corridas['data']).dt.date
 
-    # Ordena por pontos (desempate: vitórias, depois pódios, como na F1)
-    # e CALCULA a posição aqui. Assim a coluna "#" sempre bate com a ordem
-    # da tabela, mesmo que a coluna "posicao" do CSV esteja desatualizada.
     df_classificacao = df_classificacao.sort_values(
         ['pontos', 'vitorias', 'podios'], ascending=False
     ).reset_index(drop=True)
     df_classificacao['posicao'] = df_classificacao.index + 1
     classificacao = df_classificacao.to_dict('records')
 
-    # Uma corrida só vira "realizada" quando o DIA dela termina.
-    agora = datetime.now()
-    fim_do_dia = df_corridas['data'] + timedelta(days=1)
-    corridas_realizadas = df_corridas[fim_do_dia <= agora]
-    corridas_futuras = df_corridas[fim_do_dia > agora]
+    agora = datetime.now().date() # Pega apenas a data de hoje para comparar
+    corridas_realizadas = df_corridas[df_corridas['data'] <= agora]
+    corridas_futuras = df_corridas[df_corridas['data'] > agora]
 
     total_corridas_realizadas = len(corridas_realizadas)
     total_pilotos = len(df_classificacao)
     lider_pontos = df_classificacao.iloc[0]['pontos'] if not df_classificacao.empty else 0
 
-    # Últimas 5 corridas realizadas
     ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
-
-    # Próximas 5 corridas
     proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
 
     return render_template('dashboard.html',
@@ -199,10 +169,6 @@ def dashboard():
                          total_pilotos=total_pilotos,
                          lider_pontos=lider_pontos)
 
-# ============================================
-# ROTAS DAS PISTAS
-# ============================================
-
 @app.route('/pistas')
 def pistas():
     pistas = df_pistas.to_dict('records')
@@ -211,32 +177,19 @@ def pistas():
 @app.route('/pista/<nome_pista>')
 def pista_detalhe(nome_pista):
     nome_pista_formatado = nome_pista.replace('_', ' ')
-
-    # Buscar a pista pelo nome
     pista = df_pistas[df_pistas['pista'] == nome_pista_formatado]
-
     if pista.empty:
         return "Pista não encontrada", 404
-
     pista = pista.iloc[0].to_dict()
     return render_template('pista_detalhe.html', pista=pista)
-
-# ============================================
-# ROTA DAS CURIOSIDADES
-# ============================================
 
 @app.route('/curiosidades')
 def curiosidades():
     return render_template('curiosidades.html', curiosidades=lista_curiosidades)
-
-# ============================================
-# ROTA DAS POLE POSITIONS
-# ============================================
 
 @app.route('/poles')
 def poles():
     return render_template('poles.html', poles=poles_lista)
 
 if __name__ == '__main__':
-    # debug=True só no seu computador. Nunca ligue isso em um site publicado.
     app.run(debug=True)

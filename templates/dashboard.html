@@ -334,8 +334,7 @@
                         {% for c in proximas_corridas %}
                         <tr>
                             <td>{{ c.gp }}</td>
-                            <td>{{ c.data }}</td> 
-                            <!-- Corrigido: removido o .strftime para evitar erro se a data for texto -->
+                            <td>{{ c.data.strftime('%d/%m/%Y') }}</td> <!-- Data formatada -->
                         </tr>
                         {% endfor %}
                     </tbody>
