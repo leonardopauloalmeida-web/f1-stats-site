@@ -18,6 +18,10 @@
             --red-dark: #b30000;
             --text: #e8e8e8;
             --text-muted: #888;
+            --ouro: #f5c542;
+            --ouro-escuro: #b8860b;
+            --prata: #c0c0c0;
+            --bronze: #cd7f32;
         }
 
         body {
@@ -144,6 +148,49 @@
             font-weight: 600;
         }
 
+        /* ===== FAIXA DO CAMPEÃO ===== */
+        .faixa-campeao {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--ouro-escuro);
+            background: linear-gradient(90deg, rgba(245, 197, 66, 0.25), rgba(245, 197, 66, 0.04));
+        }
+        .faixa-campeao svg {
+            width: 52px;
+            height: 52px;
+            fill: var(--ouro);
+            flex: none;
+            filter: drop-shadow(0 0 10px rgba(245, 197, 66, 0.5));
+        }
+        .faixa-rotulo {
+            display: block;
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--ouro);
+        }
+        .faixa-nome {
+            display: block;
+            font-size: clamp(1.5em, 4.5vw, 2.3em);
+            font-weight: 800;
+            line-height: 1.15;
+            background: linear-gradient(90deg, #fff2b0, var(--ouro), var(--ouro-escuro));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .faixa-detalhe {
+            display: block;
+            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
         /* ===== TABELAS ===== */
         .tabela-container {
             background: var(--bg-card);
@@ -178,6 +225,44 @@
         tr:hover { background: rgba(225, 6, 0, 0.06); }
         .posicao { color: var(--red); font-weight: 700; }
 
+        /* ===== MEDALHAS (1º ouro, 2º prata, 3º bronze) ===== */
+        .medalha {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.9em;
+            color: #111;
+        }
+        .medalha.m1 { background: linear-gradient(135deg, #fff2b0, var(--ouro-escuro)); }
+        .medalha.m2 { background: linear-gradient(135deg, #f2f2f2, #8c8c8c); }
+        .medalha.m3 { background: linear-gradient(135deg, #e6a468, #8a4b12); }
+
+        /* ===== LINHA DO CAMPEÃO (nome com brilho deslizante) ===== */
+        tr.campeao,
+        tr.campeao:hover {
+            background: rgba(245, 197, 66, 0.08);
+        }
+        tr.campeao td {
+            border-top: 1px solid var(--ouro-escuro);
+            border-bottom: 1px solid var(--ouro-escuro);
+        }
+        tr.campeao .nome-piloto {
+            background: linear-gradient(110deg, var(--ouro-escuro) 35%, #fff7c8 50%, var(--ouro-escuro) 65%);
+            background-size: 250% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: brilho 2.6s linear infinite;
+        }
+        @keyframes brilho {
+            from { background-position: 130% 0; }
+            to   { background-position: -130% 0; }
+        }
+
         /* ===== GRID 2 COLUNAS ===== */
         .grid-2 {
             display: grid;
@@ -205,6 +290,11 @@
         body.tema-claro td { color: #1a1a1a; }
         body.tema-claro .nav a { color: #555; }
         body.tema-claro .stat-card .numero { text-shadow: none; }
+        body.tema-claro .faixa-campeao { background: linear-gradient(90deg, rgba(245, 197, 66, 0.4), rgba(245, 197, 66, 0.1)); }
+        body.tema-claro .faixa-nome { background: linear-gradient(90deg, #8a6500, #b8860b); -webkit-background-clip: text; background-clip: text; }
+        body.tema-claro .faixa-rotulo { color: #8a6500; }
+        body.tema-claro .faixa-campeao svg { fill: #b8860b; }
+        body.tema-claro tr.campeao .nome-piloto { background: linear-gradient(110deg, #7a5600 35%, #d4a017 50%, #7a5600 65%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; }
 
         /* ===== RESPONSIVO ===== */
         @media (max-width: 900px) {
@@ -218,6 +308,13 @@
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .grid-2 { grid-template-columns: 1fr; }
             th, td { padding: 8px 10px; font-size: 0.82em; }
+            .faixa-campeao { padding: 16px; gap: 12px; }
+            .faixa-campeao svg { width: 40px; height: 40px; }
+        }
+
+        /* Quem prefere menos movimento: sem o brilho deslizante */
+        @media (prefers-reduced-motion: reduce) {
+            tr.campeao .nome-piloto { animation: none; }
         }
     </style>
 </head>
@@ -268,6 +365,23 @@
             </div>
         </div>
 
+        <!-- Faixa do campeão (só aparece se o campeão estiver definido no app.py) -->
+        {% if dados_campeao %}
+        <div class="faixa-campeao">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5a5 5 0 0 1-10 0zM5 4H2v2a4 4 0 0 0 4 4zm14 0h3v2a4 4 0 0 1-4 4zM11 14h2v3h3v2H8v-2h3z"/></svg>
+            <div>
+                <span class="faixa-rotulo">CAMPEÃO MUNDIAL 2026</span>
+                <span class="faixa-nome">{{ dados_campeao.piloto }}</span>
+                <span class="faixa-detalhe">
+                    {{ dados_campeao.equipe }} • {{ dados_campeao.pontos }} pontos • {{ dados_campeao.vitorias }} vitórias
+                    {% if campeao == "Kimi Antonelli" %}
+                    <br>O campeão mais jovem da história da Fórmula 1. Título garantido no GP da Cidade do México, com quatro corridas de antecedência.
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Classificação de Pilotos -->
         <div class="tabela-container">
             <h3>🏁 Classificação de Pilotos</h3>
@@ -284,9 +398,15 @@
                 </thead>
                 <tbody>
                     {% for p in classificacao %}
-                    <tr>
-                        <td class="posicao">{{ p.posicao }}</td>
-                        <td><strong>{{ p.piloto }}</strong></td>
+                    <tr class="{{ 'campeao' if p.piloto == campeao else '' }}">
+                        <td class="posicao">
+                            {% if p.posicao <= 3 %}
+                            <span class="medalha m{{ p.posicao }}">{{ p.posicao }}</span>
+                            {% else %}
+                            {{ p.posicao }}
+                            {% endif %}
+                        </td>
+                        <td><strong class="nome-piloto">{{ p.piloto }}</strong></td>
                         <td>{{ p.equipe }}</td>
                         <td>{{ p.pontos }}</td>
                         <td>{{ p.vitorias }}</td>
