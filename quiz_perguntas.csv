@@ -1,7 +1,7 @@
 pergunta,opcao1,opcao2,opcao3,opcao4,resposta_correta
 "Qual piloto tem mais vitórias na história da F1?","Lewis Hamilton","Michael Schumacher","Max Verstappen","Ayrton Senna","Lewis Hamilton"
 "Qual piloto tem mais títulos mundiais?","Lewis Hamilton","Michael Schumacher","Juan Manuel Fangio","Ayrton Senna","Lewis Hamilton, Michael Schumacher"
-"Qual piloto é o campeão mais jovem da história?","Sebastian Vettel","Max Verstappen","Lewis Hamilton","Fernando Alonso","Sebastian Vettel"
+"Qual piloto é o campeão mais jovem da história?","Sebastian Vettel","Max Verstappen","Lewis Hamilton","Kimi Antonelli","Sebastian Vettel,Kimi Antonelli"
 "Qual piloto é o campeão mais velho da história?","Juan Manuel Fangio","Giuseppe Farina","Jack Brabham","Niki Lauda","Juan Manuel Fangio"
 "Qual piloto tem mais vitórias em uma única temporada?","Max Verstappen","Michael Schumacher","Lewis Hamilton","Sebastian Vettel","Max Verstappen"
 "Qual piloto tem mais vitórias consecutivas?","Max Verstappen","Sebastian Vettel","Michael Schumacher","Lewis Hamilton","Max Verstappen"
@@ -19,4 +19,4 @@ pergunta,opcao1,opcao2,opcao3,opcao4,resposta_correta
 "Qual piloto tem mais vitórias sem ser campeão mundial?","Stirling Moss","Gerhard Berger","David Coulthard","Rubens Barrichello","Stirling Moss"
 "Qual equipe tem mais vitórias na história da F1?","Ferrari","McLaren","Mercedes","Williams","Ferrari"
 "Qual piloto tem mais pontos na história da F1?","Lewis Hamilton","Sebastian Vettel","Max Verstappen","Fernando Alonso","Lewis Hamilton"
-"Qual é o piloto mais jovem a ser campeão da Fórmula 1?","Max Verstappen","Sebastian Vettel","Lewis Hamilton","Kimi Antonelli aos 20 anos","Kimi Antonelli aos 20 anos"
+"Qual é o piloto mais jovem a ser campeão da Fórmula 1 aos 20 anos?","Max Verstappen","Sebastian Vettel","Lewis Hamilton","Kimi Antonelli aos 20 anos","Kimi Antonelli aos 20 anos"
