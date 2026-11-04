@@ -19,6 +19,9 @@
             --red-dark: #b30000;
             --text: #e8e8e8;
             --text-muted: #888;
+            --ciano: #35d8ff;
+            --ouro-escuro: #b8860b;
+            --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
         }
 
         body {
@@ -71,7 +74,8 @@
             border-radius: 8px;
             transition: 0.2s;
         }
-        .nav a:hover {
+        .nav a:hover,
+        .nav a.ativo {
             color: var(--red);
             background: rgba(225, 6, 0, 0.1);
         }
@@ -235,6 +239,7 @@
             border-radius: 16px;
             padding: 20px;
             border: 1px solid var(--border);
+            border-top: 3px solid var(--red);
             transition: 0.3s;
         }
         .card:hover {
@@ -242,11 +247,14 @@
             box-shadow: 0 8px 30px rgba(225, 6, 0, 0.1);
         }
         .card h3 {
-            color: var(--red);
-            font-size: 1.15em;
+            color: var(--ciano);
+            font-family: var(--mono);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 4px;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
         }
         .card .card-desc {
             text-align: center;
@@ -268,13 +276,17 @@
             border-radius: 16px;
             padding: 22px;
             border: 1px solid var(--border);
+            border-top: 3px solid var(--red);
         }
         .tabela-container h3 {
-            color: var(--red);
-            font-size: 1.15em;
+            color: var(--ciano);
+            font-family: var(--mono);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 16px;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
         }
         table { width: 100%; border-collapse: collapse; }
         th, td {
@@ -291,8 +303,26 @@
             letter-spacing: 0.5px;
         }
         td { color: var(--text); font-size: 0.9em; }
+        td.num { font-family: var(--mono); }
+        td.posicao { color: var(--red); font-weight: 700; width: 56px; }
         tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
         tr:hover { background: rgba(225, 6, 0, 0.06); }
+
+        /* ===== MEDALHAS (1º ouro, 2º prata, 3º bronze) ===== */
+        .medalha {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.9em;
+            color: #111;
+        }
+        .medalha.m1 { background: linear-gradient(135deg, #fff2b0, var(--ouro-escuro)); }
+        .medalha.m2 { background: linear-gradient(135deg, #f2f2f2, #8c8c8c); }
+        .medalha.m3 { background: linear-gradient(135deg, #e6a468, #8a4b12); }
 
         /* ===== RODAPÉ ===== */
         .footer {
@@ -318,6 +348,8 @@
         body.tema-claro .contador-grande { color: #1a1a1a; }
         body.tema-claro td { color: #1a1a1a; }
         body.tema-claro .nav a { color: #555; }
+        body.tema-claro .card h3,
+        body.tema-claro .tabela-container h3 { color: #0a7f95; }
         body.tema-claro .contador-container {
             animation: none;
             box-shadow: 0 4px 15px rgba(225, 6, 0, 0.2);
@@ -352,7 +384,7 @@
         <div class="header-content">
             <a href="/" class="logo">🏎️ Estatísticas F1</a>
             <nav class="nav">
-                <a href="/">📈 Gráficos</a>
+                <a href="/" class="ativo">📈 Gráficos</a>
                 <a href="/campeoes">🏆 Campeões</a>
                 <a href="/dashboard">📊 Dashboard</a>
                 <a href="/pistas">🏁 Pistas</a>
@@ -443,10 +475,14 @@
         <div class="tabela-container">
             <h3>📊 Resumo das Vitórias (1950-2026)</h3>
             <table>
-                <thead><tr><th>Piloto</th><th>Vitórias</th></tr></thead>
+                <thead><tr><th>#</th><th>Piloto</th><th>Vitórias</th></tr></thead>
                 <tbody>
                     {% for i in range(piloto_labels|length) %}
-                    <tr><td>{{ piloto_labels[i] }}</td><td>{{ piloto_values[i] }}</td></tr>
+                    <tr>
+                        <td class="posicao">{% if i < 3 %}<span class="medalha m{{ i + 1 }}">{{ i + 1 }}</span>{% else %}{{ i + 1 }}{% endif %}</td>
+                        <td>{{ piloto_labels[i] }}</td>
+                        <td class="num">{{ piloto_values[i] }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -501,6 +537,10 @@
         atualizarContador();
 
         // ===== GRÁFICOS =====
+        // Estilo "painel": fonte monoespaçada nos números e eixos
+        Chart.defaults.font.family = "ui-monospace, 'SFMono-Regular', Consolas, monospace";
+        Chart.defaults.color = '#888';
+
         const coresPilotos = {
             'Lewis Hamilton': '#e10600', 'Michael Schumacher': '#e10600', 'Max Verstappen': '#1E41FF',
             'Sebastian Vettel': '#1E41FF', 'Alain Prost': '#FF8700', 'Ayrton Senna': '#FF8700',
@@ -517,6 +557,13 @@
             'Brabham': '#8B4513', 'Benetton': '#00A86B', 'Renault': '#FFD700', 'Cooper': '#808080'
         };
 
+        // Dicas ao passar o mouse, com o visual do site
+        const dica = {
+            backgroundColor: '#0a0a0a', borderColor: '#35d8ff', borderWidth: 1,
+            titleColor: '#35d8ff', bodyColor: '#e8e8e8', padding: 10, displayColors: false
+        };
+        const grade = { color: 'rgba(53,216,255,0.08)' };
+
         new Chart(document.getElementById('chartVitoriasPilotos'), {
             type: 'bar',
             data: {
@@ -524,13 +571,13 @@
                 datasets: [{
                     data: {{ piloto_values|tojson }},
                     backgroundColor: {{ piloto_labels|tojson }}.map(p => coresPilotos[p] || '#808080'),
-                    borderColor: '#000', borderWidth: 1, borderRadius: 5
+                    borderColor: '#000', borderWidth: 1, borderRadius: 2
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 9 } } } }
+                plugins: { legend: { display: false }, tooltip: dica },
+                scales: { y: { beginAtZero: true, grid: grade, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 9 } } } }
             }
         });
 
@@ -541,13 +588,13 @@
                 datasets: [{
                     data: {{ equipe_values|tojson }},
                     backgroundColor: {{ equipe_labels|tojson }}.map(e => coresEquipes[e] || '#808080'),
-                    borderColor: '#000', borderWidth: 1, borderRadius: 5
+                    borderColor: '#000', borderWidth: 1, borderRadius: 2
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
+                plugins: { legend: { display: false }, tooltip: dica },
+                scales: { y: { beginAtZero: true, grid: grade, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
             }
         });
 
@@ -559,13 +606,13 @@
                     data: {{ evolucao_valores|tojson }},
                     borderColor: '#e10600', backgroundColor: 'rgba(225,6,0,0.1)',
                     fill: true, tension: 0.3,
-                    pointBackgroundColor: '#1E41FF', pointBorderColor: '#000', pointRadius: 3, borderWidth: 2.5
+                    pointBackgroundColor: '#35d8ff', pointBorderColor: '#000', pointRadius: 3, borderWidth: 2.5
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 8 } } } }
+                plugins: { legend: { display: false }, tooltip: dica },
+                scales: { y: { beginAtZero: true, grid: grade, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 8 } } } }
             }
         });
     </script>

@@ -3,218 +3,126 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏆 Campeões da F1 - Estatísticas F1</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>🏆 Campeões - Estatísticas F1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
-            --bg: #0a0a0a;
-            --bg-card: #141414;
-            --border: #262626;
-            --red: #e10600;
-            --red-dark: #b30000;
-            --text: #e8e8e8;
-            --text-muted: #888;
+            --bg: #0a0a0a; --bg-card: #141414; --border: #262626;
+            --red: #e10600; --text: #e8e8e8; --text-muted: #888;
+            --ciano: #35d8ff; --ouro: #f5c542; --ouro-escuro: #b8860b;
+            --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding-top: 70px;
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: 70px; }
 
         /* ===== HEADER ===== */
-        .header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
-        }
-        .header-content {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-        .logo {
-            font-size: 1.1em;
-            color: var(--red);
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
-            text-decoration: none;
-        }
-        .nav {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-        .nav a {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 0.82em;
-            font-weight: 500;
-            padding: 7px 12px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        .nav a:hover {
-            color: var(--red);
-            background: rgba(225, 6, 0, 0.1);
-        }
-        .nav a.ativo {
-            color: var(--red);
-            background: rgba(225, 6, 0, 0.1);
-        }
-        .btn-tema {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: #aaa;
-            padding: 7px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85em;
-            margin-left: 6px;
-            transition: 0.2s;
-        }
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 24px; }
+        .header-content { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo { font-size: 1.1em; color: var(--red); font-weight: 800; letter-spacing: -0.3px; white-space: nowrap; text-decoration: none; }
+        .nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .nav a { color: #aaa; text-decoration: none; font-size: 0.82em; font-weight: 500; padding: 7px 12px; border-radius: 8px; transition: 0.2s; }
+        .nav a:hover, .nav a.ativo { color: var(--red); background: rgba(225,6,0,0.1); }
+        .btn-tema { background: transparent; border: 1px solid var(--border); color: #aaa; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85em; margin-left: 6px; transition: 0.2s; }
         .btn-tema:hover { border-color: var(--red); color: var(--text); }
 
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 30px 24px;
-        }
-
+        /* ===== PÁGINA ===== */
+        .container { max-width: 1300px; margin: 0 auto; padding: 30px 24px; }
         .title-section { text-align: center; margin-bottom: 30px; }
-        .title-section h1 {
-            font-size: 2.2em;
-            color: var(--red);
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 6px;
-        }
+        .title-section h1 { font-size: 2.2em; color: var(--red); font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
         .title-section p { color: var(--text-muted); font-size: 0.95em; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
 
-        /* ===== CARDS DE GRÁFICOS ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            transition: 0.3s;
-        }
-        .card:hover {
-            border-color: var(--red);
-            box-shadow: 0 8px 30px rgba(225, 6, 0, 0.1);
-        }
-        .card h3 {
-            color: var(--red);
-            font-size: 1.15em;
-            margin-bottom: 4px;
-            text-align: center;
-            font-weight: 700;
-        }
-        .card .card-desc {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.8em;
-            margin-bottom: 14px;
-        }
-        .chart-container {
-            position: relative;
-            height: 280px;
-            width: 100%;
-        }
-        .full-width { grid-column: 1 / -1; }
-        .full-width .chart-container { height: 320px; }
+        /* ===== CARDS (base da versão 1 + títulos da versão 3) ===== */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--red); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
+        .grid-2 .card, .grid-3 .card { margin-bottom: 0; }
+        .card h3 { font-family: var(--mono); font-size: 0.78em; text-transform: uppercase; letter-spacing: 2.5px; color: var(--ciano); margin-bottom: 18px; font-weight: 600; }
+
+        /* ===== BARRAS SEGMENTADAS (estilo painel) ===== */
+        .linha-barra { display: grid; grid-template-columns: 120px 1fr 44px; gap: 12px; align-items: center; margin-bottom: 11px; font-size: 0.85em; }
+        .linha-barra .rot { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .linha-barra b { font-family: var(--mono); text-align: right; }
+        .trilho { height: 12px; }
+        .trilho i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--red) 0 6px, transparent 6px 9px); animation: cresce 0.9s ease-out both; }
+        .trilho i.ciano { background: repeating-linear-gradient(90deg, var(--ciano) 0 6px, transparent 6px 9px); }
+        @keyframes cresce { from { width: 0 !important; } }
+
+        /* ===== GRÁFICO DE LINHA ===== */
+        #linha { width: 100%; height: 190px; display: block; }
+        #linha .ln { fill: none; stroke: var(--red); stroke-width: 3; stroke-linejoin: round; }
+        #linha .ar { fill: var(--red); opacity: 0.15; }
+        #linha .gd { stroke: var(--border); stroke-width: 1; }
+        #linha text { fill: var(--text-muted); font-size: 11px; font-family: var(--mono); }
 
         /* ===== TABELA ===== */
-        .tabela-container {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid var(--border);
-        }
-        .tabela-container h3 {
-            color: var(--red);
-            font-size: 1.15em;
-            margin-bottom: 16px;
-            text-align: center;
-            font-weight: 700;
-        }
         table { width: 100%; border-collapse: collapse; }
-        th, td {
-            padding: 11px 14px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            background: var(--red);
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.78em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--red); color: #fff; font-weight: 700; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.5px; }
         td { color: var(--text); font-size: 0.9em; }
-        tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
-        tr:hover { background: rgba(225, 6, 0, 0.06); }
-        .ano { color: var(--red); font-weight: 700; }
+        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        tr:hover { background: rgba(225,6,0,0.06); }
+        td.num { font-family: var(--mono); }
+        .medalha { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: 800; font-size: 0.9em; color: #111; }
+        .medalha.m1 { background: linear-gradient(135deg, #fff2b0, var(--ouro-escuro)); }
+        .medalha.m2 { background: linear-gradient(135deg, #f2f2f2, #8c8c8c); }
+        .medalha.m3 { background: linear-gradient(135deg, #e6a468, #8a4b12); }
+        .posicao { color: var(--red); font-weight: 700; }
+
+        /* ===== CARDS DOS CAMPEÕES ===== */
+        .campeoes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+        .cp { position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; overflow: hidden; transition: 0.25s; }
+        .cp:hover { border-color: var(--red); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(225,6,0,0.12); }
+        .cp .ano { font-size: 2.6em; font-weight: 800; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--red); }
+        .cp b { display: block; margin-top: 8px; font-size: 1.02em; }
+        .cp small { color: var(--text-muted); font-size: 0.78em; line-height: 1.5; display: block; margin-top: 2px; }
+        .cp.atual { border-color: var(--ouro); background: linear-gradient(135deg, rgba(245,197,66,0.22), var(--bg-card) 70%); }
+        .cp.atual .ano { -webkit-text-stroke-color: var(--ouro); }
+        .cp.atual b { background: linear-gradient(90deg, #fff2b0, var(--ouro), var(--ouro-escuro)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .selo { position: absolute; top: 12px; right: 12px; font-size: 0.62em; font-weight: 800; letter-spacing: 1.5px; color: #111; background: var(--ouro); border-radius: 999px; padding: 3px 9px; }
 
         /* ===== RODAPÉ ===== */
-        .footer {
-            text-align: center;
-            color: #444;
-            margin-top: 40px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            font-size: 0.78em;
-            line-height: 1.7;
-        }
+        .footer { text-align: center; color: #444; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.78em; line-height: 1.7; }
 
         /* ===== MODO CLARO ===== */
         body.tema-claro { background: #f5f5f5; color: #1a1a1a; }
         body.tema-claro .header { background: rgba(255,255,255,0.95); }
-        body.tema-claro .card,
-        body.tema-claro .tabela-container { background: #fff; }
+        body.tema-claro .card, body.tema-claro .cp { background: #fff; }
         body.tema-claro td { color: #1a1a1a; }
         body.tema-claro .nav a { color: #555; }
+        body.tema-claro .card h3 { color: #0a7f95; }
+        body.tema-claro .trilho i.ciano { background: repeating-linear-gradient(90deg, #0a7f95 0 6px, transparent 6px 9px); }
+        body.tema-claro .cp.atual { background: linear-gradient(135deg, rgba(245,197,66,0.4), #fff 70%); }
+        body.tema-claro .cp.atual b { background: linear-gradient(90deg, #8a6500, #b8860b); -webkit-background-clip: text; background-clip: text; }
 
         /* ===== RESPONSIVO ===== */
         @media (max-width: 900px) {
             body { padding-top: 120px; }
             .header-content { flex-direction: column; gap: 8px; }
-            .logo { font-size: 1em; }
             .nav { justify-content: center; }
             .nav a { font-size: 0.75em; padding: 6px 9px; }
             .container { padding: 20px 14px; }
             .title-section h1 { font-size: 1.8em; }
-            .grid { grid-template-columns: 1fr; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .linha-barra { grid-template-columns: 90px 1fr 38px; }
             th, td { padding: 8px 10px; font-size: 0.82em; }
         }
+        @media (prefers-reduced-motion: reduce) { .trilho i { animation: none; } }
     </style>
 </head>
 <body>
+{% macro barras(labels, values, cor, limite=10) %}
+    {% set maximo = values[0] if values else 1 %}
+    {% for nome in labels[:limite] %}
+    {% set v = values[loop.index0] %}
+    <div class="linha-barra">
+        <span class="rot" title="{{ nome }}">{{ nome }}</span>
+        <div class="trilho"><i class="{{ cor }}" style="width: {{ ((v / maximo * 100)|round(1)) if maximo else 0 }}%"></i></div>
+        <b>{{ v }}</b>
+    </div>
+    {% endfor %}
+{% endmacro %}
 
     <header class="header">
         <div class="header-content">
@@ -237,154 +145,48 @@
     <div class="container">
 
         <div class="title-section">
-            <h1>🏆 Campeões Mundiais da F1</h1>
-            <p>História completa desde 1950 até 2026</p>
+            <h1>🏆 Campeões</h1>
+            <p>Títulos por piloto, por equipe e por país, e todos os campeões da história</p>
         </div>
 
-        <!-- GRÁFICO 1: TÍTULOS POR PILOTO -->
-        <div class="card full-width" style="margin-bottom: 24px;">
-            <h3>👑 Títulos por Piloto</h3>
-            <p class="card-desc">Pilotos com mais títulos mundiais (Top 10)</p>
-            <div class="chart-container">
-                <canvas id="chartPilotos"></canvas>
+        <div class="grid-3">
+            <div class="card">
+                <h3>Títulos por piloto</h3>
+                {{ barras(titulos_piloto_labels, titulos_piloto_values, '', 8) }}
+            </div>
+            <div class="card">
+                <h3>Títulos por construtor</h3>
+                {{ barras(titulos_construtor_labels, titulos_construtor_values, 'ciano', 8) }}
+            </div>
+            <div class="card">
+                <h3>Títulos por país</h3>
+                {{ barras(titulos_pais_labels, titulos_pais_values, '', 8) }}
             </div>
         </div>
 
-        <!-- GRÁFICO 2: TÍTULOS POR CONSTRUTOR -->
-        <div class="card full-width" style="margin-bottom: 24px;">
-            <h3>🏎️ Títulos por Construtor</h3>
-            <p class="card-desc">Construtores com mais títulos mundiais (Top 10)</p>
-            <div class="chart-container">
-                <canvas id="chartConstrutores"></canvas>
+        <div class="card">
+            <h3>Todos os campeões</h3>
+            <div class="campeoes-grid">
+                {% for c in campeoes %}
+                <div class="cp{% if c.ano|string == '2026' %} atual{% endif %}">
+                    {% if c.ano|string == '2026' %}<span class="selo">ATUAL</span>{% endif %}
+                    <div class="ano">{{ c.ano }}</div>
+                    <b>{{ c.piloto }}</b>
+                    <small>{% if c.equipe %}{{ c.equipe }}{% endif %}{% if c.equipe and c.pais %} • {% endif %}{% if c.pais %}{{ c.pais }}{% endif %}</small>
+                </div>
+                {% endfor %}
             </div>
-        </div>
-
-        <!-- GRÁFICO 3: TÍTULOS POR PAÍS -->
-        <div class="card full-width" style="margin-bottom: 24px;">
-            <h3>🌍 Títulos por País</h3>
-            <p class="card-desc">Total de campeonatos conquistados por país (Top 10)</p>
-            <div class="chart-container">
-                <canvas id="chartPaises"></canvas>
-            </div>
-        </div>
-
-        <!-- TABELA COMPLETA -->
-        <div class="tabela-container">
-            <h3>📋 Todos os Campeões (1950-2026)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ano</th>
-                        <th>Piloto</th>
-                        <th>País</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for campeao in campeoes %}
-                    <tr>
-                        <td class="ano">{{ campeao.ano }}</td>
-                        <td>{{ campeao.piloto }}</td>
-                        <td>{{ campeao.pais }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
 
         <div class="footer">
             <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
             <p>Dados utilizados apenas para fins educacionais.</p>
         </div>
-
     </div>
 
     <script>
         function toggleTema() { document.body.classList.toggle('tema-claro'); }
-
-        // ===== CORES =====
-        const coresPilotos = {
-            'Lewis Hamilton': '#e10600', 'Michael Schumacher': '#e10600',
-            'Juan Manuel Fangio': '#00D2BE', 'Alain Prost': '#FF8700',
-            'Sebastian Vettel': '#1E41FF', 'Max Verstappen': '#1E41FF',
-            'Ayrton Senna': '#FF8700', 'Niki Lauda': '#e10600',
-            'Nelson Piquet': '#8B4513', 'Jackie Stewart': '#0000FF'
-        };
-        const coresEquipes = {
-            'Ferrari': '#e10600', 'McLaren': '#FF8700', 'Mercedes': '#00D2BE',
-            'Williams': '#00A0DE', 'Lotus': '#FFD700', 'Red Bull': '#1E41FF',
-            'Brabham': '#8B4513', 'Cooper': '#808080', 'Renault': '#FFD700',
-            'Benetton': '#00A86B', 'Vanwall': '#006400', 'BRM': '#006400',
-            'Matra': '#0000FF', 'Tyrrell': '#0000FF', 'Brawn GP': '#000000'
-        };
-        const coresPaises = {
-            'Reino Unido': '#012169', 'Alemanha': '#DD0000', 'Brasil': '#009739',
-            'Argentina': '#75AADB', 'França': '#002395', 'Áustria': '#ED2939',
-            'Austrália': '#00008B', 'Países Baixos': '#AE1C28',
-            'Finlândia': '#002F6C', 'Itália': '#009246'
-        };
-
-        // ===== GRÁFICO 1: PILOTOS =====
-        const labelsPilotos = {{ titulos_piloto_labels|tojson }};
-        const valuesPilotos = {{ titulos_piloto_values|tojson }};
-
-        new Chart(document.getElementById('chartPilotos'), {
-            type: 'bar',
-            data: {
-                labels: labelsPilotos,
-                datasets: [{
-                    data: valuesPilotos,
-                    backgroundColor: labelsPilotos.map(p => coresPilotos[p] || '#808080'),
-                    borderColor: '#000', borderWidth: 1, borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
-            }
-        });
-
-        // ===== GRÁFICO 2: CONSTRUTORES =====
-        const labelsEquipes = {{ titulos_construtor_labels|tojson }};
-        const valuesEquipes = {{ titulos_construtor_values|tojson }};
-
-        new Chart(document.getElementById('chartConstrutores'), {
-            type: 'bar',
-            data: {
-                labels: labelsEquipes,
-                datasets: [{
-                    data: valuesEquipes,
-                    backgroundColor: labelsEquipes.map(e => coresEquipes[e] || '#808080'),
-                    borderColor: '#000', borderWidth: 1, borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
-            }
-        });
-
-        // ===== GRÁFICO 3: PAÍSES =====
-        const labelsPaises = {{ titulos_pais_labels|tojson }};
-        const valuesPaises = {{ titulos_pais_values|tojson }};
-
-        new Chart(document.getElementById('chartPaises'), {
-            type: 'bar',
-            data: {
-                labels: labelsPaises,
-                datasets: [{
-                    data: valuesPaises,
-                    backgroundColor: labelsPaises.map(p => coresPaises[p] || '#808080'),
-                    borderColor: '#000', borderWidth: 1, borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } }, x: { grid: { display: false }, ticks: { color: '#aaa', font: { size: 10 } } } }
-            }
-        });
     </script>
+
 </body>
 </html>
