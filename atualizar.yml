@@ -1,0 +1,32 @@
+# Atualiza os CSVs da temporada automaticamente, direto no GitHub.
+# Roda aos domingos e segundas (dias de corrida), a cada 3 horas,
+# e também quando você clicar em "Run workflow" na aba Actions.
+name: Atualizar resultados da F1
+
+on:
+  schedule:
+    - cron: "0 */3 * * 0,1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Buscar resultados na API
+        run: python atualizar_dados.py
+
+      - name: Salvar mudanças (se houver)
+        run: |
+          git config user.name "atualizador-f1"
+          git config user.email "atualizador-f1@users.noreply.github.com"
+          git add temporada_2026.csv construtores_2026.csv corridas_2026.csv
+          git diff --cached --quiet || (git commit -m "Atualiza resultados automaticamente" && git push)
