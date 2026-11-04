@@ -3,192 +3,302 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏁 Pole Positions da F1</title>
+    <title>🏁 Pole Positions - Estatísticas F1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #141414;
+            --border: #262626;
+            --red: #e10600;
+            --text: #e8e8e8;
+            --text-muted: #888;
+            --ouro: #f5c542;
+            --ouro-escuro: #b8860b;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e8e8e8;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-        }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 {
-            text-align: center;
-            font-size: 3em;
-            color: #b30000;
-            margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(180, 0, 0, 0.2);
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #999;
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #b30000;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
+            padding-top: 70px;
         }
 
-        .menu-superior {
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+        }
+        .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .logo {
+            font-size: 1.1em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .nav {
+            display: flex;
+            gap: 4px;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 0;
-            margin: 15px 0 30px 0;
-            padding: 10px 18px;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid #2a2a2a;
+            justify-content: flex-end;
         }
-        .menu-item {
-            color: #bbb;
+        .nav a {
+            color: #aaa;
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.82em;
             font-weight: 500;
-            padding: 6px 16px;
-            transition: 0.3s;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-        }
-        .menu-item:hover {
-            color: #cc0000;
-            background: rgba(200,0,0,0.08);
-        }
-        .menu-divisor { color: #333; padding: 0 2px; }
-
-        .tabela-container {
-            background: rgba(20,15,15,0.7);
-            border-radius: 16px;
-            padding: 22px;
-            border: 1px solid #2a2a2a;
-        }
-        .tabela-container h2 {
-            color: #cc0000;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #2a2a2a;
-        }
-        th {
-            background: #b30000;
-            color: #fff;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        td {
-            color: #ddd;
-        }
-        tr:nth-child(even) {
-            background: rgba(255,255,255,0.02);
-        }
-        tr:hover {
-            background: rgba(200,0,0,0.06);
-        }
-        .td-numero {
-            color: #cc0000;
-            font-weight: 600;
-        }
-
-        .btn-voltar {
-            display: inline-block;
-            background: #b30000;
-            color: #fff;
-            padding: 10px 25px;
+            padding: 7px 12px;
             border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-            margin-top: 20px;
+            transition: 0.2s;
         }
-        .btn-voltar:hover {
-            background: #cc0000;
-            transform: scale(1.02);
+        .nav a:hover,
+        .nav a.ativo {
+            color: var(--red);
+            background: rgba(225, 6, 0, 0.1);
+        }
+        .btn-tema {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #aaa;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 6px;
+            transition: 0.2s;
+        }
+        .btn-tema:hover { border-color: var(--red); color: var(--text); }
+
+        /* ===== PÁGINA ===== */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 24px;
+        }
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .title-section h1 {
+            font-size: 2.2em;
+            color: var(--red);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+        .title-section p { color: var(--text-muted); font-size: 0.95em; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--red);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card h3 {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 22px;
         }
 
+        /* ===== PÓDIO ===== */
+        .podio {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 12px;
+        }
+        .podio .lugar {
+            flex: 1;
+            max-width: 230px;
+            text-align: center;
+        }
+        .podio .nome {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-bottom: 4px;
+            min-height: 2.6em;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .podio .valor {
+            display: block;
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--red);
+            font-variant-numeric: tabular-nums;
+        }
+        .podio .bloco {
+            margin-top: 8px;
+            border-radius: 12px 12px 0 0;
+            background: linear-gradient(var(--red), #5a0300);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10px;
+            font-size: 1.6em;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.85);
+            transform-origin: bottom;
+            animation: sobe 0.9s ease-out both;
+        }
+        .podio .p1 .valor { color: var(--ouro); text-shadow: 0 0 18px rgba(245, 197, 66, 0.4); }
+        .podio .p1 .bloco { background: linear-gradient(var(--ouro), var(--ouro-escuro)); color: #111; }
+        .podio .p2 .bloco { background: linear-gradient(#e8e8e8, #7d7d7d); color: #111; animation-delay: 0.15s; }
+        .podio .p3 .bloco { background: linear-gradient(#e6a468, #7a4210); color: #111; animation-delay: 0.3s; }
+        .podio .p2 .valor { color: #d8d8d8; }
+        .podio .p3 .valor { color: #e6a468; }
+        @keyframes sobe { from { transform: scaleY(0); } }
+
+        /* ===== LISTA ===== */
+        .lista-linha {
+            display: grid;
+            grid-template-columns: 48px 1fr 60px;
+            gap: 12px;
+            align-items: center;
+            padding: 13px 8px;
+            border-top: 1px solid var(--border);
+            transition: 0.2s;
+        }
+        .lista-linha:hover { background: rgba(225, 6, 0, 0.06); }
+        .lista-linha .pos { color: var(--red); font-weight: 700; }
+        .lista-linha .nome-l { font-weight: 500; }
+        .lista-linha .barra { height: 5px; border-radius: 3px; background: var(--border); margin-top: 6px; }
+        .lista-linha .barra i { display: block; height: 100%; border-radius: 3px; background: var(--red); }
+        .lista-linha b { text-align: right; font-variant-numeric: tabular-nums; }
+
+        /* ===== RODAPÉ ===== */
         .footer {
             text-align: center;
-            color: #555;
+            color: #444;
             margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
-            font-size: 0.8em;
-            line-height: 1.6;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.78em;
+            line-height: 1.7;
         }
 
-        @media (max-width: 700px) {
-            .menu-superior {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                border-radius: 16px;
-                padding: 12px;
-            }
-            .menu-divisor { display: none; }
-            th, td {
-                padding: 8px 10px;
-                font-size: 0.85em;
-            }
+        /* ===== MODO CLARO ===== */
+        body.tema-claro { background: #f5f5f5; color: #1a1a1a; }
+        body.tema-claro .header { background: rgba(255,255,255,0.95); }
+        body.tema-claro .card { background: #fff; }
+        body.tema-claro .nav a { color: #555; }
+        body.tema-claro .podio .p1 .valor { color: #8a6500; text-shadow: none; }
+        body.tema-claro .podio .p2 .valor { color: #666; }
+        body.tema-claro .podio .p3 .valor { color: #8a4b12; }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 900px) {
+            body { padding-top: 120px; }
+            .header-content { flex-direction: column; gap: 8px; }
+            .nav { justify-content: center; }
+            .nav a { font-size: 0.75em; padding: 6px 9px; }
+            .container { padding: 20px 14px; }
+            .title-section h1 { font-size: 1.8em; }
+            .podio { gap: 6px; }
+            .podio .nome { font-size: 0.75em; }
+            .podio .valor { font-size: 1.5em; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .podio .bloco { animation: none; }
         }
     </style>
 </head>
 <body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏎️ Estatísticas F1</a>
+            <nav class="nav">
+                <a href="/">📈 Gráficos</a>
+                <a href="/campeoes">🏆 Campeões</a>
+                <a href="/dashboard">📊 Dashboard</a>
+                <a href="/pistas">🏁 Pistas</a>
+                <a href="/curiosidades">📖 Curiosidades</a>
+                <a href="/poles" class="ativo">🏁 Poles</a>
+                <a href="/comparar">⚔️ Pilotos</a>
+                <a href="/comparar-equipes">⚔️ Equipes</a>
+                <a href="/quiz">🧠 Quiz</a>
+                <button class="btn-tema" onclick="toggleTema()">🌓</button>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>🏁 Pole Positions da F1</h1>
-        <div class="subtitle">Pilotos com mais poles na história da Fórmula 1</div>
 
-        <div class="menu-superior">
-            <a href="/" class="menu-item">🏠 Início</a>
-            <span class="menu-divisor">|</span>
-            <a href="/campeoes" class="menu-item">🏆 Campeões</a>
-            <span class="menu-divisor">|</span>
-            <a href="/dashboard" class="menu-item">📊 Dashboard</a>
-            <span class="menu-divisor">|</span>
-            <a href="/pistas" class="menu-item">🏁 Pistas</a>
+        <div class="title-section">
+            <h1>🏁 Pole Positions da F1</h1>
+            <p>Pilotos com mais poles na história da Fórmula 1</p>
         </div>
 
-        <div class="tabela-container">
-            <h2>📋 Ranking de Pole Positions</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Piloto</th>
-                        <th>Poles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in poles %}
-                    <tr>
-                        <td class="td-numero">{{ loop.index }}</td>
-                        <td>{{ p.piloto }}</td>
-                        <td><strong>{{ p.poles }}</strong></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% set maximo = poles[0].poles if poles else 1 %}
 
-        <div style="text-align: center;">
-            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
+        {% if poles|length >= 3 %}
+        <!-- Pódio: 2º, 1º e 3º -->
+        <div class="card">
+            <h3>Pódio das Pole Positions</h3>
+            <div class="podio">
+                {% for idx in [1, 0, 2] %}
+                {% set p = poles[idx] %}
+                <div class="lugar p{{ idx + 1 }}">
+                    <span class="nome">{{ p.piloto }}</span>
+                    <span class="valor">{{ p.poles }}</span>
+                    <div class="bloco" style="height: {{ (70 + (p.poles / maximo * 110))|round|int }}px">{{ idx + 1 }}º</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Lista do 4º lugar em diante -->
+        <div class="card">
+            <h3>Ranking de Pole Positions</h3>
+            {% for p in poles[3:] %}
+            <div class="lista-linha">
+                <span class="pos">{{ loop.index + 3 }}</span>
+                <div>
+                    <div class="nome-l">{{ p.piloto }}</div>
+                    <div class="barra"><i style="width: {{ ((p.poles / maximo * 100)|round(1)) if maximo else 0 }}%"></i></div>
+                </div>
+                <b>{{ p.poles }}</b>
+            </div>
+            {% endfor %}
         </div>
 
         <div class="footer">
             <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
             <p>Dados utilizados apenas para fins educacionais.</p>
         </div>
+
     </div>
+
+    <script>
+        function toggleTema() { document.body.classList.toggle('tema-claro'); }
+    </script>
+
 </body>
 </html>
