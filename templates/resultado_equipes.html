@@ -3,78 +3,213 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏎️ Comparação - {{ e1.equipe }} vs {{ e2.equipe }}</title>
+    <title>🏎️ Resultado - Comparar Equipes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0d0d0d; color: #e8e8e8; padding: 20px; min-height: 100vh; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; font-size: 2.5em; color: #b30000; margin-bottom: 10px; text-shadow: 0 0 20px rgba(180, 0, 0, 0.2); }
-        .subtitle { text-align: center; color: #999; font-size: 1.1em; margin-bottom: 30px; border-bottom: 1px solid #b30000; padding-bottom: 15px; letter-spacing: 1px; }
-        .comparacao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .equipe-card { background: rgba(20, 15, 15, 0.8); border-radius: 16px; padding: 25px; border: 1px solid #2a2a2a; transition: 0.3s; }
-        .equipe-card:hover { border-color: #b30000; }
-        .equipe-card h2 { text-align: center; font-size: 2em; color: #cc0000; margin-bottom: 5px; }
-        .equipe-card .pais { text-align: center; color: #999; font-size: 0.9em; margin-bottom: 20px; }
-        .equipe-card table { width: 100%; border-collapse: collapse; }
-        .equipe-card td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; }
-        .equipe-card td:first-child { color: #999; font-weight: 500; }
-        .equipe-card td:last-child { text-align: right; color: #e8e8e8; font-weight: 600; }
-        .equipe-card .destaque { color: #cc0000; font-size: 1.2em; }
-        .vencedor { border-color: #cc0000; box-shadow: 0 0 30px rgba(200, 0, 0, 0.1); }
-        .btn-voltar { display: inline-block; background: #b30000; color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 20px 20px 0; transition: 0.3s; }
-        .btn-voltar:hover { background: #cc0000; transform: scale(1.02); }
-        .btn-nova { display: inline-block; background: #2a2a2a; color: #e8e8e8; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0; transition: 0.3s; }
-        .btn-nova:hover { background: #3a3a3a; transform: scale(1.02); }
-        .footer { text-align: center; color: #555; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2a2a2a; font-size: 0.8em; line-height: 1.6; }
-        @media (max-width: 700px) { .comparacao-grid { grid-template-columns: 1fr; } }
+        :root {
+            --bg: #0a0a0a; --bg-card: #141414; --border: #262626;
+            --red: #e10600; --azul: #2f6bff; --text: #e8e8e8; --text-muted: #888;
+            --ouro: #f5c542; --ciano: #35d8ff;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: 70px; }
+
+        /* ===== HEADER ===== */
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 24px; }
+        .header-content { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo { font-size: 1.1em; color: var(--red); font-weight: 800; letter-spacing: -0.3px; white-space: nowrap; text-decoration: none; }
+        .nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .nav a { color: #aaa; text-decoration: none; font-size: 0.82em; font-weight: 500; padding: 7px 12px; border-radius: 8px; transition: 0.2s; }
+        .nav a:hover, .nav a.ativo { color: var(--red); background: rgba(225,6,0,0.1); }
+        .btn-tema { background: transparent; border: 1px solid var(--border); color: #aaa; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85em; margin-left: 6px; transition: 0.2s; }
+        .btn-tema:hover { border-color: var(--red); color: var(--text); }
+
+        /* ===== PÁGINA ===== */
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; }
+        .title-section { text-align: center; margin-bottom: 28px; }
+        .title-section h1 { font-size: 2.2em; color: var(--red); font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
+        .title-section p { color: var(--text-muted); font-size: 0.95em; }
+
+        /* ===== FORMULÁRIO ===== */
+        .fm { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--red); border-radius: 16px; padding: 22px; margin-bottom: 24px; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .fm label { display: block; font-size: 0.75em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .fm .l1 { color: var(--red); } .fm .l2 { color: var(--azul); }
+        .fm select { width: 100%; padding: 13px; border-radius: 10px; background: #0a0a0a; color: var(--text); border: 1px solid var(--border); font-size: 1em; font-family: inherit; cursor: pointer; }
+        .fm select:focus { border-color: var(--red); outline: none; }
+        .fm .btn { grid-column: 1 / -1; padding: 14px; border: 0; border-radius: 10px; background: var(--red); color: #fff; font-size: 1.05em; font-weight: 800; font-family: inherit; cursor: pointer; transition: 0.2s; }
+        .fm .btn:hover { background: #ff1a00; transform: translateY(-2px); }
+        .aviso { grid-column: 1 / -1; color: var(--ouro); font-size: 0.85em; text-align: center; min-height: 1.2em; }
+
+        /* ===== RESULTADO: cartas + radar ===== */
+        .g1 { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 16px; align-items: start; }
+        .c3 { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--red); border-radius: 16px; padding: 18px; }
+        .c3.B { border-top-color: var(--azul); }
+        .c3 .av { width: 56px; height: 56px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1em; margin-bottom: 10px; color: #fff; }
+        .c3.B .av { background: var(--azul); }
+        .c3 h3 { font-size: 1.15em; margin-bottom: 2px; }
+        .c3 .info { color: var(--text-muted); font-size: 0.8em; line-height: 1.6; }
+        .bd { display: inline-block; margin: 10px 0 4px; font-size: 0.68em; font-weight: 800; letter-spacing: 1px; padding: 4px 11px; border-radius: 999px; background: var(--border); }
+        .bd.top { background: var(--ouro); color: #111; }
+        .c3 .li { display: flex; justify-content: space-between; padding: 9px 8px; border-top: 1px solid var(--border); font-size: 0.9em; }
+        .c3 .li:first-of-type { margin-top: 10px; }
+        .c3 .li.w { background: rgba(245,197,66,0.12); border-radius: 8px; color: var(--ouro); }
+        .c3 .li b { font-variant-numeric: tabular-nums; }
+        .pn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+        .lg { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; font-size: 0.82em; margin-bottom: 8px; }
+        .lg i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; }
+        .rd { width: 100%; max-width: 340px; display: block; margin: 0 auto; }
+        .placar { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 8px; }
+        .placar div { font-size: 2.6em; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+        .placar .a { color: var(--red); } .placar .b2 { color: var(--azul); } .placar span { color: var(--text-muted); font-size: 1.4em; }
+        .placar-leg { text-align: center; color: var(--text-muted); font-size: 0.78em; margin-top: 4px; }
+        .an { transform-origin: 120px 120px; animation: cresce 1.1s ease-out both; }
+        .an.d { animation-delay: 0.25s; }
+        @keyframes cresce { from { transform: scale(0); opacity: 0; } }
+
+        .acoes { text-align: center; margin-top: 24px; }
+        .btn-voltar { display: inline-block; background: var(--red); color: #fff; padding: 10px 26px; border-radius: 10px; text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .btn-voltar:hover { background: #ff1a00; transform: translateY(-2px); }
+        .footer { text-align: center; color: #444; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.78em; line-height: 1.7; }
+
+        /* ===== MODO CLARO ===== */
+        body.tema-claro { background: #f5f5f5; color: #1a1a1a; }
+        body.tema-claro .header { background: rgba(255,255,255,0.95); }
+        body.tema-claro .fm, body.tema-claro .c3, body.tema-claro .pn { background: #fff; }
+        body.tema-claro .fm select { background: #f5f5f5; color: #1a1a1a; }
+        body.tema-claro .nav a { color: #555; }
+        body.tema-claro .c3 .li.w { color: #7a5600; }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 900px) {
+            body { padding-top: 120px; }
+            .header-content { flex-direction: column; gap: 8px; }
+            .nav { justify-content: center; }
+            .nav a { font-size: 0.75em; padding: 6px 9px; }
+            .container { padding: 20px 14px; }
+            .title-section h1 { font-size: 1.8em; }
+            .fm { grid-template-columns: 1fr; }
+            .g1 { grid-template-columns: 1fr; }
+            .g1 .mid { order: -1; }
+        }
+        @media (prefers-reduced-motion: reduce) { .an { animation: none; } }
     </style>
 </head>
 <body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🏎️ Estatísticas F1</a>
+            <nav class="nav">
+                <a href="/">📈 Gráficos</a>
+                <a href="/campeoes">🏆 Campeões</a>
+                <a href="/dashboard">📊 Dashboard</a>
+                <a href="/pistas">🏁 Pistas</a>
+                <a href="/curiosidades">📖 Curiosidades</a>
+                <a href="/poles">🏁 Poles</a>
+                <a href="/comparar">⚔️ Pilotos</a>
+                <a href="/comparar-equipes" class="ativo">⚔️ Equipes</a>
+                <a href="/quiz">🧠 Quiz</a>
+                <button class="btn-tema" onclick="toggleTema()">🌓</button>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>🏎️ Comparação de Equipes</h1>
-        <div class="subtitle">{{ e1.equipe }} vs {{ e2.equipe }}</div>
 
-        <div class="comparacao-grid">
-            <!-- EQUIPE 1 -->
-            <div class="equipe-card {% if e1.titulos_construtores > e2.titulos_construtores %}vencedor{% endif %}">
-                <h2>🏁 {{ e1.equipe }}</h2>
-                <div class="pais">🇧🇷 {{ e1.pais }}</div>
-                <table>
-                    <tr><td>🏆 Títulos Construtores</td><td><span class="destaque">{{ e1.titulos_construtores }}</span></td></tr>
-                    <tr><td>🏆 Títulos Pilotos</td><td>{{ e1.titulos_pilotos }}</td></tr>
-                    <tr><td>🏆 Vitórias</td><td>{{ e1.vitorias }}</td></tr>
-                    <tr><td>🏁 Corridas</td><td>{{ e1.corridas }}</td></tr>
-                    <tr><td>📅 Estreia</td><td>{{ e1.estreia }}</td></tr>
-                    <tr><td>📅 Última corrida</td><td>{{ e1.ultima_corrida }}</td></tr>
-                    <tr><td>🏎️ Pilotos Icônicos</td><td class="pilotos">{{ e1.pilotos_iconicos }}</td></tr>
-                </table>
+        <div class="title-section">
+            <h1>⚔️ Comparar Equipes</h1>
+            <p>Estatísticas lado a lado</p>
+        </div>
+
+        <form class="fm" action="{{ url_for('comparar_equipes_resultado') }}" method="POST" id="formComparar">
+            <div>
+                <label class="l1" for="equipe1">🏁 Equipe 1</label>
+                <select name="equipe1" id="equipe1" required>
+                    {% for x in lista %}<option value="{{ x }}" {% if x == nome1 %}selected{% endif %}>{{ x }}</option>{% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="l2" for="equipe2">🏁 Equipe 2</label>
+                <select name="equipe2" id="equipe2" required>
+                    {% for x in lista %}<option value="{{ x }}" {% if x == nome2 %}selected{% endif %}>{{ x }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="aviso" id="aviso"></div>
+            <button type="submit" class="btn">📊 Comparar</button>
+        </form>
+        <div class="g1">
+            <div class="c3 A">
+                <div class="av">{{ (nome1.split(' ')|map('first')|join(''))[:2] }}</div>
+                <h3>{{ nome1 }}</h3>
+                <div class="info">{% for k, v in info1.items() %}{{ k|replace('_', ' ')|capitalize }}: {{ v }}<br>{% endfor %}</div>
+                <span class="bd {% if vitorias1 > vitorias2 %}top{% endif %}">VENCE EM {{ vitorias1 }} DE {{ stats|length }}</span>
+                {% for s in stats %}
+                <div class="li {% if s[1] > s[2] %}w{% endif %}"><span>{{ s[0] }}</span><b>{{ s[1] }}</b></div>
+                {% endfor %}
             </div>
 
-            <!-- EQUIPE 2 -->
-            <div class="equipe-card {% if e2.titulos_construtores > e1.titulos_construtores %}vencedor{% endif %}">
-                <h2>🏁 {{ e2.equipe }}</h2>
-                <div class="pais">🇧🇷 {{ e2.pais }}</div>
-                <table>
-                    <tr><td>🏆 Títulos Construtores</td><td><span class="destaque">{{ e2.titulos_construtores }}</span></td></tr>
-                    <tr><td>🏆 Títulos Pilotos</td><td>{{ e2.titulos_pilotos }}</td></tr>
-                    <tr><td>🏆 Vitórias</td><td>{{ e2.vitorias }}</td></tr>
-                    <tr><td>🏁 Corridas</td><td>{{ e2.corridas }}</td></tr>
-                    <tr><td>📅 Estreia</td><td>{{ e2.estreia }}</td></tr>
-                    <tr><td>📅 Última corrida</td><td>{{ e2.ultima_corrida }}</td></tr>
-                    <tr><td>🏎️ Pilotos Icônicos</td><td class="pilotos">{{ e2.pilotos_iconicos }}</td></tr>
-                </table>
+            <div class="mid pn">
+                <div class="lg"><span><i style="background: var(--red)"></i>{{ nome1 }}</span><span><i style="background: var(--azul)"></i>{{ nome2 }}</span></div>
+                <svg class="rd" id="radar" viewBox="0 0 240 240" role="img" aria-label="Radar comparando {{ nome1 }} e {{ nome2 }}"></svg>
+                <div class="placar"><div class="a">{{ vitorias1 }}</div><span>×</span><div class="b2">{{ vitorias2 }}</div></div>
+                <div class="placar-leg">categorias vencidas</div>
+            </div>
+
+            <div class="c3 B">
+                <div class="av">{{ (nome2.split(' ')|map('first')|join(''))[:2] }}</div>
+                <h3>{{ nome2 }}</h3>
+                <div class="info">{% for k, v in info2.items() %}{{ k|replace('_', ' ')|capitalize }}: {{ v }}<br>{% endfor %}</div>
+                <span class="bd {% if vitorias2 > vitorias1 %}top{% endif %}">VENCE EM {{ vitorias2 }} DE {{ stats|length }}</span>
+                {% for s in stats %}
+                <div class="li {% if s[2] > s[1] %}w{% endif %}"><span>{{ s[0] }}</span><b>{{ s[2] }}</b></div>
+                {% endfor %}
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/comparar-equipes" class="btn-nova">🔄 Nova comparação</a>
-            <a href="/" class="btn-voltar">⬅️ Voltar para o início</a>
-        </div>
+        <div class="acoes"><a href="/comparar-equipes" class="btn-voltar">⬅️ Nova comparação</a></div>
 
         <div class="footer">
             <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
             <p>Dados utilizados apenas para fins educacionais.</p>
         </div>
     </div>
+
+    <script>
+        function toggleTema() { document.body.classList.toggle('tema-claro'); }
+
+        // Evita comparar o mesmo nome com ele mesmo
+        document.getElementById('formComparar').addEventListener('submit', function (e) {
+            const sel = this.querySelectorAll('select');
+            if (sel[0].value && sel[0].value === sel[1].value) {
+                e.preventDefault();
+                document.getElementById('aviso').textContent = 'Escolha dois nomes diferentes para comparar.';
+            }
+        });
+
+        // Radar desenhado com os dados enviados pelo Flask (até 6 dados numéricos)
+        (function () {
+            const stats = {{ stats|tojson }}.slice(0, 6);
+            const svg = document.getElementById('radar');
+            if (!svg || stats.length < 3) { if (svg) svg.style.display = 'none'; return; }
+            const R = 88, C = 120, N = stats.length;
+            const pt = (i, v, m) => {
+                const a = -Math.PI / 2 + i * 2 * Math.PI / N, r = m ? R * v / m : 0;
+                return [(C + r * Math.cos(a)).toFixed(1), (C + r * Math.sin(a)).toFixed(1)];
+            };
+            const poli = (k) => stats.map((s, i) => pt(i, s[k], Math.max(s[1], s[2])).join(',')).join(' ');
+            let h = '';
+            [0.33, 0.66, 1].forEach((f) => {
+                h += '<polygon points="' + stats.map((s, i) => pt(i, f, 1).join(',')).join(' ') + '" fill="none" stroke="#333"/>';
+            });
+            stats.forEach((s, i) => { const p = pt(i, 1, 1); h += '<line x1="' + C + '" y1="' + C + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#333"/>'; });
+            stats.forEach((s, i) => { const p = pt(i, 1.2, 1); h += '<text x="' + p[0] + '" y="' + p[1] + '" fill="#999" font-size="11" text-anchor="middle">' + s[0] + '</text>'; });
+            h += '<polygon class="an" points="' + poli(1) + '" fill="rgba(225,6,0,.35)" stroke="#e10600" stroke-width="2"/>';
+            h += '<polygon class="an d" points="' + poli(2) + '" fill="rgba(47,107,255,.35)" stroke="#2f6bff" stroke-width="2"/>';
+            svg.innerHTML = h;
+        })();
+    </script>
+
 </body>
 </html>

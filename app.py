@@ -52,6 +52,51 @@ def carregar_construtores(df_pilotos):
     return df, calculado
 
 
+def montar_comparacao(linha1, linha2, chave):
+    """Prepara os dados de duas linhas (pilotos ou equipes) para a página de comparação.
+
+    - stats: lista [nome do dado, valor do 1º, valor do 2º] só com colunas NUMÉRICAS
+      (é o que alimenta o radar e as barras de "quem vence").
+    - info1/info2: os demais campos (país, texto etc.), mostrados embaixo do nome.
+    """
+    def limpar(serie):
+        dados = {}
+        for k, v in serie.items():
+            if hasattr(v, 'item'):      # converte tipos do numpy para Python puro
+                v = v.item()
+            if isinstance(v, float) and v != v:   # NaN vira 0
+                v = 0
+            dados[k] = v
+        return dados
+
+    d1, d2 = limpar(linha1), limpar(linha2)
+    # colunas que não fazem sentido comparar por "maior vence"
+    ignorar = {chave, 'id', 'posicao'}
+    palavras_info = ('ano', 'estreia', 'nascimento')
+
+    numericas = [
+        k for k, v in d1.items()
+        if k not in ignorar
+        and isinstance(v, (int, float)) and not isinstance(v, bool)
+        and not any(p in k.lower() for p in palavras_info)
+    ]
+
+    def num(valor):
+        return valor if isinstance(valor, (int, float)) and not isinstance(valor, bool) else 0
+
+    stats = [[k.replace('_', ' ').capitalize(), d1[k], num(d2.get(k, 0))] for k in numericas]
+    info1 = {k: v for k, v in d1.items() if k not in numericas and k != chave}
+    info2 = {k: v for k, v in d2.items() if k not in numericas and k != chave}
+
+    return {
+        'stats': stats,
+        'info1': info1,
+        'info2': info2,
+        'vitorias1': sum(1 for x in stats if x[1] > x[2]),
+        'vitorias2': sum(1 for x in stats if x[2] > x[1]),
+    }
+
+
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
 # ============================================
@@ -173,7 +218,9 @@ def comparar_resultado():
     if linha1.empty or linha2.empty:
         abort(404)
 
-    return render_template('resultado.html', p1=linha1.iloc[0], p2=linha2.iloc[0])
+    dados = montar_comparacao(linha1.iloc[0], linha2.iloc[0], 'piloto')
+    return render_template('resultado.html', nome1=piloto1, nome2=piloto2,
+                           lista=lista_pilotos, **dados)
 
 @app.route('/comparar-equipes')
 def comparar_equipes():
@@ -189,7 +236,9 @@ def comparar_equipes_resultado():
     if linha1.empty or linha2.empty:
         abort(404)
 
-    return render_template('resultado_equipes.html', e1=linha1.iloc[0], e2=linha2.iloc[0])
+    dados = montar_comparacao(linha1.iloc[0], linha2.iloc[0], 'equipe')
+    return render_template('resultado_equipes.html', nome1=equipe1, nome2=equipe2,
+                           lista=lista_equipes, **dados)
 
 @app.route('/dashboard')
 def dashboard():
