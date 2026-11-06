@@ -308,6 +308,12 @@ def comparar_resultado():
     piloto1 = request.form.get('piloto1', '')
     piloto2 = request.form.get('piloto2', '')
 
+    # ===== TESTE DE DEBUG =====
+    print("\n" + "="*40)
+    print(f"--> RECEBIDO DO FORMULÁRIO: Piloto 1 = '{piloto1}' | Piloto 2 = '{piloto2}'")
+    print("="*40 + "\n")
+    # =========================
+
     # Corrigido: usa os dados já carregados (sem reler o CSV a cada clique)
     # e responde com erro 404 se o nome não existir, em vez de quebrar com IndexError.
     linha1 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto1]
