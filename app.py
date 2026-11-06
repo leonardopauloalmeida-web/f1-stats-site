@@ -27,7 +27,14 @@ def ler_csv(nome, **kwargs):
 
 
 def carregar_construtores(df_pilotos):
-    """Monta a classificação de construtores da temporada 2026."""
+    """Monta a classificação de construtores da temporada 2026.
+
+    1) Se existir o arquivo construtores_2026.csv (colunas: equipe,pontos,vitorias,podios),
+       usa ele. É o jeito mais fiel ao campeonato oficial.
+    2) Se NÃO existir, soma os pontos dos pilotos de cada equipe.
+       Atenção: se algum piloto trocou de equipe no meio do ano, essa soma pode
+       ficar diferente da tabela oficial.
+    """
     caminho = os.path.join(BASE_DIR, 'construtores_2026.csv')
     if os.path.exists(caminho):
         df = pd.read_csv(caminho)
@@ -97,13 +104,108 @@ def montar_comparacao(linha1, linha2, chave):
     }
 
 
+# ---------------------------------------------------------------
+# TÍTULO MATEMÁTICO (pilotos e construtores)
+# ---------------------------------------------------------------
+# Pontos máximos que UM piloto ou UMA equipe ainda pode somar:
+#   - Piloto: 25 por corrida (vitória) + 8 por sprint (vitória no sprint)
+#   - Construtor: 43 por corrida (1º + 2º = 25 + 18) + 15 por sprint (8 + 7)
+PONTOS_CORRIDA_PILOTO, PONTOS_SPRINT_PILOTO = 25, 8
+PONTOS_CORRIDA_EQUIPE, PONTOS_SPRINT_EQUIPE = 43, 15
+
+
+def corridas_restantes_e_sprints():
+    """Conta as corridas que ainda faltam (e quantas são sprint) no corridas_2026.csv.
+
+    Para marcar um fim de semana de sprint, crie no CSV a coluna "sprint"
+    com o valor "sim" nessas corridas. Sem a coluna, considera que não há sprint.
+    Devolve (None, None) se não conseguir ler o arquivo (aí nada é afirmado).
+    """
+    try:
+        df = ler_csv('corridas_2026.csv')
+        df['data'] = pd.to_datetime(df['data'])
+    except Exception:
+        return None, None
+    futuras = df[df['data'] + timedelta(days=1) > datetime.now()]
+    sprints = 0
+    if 'sprint' in futuras.columns:
+        marcados = futuras['sprint'].astype(str).str.strip().str.lower()
+        sprints = int(marcados.isin(['1', 'sim', 's', 'true', 'x', 'yes']).sum())
+    return len(futuras), sprints
+
+
+def analisar_titulo(df, coluna, max_corrida, max_sprint, corridas, sprints):
+    """Diz se o líder já é campeão MATEMATICAMENTE.
+
+    A conta é a do pior caso para o líder: ele não soma mais nenhum ponto e
+    cada rival soma o máximo possível em todas as corridas que faltam.
+    O líder só é campeão se nenhum rival consegue alcançá-lo (empate em
+    pontos conta como "ainda dá", pois o desempate é por vitórias).
+    """
+    if df is None or len(df) < 2 or corridas is None:
+        return None
+    df = df.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
+    max_restante = corridas * max_corrida + sprints * max_sprint
+    lider, segundo = df.iloc[0], df.iloc[1]
+    pontos_lider = int(lider['pontos'])
+
+    vivos = []
+    for _, linha in df.iloc[1:].iterrows():
+        diferenca = pontos_lider - int(linha['pontos'])
+        if diferenca <= max_restante:
+            vivos.append({'nome': linha[coluna], 'pontos': int(linha['pontos']), 'diferenca': diferenca})
+
+    vantagem = pontos_lider - int(segundo['pontos'])
+    campeao = len(vivos) == 0
+    return {
+        'lider': {'nome': lider[coluna], 'pontos': pontos_lider},
+        'segundo': {'nome': segundo[coluna], 'pontos': int(segundo['pontos'])},
+        'vantagem': vantagem,
+        'max_restante': max_restante,
+        'corridas': corridas,
+        'sprints': sprints,
+        'max_corrida': max_corrida,
+        'max_sprint': max_sprint,
+        'campeao': campeao,
+        'faltam': max(0, max_restante - vantagem + 1),   # vantagem que ainda falta abrir
+        'percentual': 100 if campeao else min(100, round(vantagem / (max_restante + 1) * 100, 1)),
+        'vivos': vivos,
+    }
+
+
+def obter_campeao():
+    """Nome do campeão de pilotos: o manual (CAMPEAO_2026) ou o calculado pela matemática."""
+    if CAMPEAO_2026:
+        return CAMPEAO_2026
+    try:
+        corridas, sprints = corridas_restantes_e_sprints()
+        analise = analisar_titulo(ler_csv('temporada_2026.csv'), 'piloto',
+                                  PONTOS_CORRIDA_PILOTO, PONTOS_SPRINT_PILOTO, corridas, sprints)
+        if analise and analise['campeao']:
+            return analise['lider']['nome']
+    except Exception:
+        pass
+    return ""
+
+
+@app.context_processor
+def injetar_campeao():
+    # Disponibiliza {{ campeao_menu }} em TODAS as páginas (usado no menu lateral)
+    return {'campeao_menu': obter_campeao()}
+
+
 # ============================================
 # DADOS HISTÓRICOS DE VITÓRIAS (1950-2026)
 # ============================================
 df_vitorias = ler_csv('historico_f1.csv')
 
+# Vitórias por piloto (histórico)
 vitorias_piloto = df_vitorias.groupby('piloto')['vitorias'].sum().sort_values(ascending=False)
+
+# Vitórias por equipe (histórico)
 vitorias_equipe = df_vitorias.groupby('equipe')['vitorias'].sum().sort_values(ascending=False)
+
+# Evolução por temporada (para gráfico de linha)
 evolucao_anos = df_vitorias.groupby('ano')['vitorias'].count().index.tolist()
 evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist()
 
@@ -111,14 +213,22 @@ evolucao_valores = df_vitorias.groupby('ano')['vitorias'].count().values.tolist(
 # DADOS DOS CAMPEÕES (PILOTOS)
 # ============================================
 df_pilotos_campeoes = ler_csv('pilotos_campeoes.csv')
+
+# Títulos por piloto
 titulos_piloto = df_pilotos_campeoes['piloto'].value_counts().sort_values(ascending=False)
+
+# Títulos por país (dos pilotos)
 titulos_pais = df_pilotos_campeoes['pais'].value_counts().sort_values(ascending=False)
+
+# Lista completa de campeões (pilotos)
 campeoes_lista = df_pilotos_campeoes.sort_values('ano', ascending=False).to_dict('records')
 
 # ============================================
 # DADOS DOS CAMPEÕES (CONSTRUTORES)
 # ============================================
 df_construtores_campeoes = ler_csv('construtores_campeoes.csv')
+
+# Títulos por construtor
 titulos_construtor = df_construtores_campeoes['equipe'].value_counts().sort_values(ascending=False)
 
 # ============================================
@@ -198,6 +308,8 @@ def comparar_resultado():
     piloto1 = request.form.get('piloto1', '')
     piloto2 = request.form.get('piloto2', '')
 
+    # Corrigido: usa os dados já carregados (sem reler o CSV a cada clique)
+    # e responde com erro 404 se o nome não existir, em vez de quebrar com IndexError.
     linha1 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto1]
     linha2 = df_pilotos_detalhes[df_pilotos_detalhes['piloto'] == piloto2]
     if linha1.empty or linha2.empty:
@@ -227,22 +339,29 @@ def comparar_equipes_resultado():
 
 @app.route('/dashboard')
 def dashboard():
+    # Corrigido: a temporada 2026 é lida a cada visita ao dashboard.
+    # Assim, quando você atualiza os .csv, o site mostra os dados novos
+    # sem precisar apertar "Reload" no PythonAnywhere.
     df_classificacao = ler_csv('temporada_2026.csv')
     df_corridas = ler_csv('corridas_2026.csv')
     df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
+    # Corrigido: ordena por pontos (desempate: vitórias, depois pódios, como na F1)
+    # e CALCULA a posição aqui. Assim a coluna "#" sempre bate com a ordem da tabela,
+    # mesmo que a coluna "posicao" do CSV esteja desatualizada.
     df_classificacao = df_classificacao.sort_values(
         ['pontos', 'vitorias', 'podios'], ascending=False
     ).reset_index(drop=True)
     df_classificacao['posicao'] = df_classificacao.index + 1
     classificacao = df_classificacao.to_dict('records')
 
+    # Classificação de construtores (equipes)
     df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
     construtores = df_construtores.to_dict('records')
 
-    linha_campeao = df_classificacao[df_classificacao['piloto'] == CAMPEAO_2026]
-    dados_campeao = linha_campeao.iloc[0].to_dict() if not linha_campeao.empty else None
-
+    # Corrigido: uma corrida só vira "realizada" quando o DIA dela termina.
+    # Antes, uma corrida marcada para hoje (data 00:00) já aparecia como realizada de manhã,
+    # antes mesmo de acontecer.
     agora = datetime.now()
     fim_do_dia = df_corridas['data'] + timedelta(days=1)
     corridas_realizadas = df_corridas[fim_do_dia <= agora]
@@ -252,14 +371,39 @@ def dashboard():
     total_pilotos = len(df_classificacao)
     lider_pontos = df_classificacao.iloc[0]['pontos'] if not df_classificacao.empty else 0
 
+    # Últimas 5 corridas realizadas
     ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
+
+    # Próximas 5 corridas
     proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
+
+    # Título matemático (pilotos e construtores) com as corridas que ainda faltam
+    sprints_restantes = 0
+    if 'sprint' in corridas_futuras.columns:
+        marcados = corridas_futuras['sprint'].astype(str).str.strip().str.lower()
+        sprints_restantes = int(marcados.isin(['1', 'sim', 's', 'true', 'x', 'yes']).sum())
+    corridas_restantes = len(corridas_futuras)
+    analise_pilotos = analisar_titulo(df_classificacao, 'piloto', PONTOS_CORRIDA_PILOTO,
+                                      PONTOS_SPRINT_PILOTO, corridas_restantes, sprints_restantes)
+    analise_construtores = analisar_titulo(df_construtores, 'equipe', PONTOS_CORRIDA_EQUIPE,
+                                           PONTOS_SPRINT_EQUIPE, corridas_restantes, sprints_restantes)
+
+    # Campeão de pilotos: o manual, ou o que a matemática já garantiu
+    campeao_nome = CAMPEAO_2026
+    if not campeao_nome and analise_pilotos and analise_pilotos['campeao']:
+        campeao_nome = analise_pilotos['lider']['nome']
+
+    # Dados do campeão para a faixa de troféu (None se o nome não for achado)
+    linha_campeao = df_classificacao[df_classificacao['piloto'] == campeao_nome]
+    dados_campeao = linha_campeao.iloc[0].to_dict() if not linha_campeao.empty else None
 
     return render_template('dashboard.html',
                          classificacao=classificacao,
                          construtores=construtores,
                          construtores_calculados=construtores_calculados,
-                         campeao=CAMPEAO_2026,
+                         analise_construtores=analise_construtores,
+                         analise_pilotos=analise_pilotos,
+                         campeao=campeao_nome,
                          dados_campeao=dados_campeao,
                          ultimas_corridas=ultimas_corridas,
                          proximas_corridas=proximas_corridas,
@@ -280,6 +424,7 @@ def pistas():
 def pista_detalhe(nome_pista):
     nome_pista_formatado = nome_pista.replace('_', ' ')
 
+    # Buscar a pista pelo nome
     pista = df_pistas[df_pistas['pista'] == nome_pista_formatado]
 
     if pista.empty:
@@ -305,4 +450,5 @@ def poles():
     return render_template('poles.html', poles=poles_lista)
 
 if __name__ == '__main__':
+    # debug=True só no seu computador. Nunca ligue isso em um site publicado.
     app.run(debug=True)

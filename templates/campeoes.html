@@ -112,6 +112,7 @@
     </style>
 </head>
 <body>
+    {% include '_menu.html' %}
 {% macro barras(labels, values, cor, limite=10) %}
     {% set maximo = values[0] if values else 1 %}
     {% for nome in labels[:limite] %}
@@ -123,24 +124,6 @@
     </div>
     {% endfor %}
 {% endmacro %}
-
-    <header class="header">
-        <div class="header-content">
-            <a href="/" class="logo">🏎️ Estatísticas F1</a>
-            <nav class="nav">
-                <a href="/">📈 Gráficos</a>
-                <a href="/campeoes" class="ativo">🏆 Campeões</a>
-                <a href="/dashboard">📊 Dashboard</a>
-                <a href="/pistas">🏁 Pistas</a>
-                <a href="/curiosidades">📖 Curiosidades</a>
-                <a href="/poles">🏁 Poles</a>
-                <a href="/comparar">⚔️ Pilotos</a>
-                <a href="/comparar-equipes">⚔️ Equipes</a>
-                <a href="/quiz">🧠 Quiz</a>
-                <button class="btn-tema" onclick="toggleTema()">🌓</button>
-            </nav>
-        </div>
-    </header>
 
     <div class="container">
 

@@ -1,0 +1,199 @@
+{# ============================================================
+   MENU LATERAL (vidro + busca + cartão do campeão)
+   Para usar em qualquer página, logo depois de <body>:
+       {% include '_menu.html' %}
+   e apague o <header> antigo da página.
+   ============================================================ #}
+<script>
+    /* Lê a preferência ANTES de a página aparecer, para não piscar */
+    try { if (localStorage.getItem('menuRecolhido') === '1') document.documentElement.classList.add('menu-rec'); } catch (e) {}
+</script>
+<style>
+    html { --mw: 250px; }
+    html.menu-rec { --mw: 72px; }
+    body { padding-top: 0 !important; padding-left: var(--mw) !important; transition: padding-left 0.28s; }
+    .header { display: none !important; }
+    body::before {
+        content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        background: radial-gradient(circle at 8% 15%, rgba(225,6,0,0.22), transparent 42%),
+                    radial-gradient(circle at 92% 92%, rgba(122,92,255,0.18), transparent 48%);
+    }
+
+    #menu {
+        position: fixed; left: 0; top: 0; bottom: 0; width: var(--mw); z-index: 1000;
+        display: flex; flex-direction: column; padding: 14px 10px; gap: 2px;
+        background: linear-gradient(160deg, rgba(225,6,0,0.28), rgba(122,92,255,0.22)), rgba(14,8,22,0.82);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-right: 1px solid rgba(255,255,255,0.14);
+        transition: width 0.28s; font-family: 'Inter', sans-serif;
+    }
+    #menu .m-hd { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 12px; padding: 0 4px; }
+    #menu .m-logo { font-weight: 800; color: #ff5a4d; font-size: 15px; text-decoration: none; white-space: nowrap; }
+    #menu .m-rec { background: none; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; flex: none; }
+    #menu .m-rec:hover { background: rgba(255,255,255,0.12); }
+
+    /* cartão do campeão */
+    #menu .m-cc { margin: 0 4px 12px; padding: 12px; border-radius: 14px; border: 1px solid #f5c542; background: linear-gradient(135deg, rgba(245,197,66,0.28), rgba(245,197,66,0.04)); display: flex; gap: 10px; align-items: center; }
+    #menu .m-cc .tr { font-size: 26px; }
+    #menu .m-cc small { display: block; font-size: 9px; letter-spacing: 2px; color: #f5c542; font-weight: 800; }
+    #menu .m-cc b { font-size: 14px; background: linear-gradient(90deg, #fff2b0, #f5c542, #b8860b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* busca */
+    #menu .m-bs { margin: 0 4px 10px; position: relative; }
+    #menu .m-bs input { width: 100%; height: 40px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; padding: 0 38px 0 12px; font: inherit; font-size: 13px; }
+    #menu .m-bs input::placeholder { color: rgba(255,255,255,0.5); }
+    #menu .m-bs input:focus { outline: 2px solid #e10600; outline-offset: 1px; }
+    #menu .m-bs kbd { position: absolute; right: 8px; top: 9px; font-size: 11px; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; padding: 2px 6px; color: rgba(255,255,255,0.6); font-family: inherit; }
+
+    /* lista + indicador que desliza */
+    #mLista { position: relative; display: flex; flex-direction: column; gap: 2px; }
+    #menu .m-ind { position: absolute; left: 0; right: 0; top: 0; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); transition: transform 0.3s cubic-bezier(0.3, 1.3, 0.5, 1), height 0.2s, opacity 0.2s; z-index: 0; pointer-events: none; }
+    #menu .m-a { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: 10px; color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: color 0.2s; }
+    #menu .m-a .m-i { font-size: 18px; width: 22px; text-align: center; flex: none; }
+    #menu .m-a:hover, #menu .m-a.at { color: #fff; }
+    #menu .m-a.at { font-weight: 700; }
+    #menu .m-vz { display: none; padding: 14px; color: rgba(255,255,255,0.6); font-size: 13px; }
+
+    #menu .m-ft { margin-top: auto; padding: 10px 6px 0; border-top: 1px solid rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.6); }
+    #menu .m-sw { width: 46px; height: 26px; border-radius: 999px; background: rgba(255,255,255,0.2); position: relative; border: 0; cursor: pointer; flex: none; }
+    #menu .m-sw::after { content: "🌙"; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #111; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: 0.25s; }
+    body.tema-claro #menu .m-sw::after { content: "☀️"; left: 22px; background: #fff; }
+
+    /* recolhido: só ícones, com o nome ao passar o mouse */
+    html.menu-rec #menu .m-tx, html.menu-rec #menu .m-logo .m-tx, html.menu-rec #menu .m-bs, html.menu-rec #menu .m-ft span, html.menu-rec #menu .m-cc div { display: none; }
+    html.menu-rec #menu .m-hd { justify-content: center; }
+    html.menu-rec #menu .m-logo { display: none; }
+    html.menu-rec #menu .m-a { justify-content: center; padding: 0; }
+    html.menu-rec #menu .m-cc { justify-content: center; padding: 8px; }
+    html.menu-rec #menu .m-ft { justify-content: center; }
+    html.menu-rec #menu .m-a:hover::after { content: attr(data-tip); position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%); background: #000; color: #fff; border: 1px solid #333; padding: 6px 10px; border-radius: 8px; font-size: 12px; pointer-events: none; }
+
+    /* celular: o menu vira uma gaveta, aberta pelo botão ☰ */
+    .m-mob, #mScrim { display: none; }
+    @media (max-width: 900px) {
+        body { padding-left: 0 !important; padding-top: 64px !important; }
+        #menu { width: 270px; transform: translateX(-100%); transition: transform 0.3s; }
+        html.menu-aberto #menu { transform: none; }
+        html.menu-rec #menu .m-tx, html.menu-rec #menu .m-bs, html.menu-rec #menu .m-ft span, html.menu-rec #menu .m-cc div { display: revert; }
+        html.menu-rec #menu .m-logo { display: inline; }
+        html.menu-rec #menu .m-a { justify-content: flex-start; padding: 0 12px; }
+        html.menu-rec #menu .m-a:hover::after { display: none; }
+        html.menu-rec #menu .m-hd { justify-content: space-between; }
+        #menu .m-rec { display: none; }
+        .m-mob { display: flex; position: fixed; top: 12px; left: 12px; z-index: 1001; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 12px; border: 1px solid rgba(255,255,255,0.25); background: rgba(14,8,22,0.85); color: #fff; font-size: 20px; cursor: pointer; }
+        #mScrim { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 999; opacity: 0; pointer-events: none; transition: 0.3s; }
+        html.menu-aberto #mScrim { opacity: 1; pointer-events: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { #menu, #menu .m-ind, body { transition: none; } }
+</style>
+
+<nav id="menu" aria-label="Menu principal">
+    <div class="m-hd">
+        <a href="/" class="m-logo">🏎️ <span class="m-tx">Estatísticas F1</span></a>
+        <button class="m-rec" id="mRec" aria-label="Recolher ou expandir o menu" title="Recolher menu">⇔</button>
+    </div>
+
+    {% if campeao_menu %}
+    <div class="m-cc"><span class="tr">🏆</span><div><small>CAMPEÃO 2026</small><b>{{ campeao_menu }}</b></div></div>
+    {% endif %}
+
+    <div class="m-bs">
+        <input type="search" id="mBusca" placeholder="Buscar página..." aria-label="Buscar página" autocomplete="off">
+        <kbd>/</kbd>
+    </div>
+
+    <div id="mLista">
+        <div class="m-ind" id="mInd"></div>
+        <a class="m-a" href="/" data-tip="Gráficos"><span class="m-i">📈</span><span class="m-tx">Gráficos</span></a>
+        <a class="m-a" href="/campeoes" data-tip="Campeões"><span class="m-i">🏆</span><span class="m-tx">Campeões</span></a>
+        <a class="m-a" href="/dashboard" data-tip="Dashboard"><span class="m-i">📊</span><span class="m-tx">Dashboard</span></a>
+        <a class="m-a" href="/pistas" data-tip="Pistas"><span class="m-i">🏁</span><span class="m-tx">Pistas</span></a>
+        <a class="m-a" href="/curiosidades" data-tip="Curiosidades"><span class="m-i">📖</span><span class="m-tx">Curiosidades</span></a>
+        <a class="m-a" href="/poles" data-tip="Poles"><span class="m-i">🏁</span><span class="m-tx">Poles</span></a>
+        <a class="m-a" href="/comparar" data-tip="Pilotos"><span class="m-i">⚔️</span><span class="m-tx">Pilotos</span></a>
+        <a class="m-a" href="/comparar-equipes" data-tip="Equipes"><span class="m-i">⚔️</span><span class="m-tx">Equipes</span></a>
+        <a class="m-a" href="/quiz" data-tip="Quiz"><span class="m-i">🧠</span><span class="m-tx">Quiz</span></a>
+    </div>
+    <div class="m-vz" id="mVz">Nenhuma página encontrada</div>
+
+    <div class="m-ft">
+        <span>Tema</span>
+        <button class="m-sw" id="mTema" aria-label="Alternar tema claro e escuro"></button>
+    </div>
+</nav>
+<button class="m-mob" id="mBtnMob" aria-label="Abrir menu">☰</button>
+<div id="mScrim"></div>
+
+<script>
+    (function () {
+        var html = document.documentElement;
+        var lista = document.getElementById('mLista');
+        var ind = document.getElementById('mInd');
+        var links = [].slice.call(lista.querySelectorAll('.m-a'));
+
+        // 1) página atual (a rota mais específica que combina)
+        var path = location.pathname.replace(/\/$/, '') || '/';
+        var ativo = null, melhor = -1;
+        links.forEach(function (a) {
+            var h = a.getAttribute('href');
+            var casa = h === '/' ? path === '/' :
+                (path === h || path.indexOf(h + '/') === 0 || (h === '/pistas' && path.indexOf('/pista/') === 0));
+            if (casa && h.length > melhor) { melhor = h.length; ativo = a; }
+        });
+        if (ativo) ativo.classList.add('at');
+
+        // 2) indicador que desliza até o item ativo (e acompanha o mouse)
+        function mover(a) {
+            if (!a || a.style.display === 'none') { ind.style.opacity = 0; return; }
+            ind.style.opacity = 1;
+            ind.style.height = a.offsetHeight + 'px';
+            ind.style.transform = 'translateY(' + a.offsetTop + 'px)';
+        }
+        mover(ativo);
+        links.forEach(function (a) { a.addEventListener('mouseenter', function () { mover(a); }); });
+        lista.addEventListener('mouseleave', function () { mover(ativo); });
+        window.addEventListener('resize', function () { mover(ativo); });
+
+        // 3) recolher / expandir (lembra a escolha)
+        document.getElementById('mRec').addEventListener('click', function () {
+            html.classList.toggle('menu-rec');
+            try { localStorage.setItem('menuRecolhido', html.classList.contains('menu-rec') ? '1' : '0'); } catch (e) {}
+            setTimeout(function () { mover(ativo); }, 300);
+        });
+
+        // 4) busca: filtra os links; "/" foca o campo; Esc limpa
+        var busca = document.getElementById('mBusca');
+        function filtrar() {
+            var q = busca.value.toLowerCase().trim(), n = 0;
+            links.forEach(function (a) {
+                var ok = a.textContent.toLowerCase().indexOf(q) !== -1;
+                a.style.display = ok ? '' : 'none';
+                if (ok) n++;
+            });
+            document.getElementById('mVz').style.display = n ? 'none' : 'block';
+            mover(ativo);
+        }
+        busca.addEventListener('input', filtrar);
+        document.addEventListener('keydown', function (e) {
+            var tag = (document.activeElement && document.activeElement.tagName) || '';
+            if (e.key === '/' && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'TEXTAREA') {
+                if (html.classList.contains('menu-rec')) html.classList.remove('menu-rec');
+                e.preventDefault(); busca.focus();
+            }
+            if (e.key === 'Escape') { busca.value = ''; filtrar(); busca.blur(); html.classList.remove('menu-aberto'); }
+            if (e.key === 'Enter' && document.activeElement === busca) {
+                var primeiro = links.filter(function (a) { return a.style.display !== 'none'; })[0];
+                if (primeiro) location.href = primeiro.getAttribute('href');
+            }
+        });
+
+        // 5) tema claro / escuro (usa a função da própria página)
+        document.getElementById('mTema').addEventListener('click', function () {
+            if (typeof toggleTema === 'function') toggleTema(); else document.body.classList.toggle('tema-claro');
+        });
+
+        // 6) celular: gaveta
+        document.getElementById('mBtnMob').addEventListener('click', function () { html.classList.add('menu-aberto'); });
+        document.getElementById('mScrim').addEventListener('click', function () { html.classList.remove('menu-aberto'); });
+    })();
+</script>

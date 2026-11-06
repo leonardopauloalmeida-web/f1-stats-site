@@ -191,6 +191,20 @@
             line-height: 1.5;
         }
 
+        /* ===== CORRIDA PELO TÍTULO (matemática) ===== */
+        .titulo-box { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--red); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
+        .titulo-box h3 { color: var(--red); font-size: 1.15em; margin-bottom: 14px; text-align: center; font-weight: 700; }
+        .titulo-box .texto { color: var(--text-muted); font-size: 0.9em; line-height: 1.7; text-align: center; }
+        .titulo-box .texto b { color: var(--text); }
+        .tbarra { height: 14px; border-radius: 7px; background: var(--border); margin: 16px 0 6px; overflow: hidden; }
+        .tbarra i { display: block; height: 100%; border-radius: 7px; background: linear-gradient(90deg, #7a0300, var(--red)); }
+        .tleg { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.75em; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+        .chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 0.8em; }
+        .chip small { color: var(--text-muted); }
+        .titulo-box details { margin-top: 14px; color: var(--text-muted); font-size: 0.8em; line-height: 1.7; }
+        .titulo-box summary { cursor: pointer; color: var(--text); font-weight: 600; text-align: center; }
+
         /* ===== TABELAS ===== */
         .tabela-container {
             background: var(--bg-card);
@@ -341,24 +355,7 @@
     </style>
 </head>
 <body>
-
-    <header class="header">
-        <div class="header-content">
-            <a href="/" class="logo">🏎️ Estatísticas F1</a>
-            <nav class="nav">
-                <a href="/">📈 Gráficos</a>
-                <a href="/campeoes">🏆 Campeões</a>
-                <a href="/dashboard" class="ativo">📊 Dashboard</a>
-                <a href="/pistas">🏁 Pistas</a>
-                <a href="/curiosidades">📖 Curiosidades</a>
-                <a href="/poles">🏁 Poles</a>
-                <a href="/comparar">⚔️ Pilotos</a>
-                <a href="/comparar-equipes">⚔️ Equipes</a>
-                <a href="/quiz">🧠 Quiz</a>
-                <button class="btn-tema" onclick="toggleTema()">🌓</button>
-            </nav>
-        </div>
-    </header>
+    {% include '_menu.html' %}
 
     <div class="container">
 
@@ -438,6 +435,53 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Corrida pelo título de construtores (matemática) -->
+        {% if analise_construtores %}
+        {% set an = analise_construtores %}
+        {% if an.campeao %}
+        <div class="faixa-campeao">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5a5 5 0 0 1-10 0zM5 4H2v2a4 4 0 0 0 4 4zm14 0h3v2a4 4 0 0 1-4 4zM11 14h2v3h3v2H8v-2h3z"/></svg>
+            <div>
+                <span class="faixa-rotulo">CAMPEÃ MUNDIAL DE CONSTRUTORES 2026</span>
+                <span class="faixa-nome">{{ an.lider.nome }}</span>
+                <span class="faixa-detalhe">
+                    {{ an.lider.pontos }} pontos, {{ an.vantagem }} a mais que {{ an.segundo.nome }}.
+                    Título garantido matematicamente: nenhum rival consegue alcançar, mesmo somando o máximo nas {{ an.corridas }} corridas que faltam.
+                </span>
+            </div>
+        </div>
+        {% else %}
+        <div class="titulo-box">
+            <h3>🏭 Quando {{ an.lider.nome }} garante o título de construtores?</h3>
+            <p class="texto">
+                Faltam <b>{{ an.corridas }}</b> corrida{{ 's' if an.corridas != 1 }}{% if an.sprints %} (com <b>{{ an.sprints }}</b> sprint{{ 's' if an.sprints != 1 }}){% endif %}.
+                Cada equipe ainda pode somar no máximo <b>{{ an.max_restante }}</b> pontos.<br>
+                {{ an.lider.nome }} tem <b>{{ an.vantagem }}</b> pontos de vantagem sobre {{ an.segundo.nome }}
+                e precisa de mais de <b>{{ an.max_restante }}</b> para ser campeã com certeza:
+                <b>faltam {{ an.faltam }} pontos de vantagem</b>.
+            </p>
+            <div class="tbarra"><i style="width: {{ an.percentual }}%"></i></div>
+            <div class="tleg"><span>Vantagem atual: {{ an.vantagem }}</span><span>Necessário: {{ an.max_restante + 1 }}</span></div>
+            <div class="chips">
+                {% for v in an.vivos %}
+                <span class="chip"><b>{{ v.nome }}</b> <small>{{ v.diferenca }} pts atrás</small></span>
+                {% endfor %}
+            </div>
+            <p class="texto" style="margin-top: 8px; font-size: 0.78em;">Equipes que ainda têm chance matemática de título</p>
+            <details>
+                <summary>Como a conta é feita</summary>
+                <p>
+                    Cenário mais difícil para o líder: ele não soma mais nenhum ponto e a rival soma o máximo possível.
+                    Em cada corrida, uma equipe faz no máximo {{ an.max_corrida }} pontos (1º e 2º lugar: 25 + 18)
+                    {% if an.sprints %}e em cada sprint no máximo {{ an.max_sprint }} (8 + 7){% endif %}.
+                    Se a vantagem do líder for maior que esse total, ninguém mais alcança.
+                    Em caso de empate em pontos, o desempate seria por vitórias, por isso o empate ainda conta como possível.
+                </p>
+            </details>
+        </div>
+        {% endif %}
+        {% endif %}
 
         <!-- Classificação de Construtores -->
         <div class="tabela-container">

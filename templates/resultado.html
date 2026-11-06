@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🏎️ Resultado - Comparar Pilotos</title>
+    <title>🏎️ Comparar Pilotos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -97,78 +97,34 @@
     </style>
 </head>
 <body>
-
-    <header class="header">
-        <div class="header-content">
-            <a href="/" class="logo">🏎️ Estatísticas F1</a>
-            <nav class="nav">
-                <a href="/">📈 Gráficos</a>
-                <a href="/campeoes">🏆 Campeões</a>
-                <a href="/dashboard">📊 Dashboard</a>
-                <a href="/pistas">🏁 Pistas</a>
-                <a href="/curiosidades">📖 Curiosidades</a>
-                <a href="/poles">🏁 Poles</a>
-                <a href="/comparar" class="ativo">⚔️ Pilotos</a>
-                <a href="/comparar-equipes">⚔️ Equipes</a>
-                <a href="/quiz">🧠 Quiz</a>
-                <button class="btn-tema" onclick="toggleTema()">🌓</button>
-            </nav>
-        </div>
-    </header>
+    {% include '_menu.html' %}
 
     <div class="container">
 
         <div class="title-section">
             <h1>⚔️ Comparar Pilotos</h1>
-            <p>Estatísticas lado a lado</p>
+            <p>Escolha dois pilotos e veja suas estatísticas lado a lado</p>
         </div>
 
         <form class="fm" action="{{ url_for('comparar_resultado') }}" method="POST" id="formComparar">
             <div>
                 <label class="l1" for="piloto1">🏁 Piloto 1</label>
                 <select name="piloto1" id="piloto1" required>
-                    {% for x in lista %}<option value="{{ x }}" {% if x == nome1 %}selected{% endif %}>{{ x }}</option>{% endfor %}
+                    <option value="">Selecione...</option>
+                        {% for x in pilotos %}<option value="{{ x }}">{{ x }}</option>{% endfor %}
                 </select>
             </div>
             <div>
                 <label class="l2" for="piloto2">🏁 Piloto 2</label>
                 <select name="piloto2" id="piloto2" required>
-                    {% for x in lista %}<option value="{{ x }}" {% if x == nome2 %}selected{% endif %}>{{ x }}</option>{% endfor %}
+                    <option value="">Selecione...</option>
+                        {% for x in pilotos %}<option value="{{ x }}">{{ x }}</option>{% endfor %}
                 </select>
             </div>
             <div class="aviso" id="aviso"></div>
             <button type="submit" class="btn">📊 Comparar</button>
         </form>
-        <div class="g1">
-            <div class="c3 A">
-                <div class="av">{{ (nome1.split(' ')|map('first')|join(''))[:2] }}</div>
-                <h3>{{ nome1 }}</h3>
-                <div class="info">{% for k, v in info1.items() %}{{ k|replace('_', ' ')|capitalize }}: {{ v }}<br>{% endfor %}</div>
-                <span class="bd {% if vitorias1 > vitorias2 %}top{% endif %}">VENCE EM {{ vitorias1 }} DE {{ stats|length }}</span>
-                {% for s in stats %}
-                <div class="li {% if s[1] > s[2] %}w{% endif %}"><span>{{ s[0] }}</span><b>{{ s[1] }}</b></div>
-                {% endfor %}
-            </div>
-
-            <div class="mid pn">
-                <div class="lg"><span><i style="background: var(--red)"></i>{{ nome1 }}</span><span><i style="background: var(--azul)"></i>{{ nome2 }}</span></div>
-                <svg class="rd" id="radar" viewBox="0 0 240 240" role="img" aria-label="Radar comparando {{ nome1 }} e {{ nome2 }}"></svg>
-                <div class="placar"><div class="a">{{ vitorias1 }}</div><span>×</span><div class="b2">{{ vitorias2 }}</div></div>
-                <div class="placar-leg">categorias vencidas</div>
-            </div>
-
-            <div class="c3 B">
-                <div class="av">{{ (nome2.split(' ')|map('first')|join(''))[:2] }}</div>
-                <h3>{{ nome2 }}</h3>
-                <div class="info">{% for k, v in info2.items() %}{{ k|replace('_', ' ')|capitalize }}: {{ v }}<br>{% endfor %}</div>
-                <span class="bd {% if vitorias2 > vitorias1 %}top{% endif %}">VENCE EM {{ vitorias2 }} DE {{ stats|length }}</span>
-                {% for s in stats %}
-                <div class="li {% if s[2] > s[1] %}w{% endif %}"><span>{{ s[0] }}</span><b>{{ s[2] }}</b></div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="acoes"><a href="/comparar" class="btn-voltar">⬅️ Nova comparação</a></div>
+        <div class="acoes"><a href="/" class="btn-voltar">⬅️ Voltar para o início</a></div>
 
         <div class="footer">
             <p>Este site é um projeto pessoal e não tem qualquer vínculo com a Fórmula 1, FIA ou equipes.</p>
@@ -187,28 +143,6 @@
                 document.getElementById('aviso').textContent = 'Escolha dois nomes diferentes para comparar.';
             }
         });
-
-        // Radar desenhado com os dados enviados pelo Flask (até 6 dados numéricos)
-        (function () {
-            const stats = {{ stats|tojson }}.slice(0, 6);
-            const svg = document.getElementById('radar');
-            if (!svg || stats.length < 3) { if (svg) svg.style.display = 'none'; return; }
-            const R = 88, C = 120, N = stats.length;
-            const pt = (i, v, m) => {
-                const a = -Math.PI / 2 + i * 2 * Math.PI / N, r = m ? R * v / m : 0;
-                return [(C + r * Math.cos(a)).toFixed(1), (C + r * Math.sin(a)).toFixed(1)];
-            };
-            const poli = (k) => stats.map((s, i) => pt(i, s[k], Math.max(s[1], s[2])).join(',')).join(' ');
-            let h = '';
-            [0.33, 0.66, 1].forEach((f) => {
-                h += '<polygon points="' + stats.map((s, i) => pt(i, f, 1).join(',')).join(' ') + '" fill="none" stroke="#333"/>';
-            });
-            stats.forEach((s, i) => { const p = pt(i, 1, 1); h += '<line x1="' + C + '" y1="' + C + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#333"/>'; });
-            stats.forEach((s, i) => { const p = pt(i, 1.2, 1); h += '<text x="' + p[0] + '" y="' + p[1] + '" fill="#999" font-size="11" text-anchor="middle">' + s[0] + '</text>'; });
-            h += '<polygon class="an" points="' + poli(1) + '" fill="rgba(225,6,0,.35)" stroke="#e10600" stroke-width="2"/>';
-            h += '<polygon class="an d" points="' + poli(2) + '" fill="rgba(47,107,255,.35)" stroke="#2f6bff" stroke-width="2"/>';
-            svg.innerHTML = h;
-        })();
     </script>
 
 </body>
