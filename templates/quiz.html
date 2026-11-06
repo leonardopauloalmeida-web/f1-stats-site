@@ -6,56 +6,127 @@
     <title>🏎️ Quiz - Recordes da F1</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #1c1c1e;
+            --card: #2a2a2d;
+            --line: #3a3a3e;
+            --red: #e10600;
+            --texto: #ffffff;
+            --muted: #aaaaaa;
+            --certo: #00c853;
+            --certo-fundo: rgba(0, 200, 83, 0.15);
+            --errado: #ff1744;
+            --errado-fundo: rgba(255, 23, 68, 0.15);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
+            background: var(--bg);
+            color: var(--texto);
             padding: 20px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         .container { max-width: 800px; margin: 0 auto; width: 100%; flex: 1; }
-        h1 { text-align: center; font-size: 3em; color: #e10600; margin-bottom: 5px; text-shadow: 0 0 20px rgba(225,6,0,0.3); }
-        .subtitle { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 30px; border-bottom: 2px solid #e10600; padding-bottom: 15px; }
-        .progresso-container { background: #1a1a1a; border-radius: 30px; padding: 4px; margin-bottom: 30px; border: 1px solid #333; }
-        .progresso-bar { background: #e10600; height: 12px; border-radius: 30px; width: 0%; transition: width 0.5s ease; }
+        h1 { text-align: center; font-size: 3em; color: var(--red); margin-bottom: 5px; text-shadow: 0 0 20px rgba(225,6,0,0.3); }
+        .subtitle { text-align: center; color: var(--muted); font-size: 1.1em; margin-bottom: 30px; border-bottom: 2px solid var(--red); padding-bottom: 15px; }
+
+        /* ===== BARRA DE PROGRESSO: luzes de rotação (verde, amarelo, vermelho) ===== */
+        .progresso-container {
+            background: #111;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 6px;
+            margin-bottom: 30px;
+        }
+        .progresso-led {
+            height: 14px;
+            background:
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 8px, transparent 8px 11px);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progresso-bar {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #00e676, #ffeb3b 55%, #ff1744);
+            -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+            mask-image: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.5s ease;
+        }
+
+        /* ===== CAIXA DA PERGUNTA (zebra de pista no topo) ===== */
         .pergunta-box {
-            background: #1a1a1a;
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            background: var(--card);
+            border-radius: 8px;
+            padding: 40px 30px 30px;
+            border: 1px solid var(--line);
             margin-bottom: 20px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         }
-        .pergunta-box h3 {
-            color: #e10600;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .pergunta-box::before,
+        .resultado::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 10px;
+            background: repeating-linear-gradient(90deg, #e10600 0 16px, #ffffff 16px 32px);
         }
-        .pergunta-box h3 .numero { background: #e10600; color: #fff; padding: 2px 12px; border-radius: 30px; font-size: 0.7em; }
-        .opcoes { display: flex; flex-direction: column; gap: 10px; }
+        .pergunta-box h3 {
+            color: var(--texto);
+            font-size: 1.5em;
+            line-height: 1.3;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .pergunta-box h3 .numero { flex: none; background: var(--red); color: #fff; padding: 2px 12px; border-radius: 30px; font-size: 0.7em; margin-top: 4px; }
+
+        /* ===== OPÇÕES (A, B, C, D acompanham a ordem embaralhada) ===== */
+        .opcoes { display: flex; flex-direction: column; gap: 10px; counter-reset: opcao; }
         .opcao {
-            background: #0a0a0a;
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 14px 20px;
+            position: relative;
+            background: var(--bg);
+            border: 2px solid var(--line);
+            border-radius: 8px;
+            padding: 14px 20px 14px 56px;
             cursor: pointer;
-            transition: 0.3s;
-            color: #fff;
+            transition: 0.25s;
+            color: var(--texto);
             font-size: 1em;
             text-align: left;
             width: 100%;
             font-weight: 500;
+            font-family: inherit;
+            min-height: 52px;
         }
-        .opcao:hover:not(:disabled) { background: #1a1a1a; border-color: #e10600; transform: translateX(5px); }
-        .opcao:disabled { cursor: not-allowed; opacity: 0.8; }
-        .opcao.selecionada { border-color: #e10600; background: #2a1a1a; }
-        .opcao.certa { border-color: #00c853; background: #003300; }
-        .opcao.errada { border-color: #ff1744; background: #330000; }
+        .opcao::before {
+            counter-increment: opcao;
+            content: counter(opcao, upper-alpha);
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--line);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8em; font-weight: 800;
+        }
+        .opcao:hover:not(:disabled) { border-color: var(--red); transform: translateX(5px); }
+        .opcao:disabled { cursor: not-allowed; opacity: 0.9; }
+        .opcao.selecionada { border-color: var(--red); }
+        .opcao.certa { border-color: var(--certo); background: var(--certo-fundo); }
+        .opcao.certa::before { content: "✓"; background: var(--certo); color: #fff; }
+        .opcao.errada { border-color: var(--errado); background: var(--errado-fundo); }
+        .opcao.errada::before { content: "✕"; background: var(--errado); color: #fff; }
+
         .quiz-footer {
             display: flex;
             justify-content: space-between;
@@ -65,7 +136,7 @@
             gap: 15px;
         }
         .btn-proximo {
-            background: #e10600;
+            background: var(--red);
             color: #fff;
             border: none;
             padding: 14px 40px;
@@ -74,25 +145,30 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            font-family: inherit;
         }
         .btn-proximo:hover:not(:disabled) { background: #ff1a00; transform: scale(1.05); }
         .btn-proximo:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-        .contador { color: #aaa; font-size: 0.95em; }
+        .contador { color: var(--muted); font-size: 0.95em; }
+
+        /* ===== RESULTADO ===== */
         .resultado {
+            position: relative;
+            overflow: hidden;
             text-align: center;
-            background: #1a1a1a;
-            border-radius: 16px;
-            padding: 40px;
-            border: 2px solid #e10600;
+            background: var(--card);
+            border-radius: 8px;
+            padding: 50px 40px 40px;
+            border: 2px solid var(--red);
             margin-top: 20px;
         }
-        .resultado h2 { color: #e10600; font-size: 2.8em; margin-bottom: 10px; }
+        .resultado h2 { color: var(--red); font-size: 2.8em; margin-bottom: 10px; }
         .resultado .pontuacao { font-size: 3em; font-weight: bold; color: #fff; }
-        .resultado .pontuacao span { color: #e10600; }
-        .resultado .mensagem { color: #aaa; font-size: 1.2em; margin: 15px 0; }
+        .resultado .pontuacao span { color: var(--red); }
+        .resultado .mensagem { color: var(--muted); font-size: 1.2em; margin: 15px 0; }
         .resultado .btn-voltar {
             display: inline-block;
-            background: #e10600;
+            background: var(--red);
             color: #fff;
             padding: 12px 30px;
             border-radius: 30px;
@@ -102,22 +178,27 @@
             transition: 0.3s;
         }
         .resultado .btn-voltar:hover { background: #ff1a00; transform: scale(1.05); }
+
         .footer {
             text-align: center;
-            color: #555;
+            color: #666;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #333;
+            border-top: 1px solid var(--line);
             font-size: 0.9em;
             line-height: 1.6;
         }
+
         @media (max-width: 600px) {
             h1 { font-size: 2.2em; }
-            .pergunta-box { padding: 20px; }
+            .pergunta-box { padding: 36px 20px 20px; }
             .pergunta-box h3 { font-size: 1.2em; }
-            .opcao { padding: 12px 16px; font-size: 0.9em; }
+            .opcao { padding: 12px 14px 12px 52px; font-size: 0.9em; }
             .btn-proximo { width: 100%; justify-content: center; }
             .quiz-footer { flex-direction: column; align-items: stretch; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .progresso-bar, .opcao { transition: none; }
         }
     </style>
 </head>
@@ -128,7 +209,9 @@
         <div class="subtitle">Teste seus conhecimentos sobre os recordes da Fórmula 1</div>
 
         <div class="progresso-container">
-            <div class="progresso-bar" id="progresso-bar"></div>
+            <div class="progresso-led">
+                <div class="progresso-bar" id="progresso-bar"></div>
+            </div>
         </div>
 
         <div id="perguntas-container">
@@ -177,6 +260,11 @@
         let acertos = 0;
         let respondeu = false;
 
+        // Barra de progresso em luzes: mostra só a parte já percorrida (de 0 a 100)
+        function setProgresso(pct) {
+            progresso.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+        }
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -198,7 +286,7 @@
             opcoesEmbaralhadas.forEach(op => opcoesContainer.appendChild(op));
 
             contador.textContent = `Questão ${index + 1} de ${total}`;
-            progresso.style.width = `${((index) / total) * 100}%`;
+            setProgresso((index / total) * 100);
             btnProximo.disabled = true;
             respondeu = false;
 
@@ -252,7 +340,7 @@
                 document.getElementById('perguntas-container').style.display = 'none';
                 btnProximo.style.display = 'none';
                 contador.style.display = 'none';
-                progresso.style.width = '100%';
+                setProgresso(100);
                 resultadoFinal.style.display = 'block';
                 spanAcertos.textContent = acertos;
 

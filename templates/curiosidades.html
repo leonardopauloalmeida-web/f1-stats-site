@@ -6,87 +6,105 @@
     <title>📖 Curiosidades da F1</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --line: #2a2a2a;
+            /* Troque o vermelho do site mudando só estas três linhas */
+            --cor: #c41410;          /* vermelho fosco clássico (botões, bordas, título) */
+            --cor-forte: #e10600;    /* vermelho mais vivo (ao passar o mouse) */
+            --cor-texto: #ff4d44;    /* vermelho claro para textos pequenos (mais legível no preto) */
+            --cor-brilho: 196, 20, 16;  /* a mesma cor em RGB, para as sombras */
+            --texto: #e8e8e8;
+            --muted: #999999;
+            --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e8e8e8;
+            background: var(--bg);
+            color: var(--texto);
             padding: 20px;
             min-height: 100vh;
         }
         .container { max-width: 1100px; margin: 0 auto; }
+
         h1 {
             text-align: center;
-            font-size: 3em;
-            color: #b30000;
+            font-family: var(--mono);
+            font-size: 2.6em;
+            color: var(--cor);
             margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(180, 0, 0, 0.2);
-            letter-spacing: 2px;
+            text-shadow: 0 0 16px rgba(var(--cor-brilho), 0.55);
+            letter-spacing: 1px;
         }
         .subtitle {
             text-align: center;
-            color: #999;
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #b30000;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
-        }
-
-        /* Menu */
-        .menu-superior {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0;
-            margin: 15px 0 30px 0;
-            padding: 10px 18px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #2a2a2a;
-        }
-        .menu-item {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            padding: 6px 16px;
-            transition: 0.3s;
-            border-radius: 20px;
+            color: var(--muted);
+            font-size: 1.05em;
+            margin-bottom: 18px;
             letter-spacing: 0.5px;
         }
-        .menu-item:hover {
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
-        }
-        .menu-divisor { color: #333; padding: 0 2px; }
 
-        /* Filtros por categoria */
+        /* ===== LUZES DE ROTAÇÃO (decoração, acendem ao abrir a página) ===== */
+        .rpm {
+            max-width: 520px;
+            margin: 0 auto 26px;
+            height: 12px;
+            border-radius: 4px;
+            background: #1a1a1a;
+            overflow: hidden;
+            position: relative;
+        }
+        .rpm i {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #00e676, #ffeb3b 55%, #ff1744);
+            -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+            mask-image: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+            animation: acelera 1.6s ease-out both;
+        }
+        @keyframes acelera { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+        /* ===== FILTROS ===== */
         .filtros {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 25px;
+            margin-bottom: 14px;
         }
         .filtro-btn {
             background: transparent;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--line);
             color: #bbb;
-            padding: 6px 16px;
+            padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.8em;
-            transition: 0.3s;
+            font-size: 0.82em;
+            transition: 0.25s;
             font-family: inherit;
+            min-height: 36px;
         }
         .filtro-btn:hover,
         .filtro-btn.ativo {
-            border-color: #b30000;
-            color: #cc0000;
-            background: rgba(200, 0, 0, 0.08);
+            border-color: var(--cor);
+            color: #fff;
+            background: var(--cor);
         }
+        .contagem {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.78em;
+            letter-spacing: 2px;
+            color: var(--muted);
+            margin-bottom: 22px;
+            text-transform: uppercase;
+        }
+        .contagem b { color: var(--cor-texto); }
 
-        /* Grid de Curiosidades */
+        /* ===== GRID DE CURIOSIDADES ===== */
         .curiosidade-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -94,57 +112,63 @@
             margin-bottom: 30px;
         }
         .curiosidade-card {
-            background: rgba(20, 15, 15, 0.7);
-            border-radius: 12px;
+            background: var(--card);
+            border-radius: 14px;
             padding: 20px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--cor);
             transition: 0.3s;
         }
         .curiosidade-card:hover {
-            border-color: #b30000;
+            border-color: var(--cor);
             transform: translateY(-3px);
+            box-shadow: 0 8px 26px rgba(var(--cor-brilho), 0.2);
         }
         .curiosidade-card .categoria {
+            font-family: var(--mono);
             font-size: 0.7em;
-            color: #cc0000;
+            color: var(--cor-texto);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             font-weight: 700;
         }
         .curiosidade-card .texto {
             margin-top: 8px;
             color: #ddd;
-            line-height: 1.5;
-            font-size: 0.95em;
+            line-height: 1.6;
+            font-size: 0.97em;
         }
 
         .btn-voltar {
             display: inline-block;
-            background: #b30000;
+            background: var(--cor);
             color: #fff;
-            padding: 10px 25px;
-            border-radius: 8px;
+            padding: 11px 26px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
             transition: 0.3s;
         }
-        .btn-voltar:hover { background: #cc0000; transform: scale(1.02); }
+        .btn-voltar:hover { background: var(--cor-forte); transform: scale(1.03); }
 
         .footer {
             text-align: center;
             color: #555;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
+            border-top: 1px solid var(--line);
             font-size: 0.8em;
             line-height: 1.6;
         }
 
         @media (max-width: 700px) {
+            h1 { font-size: 1.9em; }
             .curiosidade-grid { grid-template-columns: 1fr; }
-            .menu-superior { flex-direction: column; align-items: center; gap: 4px; border-radius: 16px; padding: 12px; }
-            .filtros { gap: 4px; }
-            .filtro-btn { font-size: 0.7em; padding: 4px 12px; }
+            .filtros { gap: 6px; }
+            .filtro-btn { font-size: 0.75em; padding: 6px 12px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .rpm i { animation: none; }
         }
     </style>
 </head>
@@ -154,13 +178,7 @@
         <h1>📖 Curiosidades da F1</h1>
         <div class="subtitle">Fatos históricos e curiosidades sobre a Fórmula 1</div>
 
-        <div class="menu-superior">
-            <a href="/" class="menu-item">🏠 Início</a>
-            <span class="menu-divisor">|</span>
-            <a href="/campeoes" class="menu-item">🏆 Campeões</a>
-            <span class="menu-divisor">|</span>
-            <a href="/quiz" class="menu-item">🧠 Quiz</a>
-        </div>
+        <div class="rpm" aria-hidden="true"><i></i></div>
 
         <!-- Filtros -->
         <div class="filtros">
@@ -172,6 +190,7 @@
             <button class="filtro-btn" data-filtro="Circuitos">🏁 Circuitos</button>
             <button class="filtro-btn" data-filtro="Diversos">🎯 Diversos</button>
         </div>
+        <div class="contagem" id="contagem"></div>
 
         <div class="curiosidade-grid" id="curiosidades-grid">
             {% for c in curiosidades %}
@@ -196,6 +215,12 @@
         // ===== FILTROS POR CATEGORIA =====
         const botoes = document.querySelectorAll('.filtro-btn');
         const cards = document.querySelectorAll('.curiosidade-card');
+        const contagem = document.getElementById('contagem');
+
+        function atualizarContagem() {
+            const visiveis = Array.from(cards).filter(c => c.style.display !== 'none').length;
+            contagem.innerHTML = 'Mostrando <b>' + visiveis + '</b> de ' + cards.length + ' curiosidades';
+        }
 
         botoes.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -213,8 +238,11 @@
                         card.style.display = 'none';
                     }
                 });
+                atualizarContagem();
             });
         });
+
+        atualizarContagem();
     </script>
 </body>
 </html>
