@@ -12,10 +12,10 @@
             --card: #111111;
             --line: #2a2a2a;
             /* Troque o vermelho do site mudando só estas três linhas */
-            --cor: #c41410;          /* vermelho fosco clássico (botões, bordas, título) */
-            --cor-forte: #e10600;    /* vermelho mais vivo (ao passar o mouse) */
-            --cor-texto: #ff4d44;    /* vermelho claro para textos pequenos (mais legível no preto) */
-            --cor-brilho: 196, 20, 16;  /* a mesma cor em RGB, para as sombras */
+            --cor: #d40000;          /* Rosso Corsa (botões, bordas, título, cartões) */
+            --cor-forte: #f01414;    /* vermelho mais vivo (ao passar o mouse) */
+            --cor-texto: #ff4a4a;    /* vermelho claro para textos pequenos (mais legível no preto) */
+            --cor-brilho: 212, 0, 0;  /* a mesma cor em RGB, para as sombras */
             --texto: #e8e8e8;
             --muted: #999999;
             --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
@@ -104,39 +104,67 @@
         }
         .contagem b { color: var(--cor-texto); }
 
-        /* ===== GRID DE CURIOSIDADES ===== */
+        /* ===== CARTÕES: PLACA DE BOX ===== */
         .curiosidade-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         .curiosidade-card {
-            background: var(--card);
-            border-radius: 14px;
-            padding: 20px;
-            border: 1px solid var(--line);
-            border-top: 3px solid var(--cor);
-            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            background: var(--cor);
+            color: #fff;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            padding: 16px 18px 28px;
+            box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18), 0 6px 0 rgba(0, 0, 0, 0.45);
+            transition: transform 0.25s, box-shadow 0.25s;
         }
         .curiosidade-card:hover {
-            border-color: var(--cor);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 26px rgba(var(--cor-brilho), 0.2);
+            transform: translateY(-5px) rotate(-0.5deg);
+            box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18), 0 12px 0 rgba(0, 0, 0, 0.45), 0 14px 30px rgba(var(--cor-brilho), 0.35);
+        }
+        .curiosidade-card .topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .curiosidade-card .numero {
+            font-family: var(--mono);
+            font-size: 2.6em;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -1px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
         }
         .curiosidade-card .categoria {
             font-family: var(--mono);
             font-size: 0.7em;
-            color: var(--cor-texto);
+            color: #fff;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             font-weight: 700;
+            background: rgba(0, 0, 0, 0.32);
+            border-radius: 99px;
+            padding: 6px 12px;
+            white-space: nowrap;
         }
         .curiosidade-card .texto {
-            margin-top: 8px;
-            color: #ddd;
+            margin-top: 12px;
+            color: #fff;
             line-height: 1.6;
-            font-size: 0.97em;
+            font-size: 0.98em;
+        }
+        .curiosidade-card .texto a { color: #fff; }
+        /* faixa quadriculada na base da placa */
+        .curiosidade-card .faixa {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 10px;
+            background: repeating-linear-gradient(90deg, #ffffff 0 14px, #111111 14px 28px);
         }
 
         .btn-voltar {
@@ -192,11 +220,16 @@
         </div>
         <div class="contagem" id="contagem"></div>
 
+        {% set icones = {'História': '🏛️', 'Recordes': '📊', 'Pilotos': '🏎️', 'Equipes': '🏭', 'Circuitos': '🏁', 'Diversos': '🎯'} %}
         <div class="curiosidade-grid" id="curiosidades-grid">
             {% for c in curiosidades %}
             <div class="curiosidade-card" data-categoria="{{ c.categoria }}">
-                <div class="categoria">{{ c.categoria }}</div>
+                <div class="topo">
+                    <span class="numero">P{{ loop.index }}</span>
+                    <span class="categoria">{{ icones.get(c.categoria, '📌') }} {{ c.categoria }}</span>
+                </div>
                 <div class="texto">{{ c.texto | safe }}</div>
+                <div class="faixa"></div>
             </div>
             {% endfor %}
         </div>
