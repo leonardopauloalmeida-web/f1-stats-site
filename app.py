@@ -109,6 +109,33 @@ df_poles = ler_csv('poles_f1_historico.csv')
 poles_lista = df_poles.sort_values('poles', ascending=False).to_dict('records')
 
 # ============================================
+# FUNÇÃO DE ANÁLISE DO TÍTULO
+# ============================================
+def analisar_titulo(df, coluna, max_corrida, max_sprint, corridas, sprints):
+    if df is None or len(df) < 2 or corridas is None: return None
+    df = df.sort_values(['pontos', 'vitorias'], ascending=False).reset_index(drop=True)
+    max_restante = corridas * max_corrida + sprints * max_sprint
+    lider = df.iloc[0]
+    pontos_lider = int(lider['pontos'])
+    
+    campeao = True 
+            
+    return {
+        'lider': {'nome': lider[coluna], 'pontos': pontos_lider},
+        'segundo': {'nome': df.iloc[1][coluna], 'pontos': int(df.iloc[1]['pontos'])},
+        'vantagem': pontos_lider - int(df.iloc[1]['pontos']),
+        'max_restante': max_restante,
+        'corridas': corridas,
+        'sprints': sprints,
+        'max_corrida': max_corrida,
+        'max_sprint': max_sprint,
+        'campeao': campeao,
+        'faltam': 0,
+        'percentual': 100,
+        'vivos': []
+    }
+
+# ============================================
 # ROTAS
 # ============================================
 
@@ -157,10 +184,7 @@ def dashboard():
     df_classificacao = ler_csv('temporada_2026.csv')
     df_corridas = ler_csv('corridas_2026.csv')
     
-    # Converte a coluna data para o formato de data do Pandas
     df_corridas['data'] = pd.to_datetime(df_corridas['data'])
-    
-    # CORREÇÃO INFALÍVEL: Trata os valores vazios de vencedor
     df_corridas['vencedor'] = df_corridas['vencedor'].fillna('').astype(str).str.strip()
     df_corridas['equipe'] = df_corridas['equipe'].fillna('').astype(str).str.strip()
 
@@ -171,7 +195,6 @@ def dashboard():
     df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
     construtores = df_construtores.to_dict('records')
 
-    # CORREÇÃO AQUI: Se a coluna vencedor não está vazia, a corrida já aconteceu.
     corridas_realizadas = df_corridas[df_corridas['vencedor'] != '']
     corridas_futuras = df_corridas[df_corridas['vencedor'] == '']
 
@@ -182,22 +205,20 @@ def dashboard():
     ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
     proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
 
-    # DADOS CAMPEÃO PILOTO
     linha_campeao = df_classificacao[df_classificacao['piloto'] == CAMPEAO_2026]
     dados_campeao = linha_campeao.iloc[0].to_dict() if not linha_campeao.empty else None
 
-    # DADOS CAMPEÃO CONSTRUTOR (MERCEDES)
-    linha_campeao_construtor = df_construtores[df_construtores['equipe'] == CAMPEAO_CONSTRUTORES]
-    dados_campeao_construtor = linha_campeao_construtor.iloc[0].to_dict() if not linha_campeao_construtor.empty else None
-
+    corridas_restantes = len(corridas_futuras)
+    analise_construtores = analisar_titulo(df_construtores, 'equipe', 43, 15, corridas_restantes, 0)
+        
     return render_template('dashboard.html',
                          classificacao=classificacao,
                          construtores=construtores,
                          construtores_calculados=construtores_calculados,
+                         analise_construtores=analise_construtores,
                          campeao=CAMPEAO_2026,
                          dados_campeao=dados_campeao,
                          campeao_construtor=CAMPEAO_CONSTRUTORES,
-                         dados_campeao_construtor=dados_campeao_construtor,
                          ultimas_corridas=ultimas_corridas,
                          proximas_corridas=proximas_corridas,
                          total_corridas=total_corridas_realizadas,
