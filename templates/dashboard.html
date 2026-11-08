@@ -191,20 +191,6 @@
             line-height: 1.5;
         }
 
-        /* ===== CORRIDA PELO TÍTULO (matemática) ===== */
-        .titulo-box { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--red); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
-        .titulo-box h3 { color: var(--red); font-size: 1.15em; margin-bottom: 14px; text-align: center; font-weight: 700; }
-        .titulo-box .texto { color: var(--text-muted); font-size: 0.9em; line-height: 1.7; text-align: center; }
-        .titulo-box .texto b { color: var(--text); }
-        .tbarra { height: 14px; border-radius: 7px; background: var(--border); margin: 16px 0 6px; overflow: hidden; }
-        .tbarra i { display: block; height: 100%; border-radius: 7px; background: linear-gradient(90deg, #7a0300, var(--red)); }
-        .tleg { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.75em; }
-        .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
-        .chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 0.8em; }
-        .chip small { color: var(--text-muted); }
-        .titulo-box details { margin-top: 14px; color: var(--text-muted); font-size: 0.8em; line-height: 1.7; }
-        .titulo-box summary { cursor: pointer; color: var(--text); font-weight: 600; text-align: center; }
-
         /* ===== TABELAS ===== */
         .tabela-container {
             background: var(--bg-card);
@@ -239,7 +225,7 @@
         tr:hover { background: rgba(225, 6, 0, 0.06); }
         .posicao { color: var(--red); font-weight: 700; }
 
-        /* ===== MEDALHAS (1º ouro, 2º prata, 3º bronze) ===== */
+        /* ===== MEDALHAS ===== */
         .medalha {
             display: inline-flex;
             align-items: center;
@@ -255,7 +241,7 @@
         .medalha.m2 { background: linear-gradient(135deg, #f2f2f2, #8c8c8c); }
         .medalha.m3 { background: linear-gradient(135deg, #e6a468, #8a4b12); }
 
-        /* ===== LINHA DO CAMPEÃO (nome com brilho deslizante) ===== */
+        /* ===== LINHA DO CAMPEÃO ===== */
         tr.campeao,
         tr.campeao:hover {
             background: rgba(245, 197, 66, 0.08);
@@ -277,7 +263,7 @@
             to   { background-position: -130% 0; }
         }
 
-        /* ===== BARRA DE PONTOS (construtores) ===== */
+        /* ===== BARRA DE PONTOS ===== */
         .celula-pontos { min-width: 130px; }
         .barra {
             height: 6px;
@@ -348,7 +334,6 @@
             .faixa-campeao svg { width: 40px; height: 40px; }
         }
 
-        /* Quem prefere menos movimento: sem o brilho deslizante */
         @media (prefers-reduced-motion: reduce) {
             tr.campeao .nome-piloto { animation: none; }
         }
@@ -384,7 +369,7 @@
             </div>
         </div>
 
-        <!-- Faixa do campeão (só aparece se o campeão estiver definido no app.py) -->
+        <!-- FAIXA DO CAMPEÃO PILOTO -->
         {% if dados_campeao %}
         <div class="faixa-campeao">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5a5 5 0 0 1-10 0zM5 4H2v2a4 4 0 0 0 4 4zm14 0h3v2a4 4 0 0 1-4 4zM11 14h2v3h3v2H8v-2h3z"/></svg>
@@ -394,8 +379,23 @@
                 <span class="faixa-detalhe">
                     {{ dados_campeao.equipe }} • {{ dados_campeao.pontos }} pontos • {{ dados_campeao.vitorias }} vitórias
                     {% if campeao == "Kimi Antonelli" %}
-                    <br>O campeão mais jovem da história da Fórmula 1. Título garantido no GP da Cidade do México, com quatro corridas de antecedência.
+                    <br>O campeão mais jovem da história da Fórmula 1. Título garantido no GP da Cidade do México.
                     {% endif %}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FAIXA DO CAMPEÃO CONSTRUTOR (MERCEDES) - NOVO BLOCO -->
+        {% if dados_campeao_construtor %}
+        <div class="faixa-campeao">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5a5 5 0 0 1-10 0zM5 4H2v2a4 4 0 0 0 4 4zm14 0h3v2a4 4 0 0 1-4 4zM11 14h2v3h3v2H8v-2h3z"/></svg>
+            <div>
+                <span class="faixa-rotulo">CAMPEÃ MUNDIAL DE CONSTRUTORES 2026</span>
+                <span class="faixa-nome">{{ dados_campeao_construtor.equipe }}</span>
+                <span class="faixa-detalhe">
+                    {{ dados_campeao_construtor.pontos }} pontos • {{ dados_campeao_construtor.vitorias }} vitórias<br>
+                    A equipe garantiu o nono título de sua história no GP de São Paulo, em Interlagos.
                 </span>
             </div>
         </div>
@@ -436,53 +436,6 @@
             </table>
         </div>
 
-        <!-- Corrida pelo título de construtores (matemática) -->
-        {% if analise_construtores %}
-        {% set an = analise_construtores %}
-        {% if an.campeao %}
-        <div class="faixa-campeao">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5a5 5 0 0 1-10 0zM5 4H2v2a4 4 0 0 0 4 4zm14 0h3v2a4 4 0 0 1-4 4zM11 14h2v3h3v2H8v-2h3z"/></svg>
-            <div>
-                <span class="faixa-rotulo">CAMPEÃ MUNDIAL DE CONSTRUTORES 2026</span>
-                <span class="faixa-nome">{{ an.lider.nome }}</span>
-                <span class="faixa-detalhe">
-                    {{ an.lider.pontos }} pontos, {{ an.vantagem }} a mais que {{ an.segundo.nome }}.
-                    Título garantido matematicamente: nenhum rival consegue alcançar, mesmo somando o máximo nas {{ an.corridas }} corridas que faltam.
-                </span>
-            </div>
-        </div>
-        {% else %}
-        <div class="titulo-box">
-            <h3>🏭 Quando {{ an.lider.nome }} garante o título de construtores?</h3>
-            <p class="texto">
-                Faltam <b>{{ an.corridas }}</b> corrida{{ 's' if an.corridas != 1 }}{% if an.sprints %} (com <b>{{ an.sprints }}</b> sprint{{ 's' if an.sprints != 1 }}){% endif %}.
-                Cada equipe ainda pode somar no máximo <b>{{ an.max_restante }}</b> pontos.<br>
-                {{ an.lider.nome }} tem <b>{{ an.vantagem }}</b> pontos de vantagem sobre {{ an.segundo.nome }}
-                e precisa de mais de <b>{{ an.max_restante }}</b> para ser campeã com certeza:
-                <b>faltam {{ an.faltam }} pontos de vantagem</b>.
-            </p>
-            <div class="tbarra"><i style="width: {{ an.percentual }}%"></i></div>
-            <div class="tleg"><span>Vantagem atual: {{ an.vantagem }}</span><span>Necessário: {{ an.max_restante + 1 }}</span></div>
-            <div class="chips">
-                {% for v in an.vivos %}
-                <span class="chip"><b>{{ v.nome }}</b> <small>{{ v.diferenca }} pts atrás</small></span>
-                {% endfor %}
-            </div>
-            <p class="texto" style="margin-top: 8px; font-size: 0.78em;">Equipes que ainda têm chance matemática de título</p>
-            <details>
-                <summary>Como a conta é feita</summary>
-                <p>
-                    Cenário mais difícil para o líder: ele não soma mais nenhum ponto e a rival soma o máximo possível.
-                    Em cada corrida, uma equipe faz no máximo {{ an.max_corrida }} pontos (1º e 2º lugar: 25 + 18)
-                    {% if an.sprints %}e em cada sprint no máximo {{ an.max_sprint }} (8 + 7){% endif %}.
-                    Se a vantagem do líder for maior que esse total, ninguém mais alcança.
-                    Em caso de empate em pontos, o desempate seria por vitórias, por isso o empate ainda conta como possível.
-                </p>
-            </details>
-        </div>
-        {% endif %}
-        {% endif %}
-
         <!-- Classificação de Construtores -->
         <div class="tabela-container">
             <h3>🏭 Classificação de Construtores</h3>
@@ -518,7 +471,7 @@
                 </tbody>
             </table>
             {% if construtores_calculados %}
-            <p class="nota-tabela">Pontos somados a partir dos pilotos de cada equipe. Podem diferir da tabela oficial se algum piloto trocou de equipe na temporada.</p>
+            <p class="nota-tabela">Pontos somados a partir dos pilotos de cada equipe.</p>
             {% endif %}
         </div>
 
@@ -559,7 +512,7 @@
                         {% for c in proximas_corridas %}
                         <tr>
                             <td>{{ c.gp }}</td>
-                            <td>{{ c.data.strftime('%d/%m/%Y') }}</td> <!-- Data formatada -->
+                            <td>{{ c.data.strftime('%d/%m/%Y') }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -2,36 +2,34 @@ from flask import Flask, render_template, request, abort
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-import requests
 
 app = Flask(__name__)
 
-# Chave secreta para desenvolvimento
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-apenas-para-desenvolvimento')
-
-# Caminho absoluto da pasta do projeto
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Campeão mundial de 2026
 CAMPEAO_2026 = "Kimi Antonelli"
+CAMPEAO_CONSTRUTORES = "Mercedes" # Definindo a Mercedes como campeã
 
-# ---------------------------------------------------------------
-# FUNÇÕES AUXILIARES (LEITURA DE CSV)
-# ---------------------------------------------------------------
 def ler_csv(nome, **kwargs):
     return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
 
 def carregar_construtores(df_pilotos):
-    """Monta a classificação de construtores somando os pontos dos pilotos."""
-    if df_pilotos.empty: return pd.DataFrame(), True
-    df = df_pilotos.groupby('equipe', as_index=False)[['pontos', 'vitorias', 'podios']].sum()
+    caminho = os.path.join(BASE_DIR, 'construtores_2026.csv')
+    if os.path.exists(caminho):
+        df = pd.read_csv(caminho)
+        calculado = False
+    else:
+        df = df_pilotos.groupby('equipe', as_index=False)[['pontos', 'vitorias', 'podios']].sum()
+        calculado = True
+
     df = df.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
     df['posicao'] = df.index + 1
-    df['podios'] = 0
-    return df, True
+    maior = df['pontos'].max() if not df.empty else 0
+    df['percentual'] = (df['pontos'] / maior * 100).round(1) if maior else 0
+    return df, calculado
 
 def montar_comparacao(linha1, linha2, chave):
-    """Prepara os dados de duas linhas para a página de comparação."""
     def limpar(serie):
         dados = {}
         for k, v in serie.items():
@@ -72,10 +70,13 @@ def montar_comparacao(linha1, linha2, chave):
 
 @app.context_processor
 def injetar_campeao():
-    return {'campeao_menu': CAMPEAO_2026}
+    return {
+        'campeao_menu': CAMPEAO_2026,
+        'campeao_construtores_menu': CAMPEAO_CONSTRUTORES
+    }
 
 # ============================================
-# CARREGANDO DADOS HISTÓRICOS (CSVs LOCAIS)
+# DADOS HISTÓRICOS
 # ============================================
 df_vitorias = ler_csv('historico_f1.csv')
 vitorias_piloto = df_vitorias.groupby('piloto')['vitorias'].sum().sort_values(ascending=False)
@@ -153,48 +154,45 @@ def comparar_equipes_resultado():
 
 @app.route('/dashboard')
 def dashboard():
-    # LEITURA DOS CSVs LOCAIS (CORRIGIDO)
-    try:
-        df_classificacao = ler_csv('temporada_2026.csv')
-        df_classificacao = df_classificacao.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
-        df_classificacao['posicao'] = df_classificacao.index + 1
-    except Exception as e:
-        print(f"Erro ao ler temporada_2026.csv: {e}")
-        df_classificacao = pd.DataFrame()
+    df_classificacao = ler_csv('temporada_2026.csv')
+    df_corridas = ler_csv('corridas_2026.csv')
+    df_corridas['data'] = pd.to_datetime(df_corridas['data'])
 
-    try:
-        df_corridas = ler_csv('corridas_2026.csv')
-        df_corridas['data'] = pd.to_datetime(df_corridas['data'])
-    except Exception as e:
-        print(f"Erro ao ler corridas_2026.csv: {e}")
-        df_corridas = pd.DataFrame()
+    df_classificacao = df_classificacao.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
+    df_classificacao['posicao'] = df_classificacao.index + 1
+    classificacao = df_classificacao.to_dict('records')
 
-    # Processamento
-    classificacao = df_classificacao.to_dict('records') if not df_classificacao.empty else []
     df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
-    construtores = df_construtores.to_dict('records') if not df_construtores.empty else []
-    
-    total_pilotos = len(df_classificacao) if not df_classificacao.empty else 0
+    construtores = df_construtores.to_dict('records')
+
+    agora = datetime.now()
+    fim_do_dia = df_corridas['data'] + timedelta(days=1)
+    corridas_realizadas = df_corridas[fim_do_dia <= agora]
+    corridas_futuras = df_corridas[fim_do_dia > agora]
+
+    total_corridas_realizadas = len(corridas_realizadas)
+    total_pilotos = len(df_classificacao)
     lider_pontos = df_classificacao.iloc[0]['pontos'] if not df_classificacao.empty else 0
 
-    ultimas_corridas, proximas_corridas = [], []
-    total_corridas_realizadas = 0
-    
-    if not df_corridas.empty:
-        agora = datetime.now()
-        fim_do_dia = df_corridas['data'] + timedelta(days=1)
-        realizadas = df_corridas[fim_do_dia <= agora]
-        futuras = df_corridas[fim_do_dia > agora]
-        
-        total_corridas_realizadas = len(realizadas)
-        ultimas_corridas = realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
-        proximas_corridas = futuras.sort_values('data', ascending=True).head(5).to_dict('records')
+    ultimas_corridas = corridas_realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
+    proximas_corridas = corridas_futuras.sort_values('data', ascending=True).head(5).to_dict('records')
+
+    # DADOS CAMPEÃO PILOTO
+    linha_campeao = df_classificacao[df_classificacao['piloto'] == CAMPEAO_2026]
+    dados_campeao = linha_campeao.iloc[0].to_dict() if not linha_campeao.empty else None
+
+    # DADOS CAMPEÃO CONSTRUTOR (MERCEDES)
+    linha_campeao_construtor = df_construtores[df_construtores['equipe'] == CAMPEAO_CONSTRUTORES]
+    dados_campeao_construtor = linha_campeao_construtor.iloc[0].to_dict() if not linha_campeao_construtor.empty else None
 
     return render_template('dashboard.html',
                          classificacao=classificacao,
                          construtores=construtores,
                          construtores_calculados=construtores_calculados,
                          campeao=CAMPEAO_2026,
+                         dados_campeao=dados_campeao,
+                         campeao_construtor=CAMPEAO_CONSTRUTORES,
+                         dados_campeao_construtor=dados_campeao_construtor,
                          ultimas_corridas=ultimas_corridas,
                          proximas_corridas=proximas_corridas,
                          total_corridas=total_corridas_realizadas,

@@ -33,10 +33,10 @@
     #menu .m-rec:hover { background: rgba(255,255,255,0.12); }
 
     /* cartão do campeão */
-    #menu .m-cc { margin: 0 4px 12px; padding: 12px; border-radius: 14px; border: 1px solid #f5c542; background: linear-gradient(135deg, rgba(245,197,66,0.28), rgba(245,197,66,0.04)); display: flex; gap: 10px; align-items: center; }
-    #menu .m-cc .tr { font-size: 26px; }
-    #menu .m-cc small { display: block; font-size: 9px; letter-spacing: 2px; color: #f5c542; font-weight: 800; }
-    #menu .m-cc b { font-size: 14px; background: linear-gradient(90deg, #fff2b0, #f5c542, #b8860b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #menu .m-cc { margin: 0 4px 8px; padding: 10px; border-radius: 14px; border: 1px solid #f5c542; background: linear-gradient(135deg, rgba(245,197,66,0.28), rgba(245,197,66,0.04)); display: flex; gap: 10px; align-items: center; }
+    #menu .m-cc .tr { font-size: 24px; }
+    #menu .m-cc small { display: block; font-size: 9px; letter-spacing: 1.5px; color: #f5c542; font-weight: 800; }
+    #menu .m-cc b { font-size: 13px; background: linear-gradient(90deg, #fff2b0, #f5c542, #b8860b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
     /* busca */
     #menu .m-bs { margin: 0 4px 10px; position: relative; }
@@ -94,7 +94,23 @@
     </div>
 
     {% if campeao_menu %}
-    <div class="m-cc"><span class="tr">🏆</span><div><small>CAMPEÃO 2026</small><b>{{ campeao_menu }}</b></div></div>
+    <div class="m-cc">
+        <span class="tr">🏆</span>
+        <div>
+            <small>CAMPEÃO PILOTOS</small>
+            <b>{{ campeao_menu }}</b>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if campeao_construtores_menu %}
+    <div class="m-cc">
+        <span class="tr">🏆</span>
+        <div>
+            <small>CAMPEÃO CONSTRUTORES</small>
+            <b>{{ campeao_construtores_menu }}</b>
+        </div>
+    </div>
     {% endif %}
 
     <div class="m-bs">
