@@ -9,7 +9,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'chave-apenas-para-desen
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 CAMPEAO_2026 = "Kimi Antonelli"
-CAMPEAO_CONSTRUTORES = "Mercedes" # Definindo a Mercedes como campeã
+CAMPEAO_CONSTRUTORES = "Mercedes"
 
 def ler_csv(nome, **kwargs):
     return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
@@ -156,7 +156,13 @@ def comparar_equipes_resultado():
 def dashboard():
     df_classificacao = ler_csv('temporada_2026.csv')
     df_corridas = ler_csv('corridas_2026.csv')
+    
+    # Converte a coluna data para o formato de data do Pandas
     df_corridas['data'] = pd.to_datetime(df_corridas['data'])
+    
+    # CORREÇÃO INFALÍVEL: Trata os valores vazios de vencedor
+    df_corridas['vencedor'] = df_corridas['vencedor'].fillna('').astype(str).str.strip()
+    df_corridas['equipe'] = df_corridas['equipe'].fillna('').astype(str).str.strip()
 
     df_classificacao = df_classificacao.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
     df_classificacao['posicao'] = df_classificacao.index + 1
@@ -165,10 +171,9 @@ def dashboard():
     df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
     construtores = df_construtores.to_dict('records')
 
-    agora = datetime.now()
-    fim_do_dia = df_corridas['data'] + timedelta(days=1)
-    corridas_realizadas = df_corridas[fim_do_dia <= agora]
-    corridas_futuras = df_corridas[fim_do_dia > agora]
+    # CORREÇÃO AQUI: Se a coluna vencedor não está vazia, a corrida já aconteceu.
+    corridas_realizadas = df_corridas[df_corridas['vencedor'] != '']
+    corridas_futuras = df_corridas[df_corridas['vencedor'] == '']
 
     total_corridas_realizadas = len(corridas_realizadas)
     total_pilotos = len(df_classificacao)
