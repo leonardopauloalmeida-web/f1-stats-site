@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 import requests
-import time
 
 app = Flask(__name__)
 
@@ -17,95 +16,22 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMPEAO_2026 = "Kimi Antonelli"
 
 # ---------------------------------------------------------------
-# CONFIGURAÇÃO DA API JOLPICA (DADOS AUTOMÁTICOS)
-# ---------------------------------------------------------------
-API_BASE_URL = "https://api.jolpi.ca/ergast/f1"
-HEADERS = {"User-Agent": "EstatisticasF1/1.0.0"}
-
-# Cache simples em memória (10 minutos) para não sobrecarregar a API
-_cache = {}
-CACHE_TTL = 600
-
-def fetch_api(endpoint):
-    """Busca dados da API Jolpica com cache e tratamento de erro."""
-    agora = time.time()
-    if endpoint in _cache and (agora - _cache[endpoint]['timestamp'] < CACHE_TTL):
-        return _cache[endpoint]['data']
-    
-    try:
-        url = f"{API_BASE_URL}/{endpoint}"
-        resposta = requests.get(url, headers=HEADERS, timeout=10)
-        resposta.raise_for_status()
-        dados = resposta.json()
-        _cache[endpoint] = {'data': dados, 'timestamp': agora}
-        return dados
-    except Exception as e:
-        print(f"Erro na API Jolpica ({endpoint}): {e}")
-        if endpoint in _cache:
-            return _cache[endpoint]['data']
-        return None
-
-def obter_classificacao_pilotos(ano):
-    dados = fetch_api(f"{ano}/driverStandings.json")
-    if not dados: return pd.DataFrame()
-    lista = dados.get('MRData', {}).get('StandingsTable', {}).get('StandingsLists', [])
-    if not lista: return pd.DataFrame()
-    
-    df = pd.DataFrame(lista[0]['DriverStandings'])
-    if df.empty: return df
-    
-    df['piloto'] = df['Driver'].apply(lambda x: f"{x['givenName']} {x['familyName']}")
-    df['equipe'] = df['Constructors'].apply(lambda x: x[0]['name'] if x else "N/A")
-    df['pontos'] = df['points'].astype(int)
-    df['vitorias'] = df['wins'].astype(int)
-    df['posicao'] = df['position'].astype(int)
-    
-    # Criando colunas fictícias de pódios para não quebrar o HTML se ele esperar
-    df['podios'] = 0 
-    return df[['posicao', 'piloto', 'equipe', 'pontos', 'vitorias', 'podios']]
-
-def obter_classificacao_construtores(ano):
-    dados = fetch_api(f"{ano}/constructorStandings.json")
-    if not dados: return pd.DataFrame()
-    lista = dados.get('MRData', {}).get('StandingsTable', {}).get('StandingsLists', [])
-    if not lista: return pd.DataFrame()
-    
-    df = pd.DataFrame(lista[0]['ConstructorStandings'])
-    if df.empty: return df
-    
-    df['equipe'] = df['Constructor'].apply(lambda x: x['name'])
-    df['pontos'] = df['points'].astype(int)
-    df['vitorias'] = df['wins'].astype(int)
-    df['posicao'] = df['position'].astype(int)
-    df['podios'] = 0 
-    return df[['posicao', 'equipe', 'pontos', 'vitorias', 'podios']]
-
-def obter_calendario(ano):
-    dados = fetch_api(f"{ano}/races.json")
-    if not dados: return pd.DataFrame()
-    corridas = dados.get('MRData', {}).get('RaceTable', {}).get('Races', [])
-    df = pd.DataFrame(corridas)
-    if df.empty: return df
-    
-    df['data'] = pd.to_datetime(df['date'])
-    df['gp'] = df['raceName']
-    return df[['gp', 'data']]
-
-# ---------------------------------------------------------------
-# FUNÇÕES AUXILIARES (CSV de fallback)
+# FUNÇÕES AUXILIARES (LEITURA DE CSV)
 # ---------------------------------------------------------------
 def ler_csv(nome, **kwargs):
     return pd.read_csv(os.path.join(BASE_DIR, nome), **kwargs)
 
 def carregar_construtores(df_pilotos):
+    """Monta a classificação de construtores somando os pontos dos pilotos."""
     if df_pilotos.empty: return pd.DataFrame(), True
-    df = df_pilotos.groupby('equipe', as_index=False)[['pontos', 'vitorias']].sum()
-    df = df.sort_values(['pontos', 'vitorias'], ascending=False).reset_index(drop=True)
+    df = df_pilotos.groupby('equipe', as_index=False)[['pontos', 'vitorias', 'podios']].sum()
+    df = df.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
     df['posicao'] = df.index + 1
     df['podios'] = 0
     return df, True
 
 def montar_comparacao(linha1, linha2, chave):
+    """Prepara os dados de duas linhas para a página de comparação."""
     def limpar(serie):
         dados = {}
         for k, v in serie.items():
@@ -113,20 +39,36 @@ def montar_comparacao(linha1, linha2, chave):
             if isinstance(v, float) and v != v: v = 0
             dados[k] = v
         return dados
+
     d1, d2 = limpar(linha1), limpar(linha2)
     ignorar = {chave, 'id', 'posicao'}
     palavras_info = ('ano', 'estreia', 'nascimento')
-    numericas = [k for k, v in d1.items() if k not in ignorar and isinstance(v, (int, float)) and not isinstance(v, bool) and not any(p in k.lower() for p in palavras_info)]
+
+    numericas = [
+        k for k, v in d1.items()
+        if k not in ignorar
+        and isinstance(v, (int, float)) and not isinstance(v, bool)
+        and not any(p in k.lower() for p in palavras_info)
+    ]
+
     def num(valor):
         if isinstance(valor, (int, float)) and not isinstance(valor, bool): return valor
         try: return float(valor)
-        except: return 0
+        except (ValueError, TypeError): return 0
+
     stats = []
     for k in numericas:
-        stats.append([str(k).replace('_', ' ').capitalize(), num(d1.get(k, 0)), num(d2.get(k, 0))])
+        nome_formatado = str(k).replace('_', ' ').capitalize()
+        stats.append([nome_formatado, num(d1.get(k, 0)), num(d2.get(k, 0))])
+
     info1 = {k: v for k, v in d1.items() if k not in numericas and k != chave}
     info2 = {k: v for k, v in d2.items() if k not in numericas and k != chave}
-    return {'stats': stats, 'info1': info1, 'info2': info2, 'vitorias1': sum(1 for x in stats if x[1] > x[2]), 'vitorias2': sum(1 for x in stats if x[2] > x[1])}
+
+    return {
+        'stats': stats, 'info1': info1, 'info2': info2,
+        'vitorias1': sum(1 for x in stats if x[1] > x[2]),
+        'vitorias2': sum(1 for x in stats if x[2] > x[1]),
+    }
 
 @app.context_processor
 def injetar_campeao():
@@ -211,36 +153,25 @@ def comparar_equipes_resultado():
 
 @app.route('/dashboard')
 def dashboard():
-    ano_atual = datetime.now().year
-    
-    # 1. Tenta buscar da API
-    df_classificacao = obter_classificacao_pilotos(ano_atual)
-    df_construtores = obter_classificacao_construtores(ano_atual)
-    df_corridas = obter_calendario(ano_atual)
-    construtores_calculados = False
+    # LEITURA DOS CSVs LOCAIS (CORRIGIDO)
+    try:
+        df_classificacao = ler_csv('temporada_2026.csv')
+        df_classificacao = df_classificacao.sort_values(['pontos', 'vitorias', 'podios'], ascending=False).reset_index(drop=True)
+        df_classificacao['posicao'] = df_classificacao.index + 1
+    except Exception as e:
+        print(f"Erro ao ler temporada_2026.csv: {e}")
+        df_classificacao = pd.DataFrame()
 
-    # 2. Se a API falhar, usa o CSV como plano B
-    if df_classificacao.empty:
-        print("API falhou para pilotos. Usando CSV local.")
-        try:
-            df_classificacao = ler_csv('temporada_2026.csv')
-            df_classificacao = df_classificacao.sort_values(['pontos', 'vitorias'], ascending=False).reset_index(drop=True)
-            df_classificacao['posicao'] = df_classificacao.index + 1
-        except: df_classificacao = pd.DataFrame()
+    try:
+        df_corridas = ler_csv('corridas_2026.csv')
+        df_corridas['data'] = pd.to_datetime(df_corridas['data'])
+    except Exception as e:
+        print(f"Erro ao ler corridas_2026.csv: {e}")
+        df_corridas = pd.DataFrame()
 
-    if df_construtores.empty:
-        print("API falhou para construtores. Usando CSV local.")
-        df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
-
-    if df_corridas.empty:
-        print("API falhou para corridas. Usando CSV local.")
-        try:
-            df_corridas = ler_csv('corridas_2026.csv')
-            df_corridas['data'] = pd.to_datetime(df_corridas['data'])
-        except: df_corridas = pd.DataFrame()
-
-    # 3. Processa para o HTML
+    # Processamento
     classificacao = df_classificacao.to_dict('records') if not df_classificacao.empty else []
+    df_construtores, construtores_calculados = carregar_construtores(df_classificacao)
     construtores = df_construtores.to_dict('records') if not df_construtores.empty else []
     
     total_pilotos = len(df_classificacao) if not df_classificacao.empty else 0
@@ -251,13 +182,13 @@ def dashboard():
     
     if not df_corridas.empty:
         agora = datetime.now()
-        df_corridas['data_dt'] = pd.to_datetime(df_corridas['data'])
-        realizadas = df_corridas[df_corridas['data_dt'] <= agora]
-        futuras = df_corridas[df_corridas['data_dt'] > agora]
+        fim_do_dia = df_corridas['data'] + timedelta(days=1)
+        realizadas = df_corridas[fim_do_dia <= agora]
+        futuras = df_corridas[fim_do_dia > agora]
         
         total_corridas_realizadas = len(realizadas)
-        ultimas_corridas = realizadas.sort_values('data_dt', ascending=False).head(5).to_dict('records')
-        proximas_corridas = futuras.sort_values('data_dt', ascending=True).head(5).to_dict('records')
+        ultimas_corridas = realizadas.sort_values('data', ascending=False).head(5).to_dict('records')
+        proximas_corridas = futuras.sort_values('data', ascending=True).head(5).to_dict('records')
 
     return render_template('dashboard.html',
                          classificacao=classificacao,
